@@ -34,6 +34,33 @@ const SALLA = {
 };
 
 /* ---------------------------------------------------------
+   SHOPIFY CHECKOUT (headless)
+   The site stays the storefront; Shopify runs cart + payment.
+   Checkout builds a cart permalink:
+     https://<domain>/cart/<variantId>:<qty>,...
+   Keys are "<productId>-<editionId>-<sizeId>". Set domain ""
+   to disable (falls back to WhatsApp).
+   --------------------------------------------------------- */
+const SHOPIFY = {
+  /* DORMANT until the store has a live payment method (gateway or COD
+     via a KSA fulfilment partner). Until then checkout goes to WhatsApp.
+     To activate: set domain to "yk3hk2-pu.myshopify.com". */
+  domain: "",
+  variants: {
+    "classic-najd-adult": "53971290620269",  "classic-najd-kids": "53971290653037",
+    "classic-hijaz-adult": "53971290685805", "classic-hijaz-kids": "53971290718573",
+    "classic-watan-adult": "53971290751341", "classic-watan-kids": "53971290784109",
+    "classic-nassr-adult": "53971290816877", "classic-nassr-kids": "53971290849645",
+    "classic-shabab-adult": "53971290882413","classic-shabab-kids": "53971290915181",
+    "terrace-najd-adult": "53971294650733",  "terrace-najd-kids": "53971294683501",
+    "terrace-hijaz-adult": "53971294716269", "terrace-hijaz-kids": "53971294749037",
+    "terrace-watan-adult": "53971294781805", "terrace-watan-kids": "53971294814573",
+    "terrace-nassr-adult": "53971294847341", "terrace-nassr-kids": "53971294880109",
+    "terrace-shabab-adult": "53971294912877","terrace-shabab-kids": "53971294945645"
+  }
+};
+
+/* ---------------------------------------------------------
    EDITIONS
    Colour-inspired only. No club names, crests, or marks.
    --------------------------------------------------------- */

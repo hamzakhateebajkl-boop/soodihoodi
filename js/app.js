@@ -379,6 +379,23 @@
   function checkout() {
     if (!state.cart.length) return;
 
+    // Tier 0 — Shopify hosted checkout via cart permalink: the whole
+    // basket goes straight into payment. Only the checkout page is
+    // Shopify's; the storefront stays this site.
+    if (typeof SHOPIFY !== "undefined" && SHOPIFY.domain) {
+      const parts = [];
+      let allMapped = true;
+      for (const l of state.cart) {
+        const vid = SHOPIFY.variants[`${l.pid}-${l.ed}-${l.size}`];
+        if (!vid) { allMapped = false; break; }
+        parts.push(`${vid}:${l.qty}`);
+      }
+      if (allMapped && parts.length) {
+        window.location.href = `https://${SHOPIFY.domain}/cart/${parts.join(",")}`;
+        return;
+      }
+    }
+
     // Tier 1 — Salla Instant Purchase: single-line carts only, store live.
     if (SALLA.domain && state.cart.length === 1) {
       const line = state.cart[0];
