@@ -196,7 +196,7 @@
     return (
       `<span class="pc__now">${money(now)}</span>` +
       (was ? `<s class="pc__was">${money(was)}</s>` : "") +
-      (off ? `<span class="pc__save">−${off}%</span>` : "")
+      (off ? `<span class="pc__save" dir="ltr">−${off}%</span>` : "")
     );
   }
 
