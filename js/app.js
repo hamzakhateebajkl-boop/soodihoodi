@@ -181,11 +181,6 @@
     );
   }
 
-  const splitLine = (pid, size) =>
-    `${t("splitPay")} <b>${money(
-      Math.ceil(unitPrice(pid, size) / SALLA.instalments)
-    )}</b>`;
-
   function renderShop() {
     const grid = $("#shopGrid");
     if (!grid) return;
@@ -212,7 +207,6 @@
             .join("")}
         </div>
 
-        <p class="pc__split">${splitLine(p.id, pick)}</p>
 
         <button class="btn btn--go btn--full pc__cta" type="button">${t("addToCart")}</button>
       </article>`;
@@ -229,7 +223,6 @@
             x.setAttribute("aria-pressed", String(x === b))
           );
           $(".pc__price", card).innerHTML = priceBlock(pid, size);
-          $(".pc__split", card).innerHTML = splitLine(pid, size);
         })
       );
 
@@ -548,7 +541,7 @@
      ========================================================= */
   function cineInit() {
     const sec = $("#cine");
-    if (!sec) return;
+    if (!sec || sec.hidden) return;
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
       sec.classList.add("cine--static");
       return;

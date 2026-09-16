@@ -117,7 +117,9 @@ html[dir="rtl"] .ticker__row{ animation-name:tick-rtl; }
   transition:border-color .4s,background .4s;
 }
 .hdr.stuck{ border-block-end-color:var(--line); background:color-mix(in srgb,var(--ink) 92%,transparent); }
-.hdr__in{ display:flex; align-items:center; gap:clamp(16px,3vw,40px); min-height:70px; }
+/* visually LTR in both languages: logo left, nav follows, lang+cart pinned right */
+.hdr__in{ display:flex; align-items:center; gap:clamp(16px,3vw,40px); min-height:70px; direction:ltr; }
+html[dir="rtl"] .nav{ direction:rtl; }
 
 .brand{ display:flex; align-items:center; gap:11px; flex-shrink:0; }
 .brand__logo{ height:26px; width:auto; display:block; }
@@ -141,8 +143,7 @@ html[dir="rtl"] .ticker__row{ animation-name:tick-rtl; }
 .nav a:hover{ color:var(--txt); }
 .nav a:hover::after{ width:100%; }
 
-.hdr__act{ display:flex; align-items:center; gap:8px; margin-inline-start:0; }
-.nav + .hdr__act{ margin-inline-start:clamp(8px,2vw,20px); }
+.hdr__act{ display:flex; align-items:center; gap:8px; margin-inline-start:auto; }
 
 .lang{
   width:40px; height:38px; border-radius:11px; border:1px solid var(--line);
@@ -170,7 +171,7 @@ html[dir="rtl"] .ticker__row{ animation-name:tick-rtl; }
 /* =========================================================
    HERO
    ========================================================= */
-.hero{ position:relative; overflow:hidden; padding-block:clamp(20px,3vw,40px) clamp(60px,9vw,120px); isolation:isolate; }
+.hero{ position:relative; overflow:hidden; padding-block:0 clamp(60px,9vw,120px); isolation:isolate; }
 .hero__head{ margin-block-start:clamp(20px,3vw,34px); }
 
 .hero__glow{
@@ -211,15 +212,28 @@ html[dir="rtl"] .ticker__row{ animation-name:tick-rtl; }
 .hero__lights i:nth-child(4){ animation-delay:-6s; }
 @keyframes flick{ 0%,100%{opacity:.5} 45%{opacity:.75} 70%{opacity:.42} }
 
-.hero__head{ text-align:center; position:relative; z-index:2; }
-.hero__foot{ text-align:center; position:relative; z-index:2; display:grid; gap:18px; justify-items:center; margin-block-start:clamp(18px,3vw,30px); }
+.hero__foot{
+  text-align:center; position:relative; z-index:2;
+  display:grid; gap:18px; justify-items:center;
+  margin-block-start:clamp(-72px,-7vh,-34px); /* picker rises into the dissolve */
+}
 .hero__foot .hero__cta, .hero__foot .hero__pills{ justify-content:center; }
+.hero h1.hero__line{
+  font-weight:900; margin:4px 0 0;
+  font-size:clamp(1.05rem,2.6vw,1.5rem); line-height:1.3; letter-spacing:.01em;
+  display:flex; gap:.5em; flex-wrap:wrap; justify-content:center;
+}
+.hero h1.hero__line span{ display:inline; }
+.hero h1.hero__line span:first-child{ color:var(--ed-acc); }
 
-/* ---- big stage: giant wordmark behind the family ---- */
+/* ---- big stage: full-bleed family, giant wordmark behind, bottom dissolve ---- */
 .bigstage{
   position:relative; width:100%; overflow:hidden;
+  height:clamp(380px,68vh,720px);
+  margin-block-start:0;
   display:flex; justify-content:center; align-items:flex-end;
-  margin-block-start:clamp(6px,1.6vw,18px);
+  -webkit-mask-image:linear-gradient(#000 66%,transparent 97%);
+  mask-image:linear-gradient(#000 66%,transparent 97%);
 }
 .bigstage__mark{
   position:absolute; inset-inline:0; inset-block-start:50%; transform:translateY(-50%);
@@ -235,9 +249,14 @@ html[dir="rtl"] .ticker__row{ animation-name:tick-rtl; }
 }
 .bigstage__fam{
   position:relative; z-index:2;
-  width:min(740px,86%); height:auto;
+  width:100%; height:100%;
+  object-fit:cover; object-position:50% 12%;
   filter:drop-shadow(0 36px 54px rgba(0,0,0,.6));
   transition:opacity .28s ease;
+}
+@media (min-width:1100px){
+  /* on wide screens, don't stretch the family past their natural zoom */
+  .bigstage__fam{ width:min(1080px,100%); object-fit:contain; object-position:50% 0%; }
 }
 .bigstage__fam.swapping{ opacity:0; }
 .bigstage__floor{
