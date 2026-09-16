@@ -69,7 +69,7 @@ const EDITIONS = [
     id: "najd",
     img: "img/najd.jpg",
     fam: "img/fam-najd.jpg",
-    cut: "img/cut/fam-najd.png", // hero cutout — people only, transparent bg // family gallery shot — section hides for editions without one
+    cut: "img/cut/fam-najd.webp", // hero cutout — people only, transparent bg // family gallery shot — section hides for editions without one
     ink: "#0B4EA2",   // text-safe dark variant — NEVER use primary for text on white
     ar: "زعيم الدفا",
     en: "Za'eem Al-Dafa",
@@ -83,7 +83,7 @@ const EDITIONS = [
   {
     id: "hijaz",
     fam: "img/fam-hijaz.jpg",
-    cut: "img/cut/fam-hijaz.png", // hero cutout — people only, transparent bg
+    cut: "img/cut/fam-hijaz.webp", // hero cutout — people only, transparent bg
     fg: "#14161A",
     img: "img/hijaz.jpg",
     ink: "#7A5C00",   // text-safe dark variant — NEVER use primary for text on white
@@ -99,7 +99,7 @@ const EDITIONS = [
   {
     id: "watan",
     fam: "img/fam-watan.jpg",
-    cut: "img/cut/fam-watan.png", // hero cutout — people only, transparent bg
+    cut: "img/cut/fam-watan.webp", // hero cutout — people only, transparent bg
     img: "img/watan.jpg",
     ink: "#046A38",   // text-safe dark variant — NEVER use primary for text on white
     ar: "راقي الدفا",
@@ -114,7 +114,7 @@ const EDITIONS = [
   {
     id: "nassr",
     fam: "img/fam-nassr.jpg",
-    cut: "img/cut/fam-nassr.png", // hero cutout — people only, transparent bg
+    cut: "img/cut/fam-nassr.webp", // hero cutout — people only, transparent bg
     fg: "#14161A",
     img: "img/nassr.jpg",
     ink: "#1C3F94",
@@ -130,7 +130,7 @@ const EDITIONS = [
   {
     id: "shabab",
     fam: "img/fam-shabab.jpg",
-    cut: "img/cut/fam-shabab.png", // hero cutout — people only, transparent bg
+    cut: "img/cut/fam-shabab.webp", // hero cutout — people only, transparent bg
     fg: "#14161A",
     img: "img/shabab.jpg",
     ink: "#1A1A1A",
