@@ -503,22 +503,42 @@ html[data-lang="en"] .hero h1{ line-height:.92; }
    WHY
    ========================================================= */
 .why{ padding-block:clamp(64px,9vw,120px); background:linear-gradient(var(--ink),var(--ink-1)); }
-.why__grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(238px,1fr)); gap:clamp(12px,1.6vw,20px); }
-.why__c{
-  padding:clamp(22px,2.4vw,30px);
-  border:1px solid var(--line); border-radius:var(--r-l);
-  background:linear-gradient(160deg,rgba(255,255,255,.045),rgba(255,255,255,.012));
-  position:relative; overflow:hidden;
-  transition:border-color .4s,transform .4s var(--ease-o);
+/* asymmetric editorial grid — one lead statement, three stacked notes, hairlines not boxes */
+.why__grid{
+  display:grid; grid-template-columns:1.5fr 1fr; gap:0;
+  border-block:1px solid var(--line);
 }
+.why__c{
+  padding:clamp(24px,3vw,44px);
+  position:relative; overflow:hidden;
+  transition:background .4s var(--ease);
+}
+.why__c:first-child{
+  grid-row:1 / span 3;
+  border-inline-end:1px solid var(--line);
+  display:flex; flex-direction:column; justify-content:center;
+}
+.why__c:first-child h3{ font-size:clamp(1.5rem,2.4vw,2.125rem); line-height:1.25; }
+.why__c:first-child p{ font-size:clamp(1rem,1.3vw,1.125rem); max-width:36ch; }
+.why__c:nth-child(n+3){ border-block-start:1px solid var(--line); }
 .why__c::before{
   content:""; position:absolute; inset-block-start:0; inset-inline-start:0; width:100%; height:2px;
   background:linear-gradient(90deg,var(--ed),transparent);
   transform:scaleX(0); transform-origin:inline-start;
   transition:transform .55s var(--ease-o);
 }
-.why__c:hover{ transform:translateY(-6px); border-color:color-mix(in srgb,var(--ed-acc) 34%,transparent); }
+.why__c:hover{ background:color-mix(in srgb,var(--ed) 7%,transparent); }
 .why__c:hover::before{ transform:scaleX(1); }
+@media (max-width:860px){
+  .why__grid{ grid-template-columns:1fr; }
+  .why__c:first-child{ grid-row:auto; border-inline-end:0; }
+  .why__c:nth-child(2){ border-block-start:1px solid var(--line); }
+}
+
+/* tactile press feedback (skill rule 5) */
+.btn:active,.sw:active,.edc:active,.szb:active,.cartbtn:active,.lang:active{
+  transform:translateY(1px) scale(.98);
+}
 .why__ic{
   display:grid; place-items:center; width:42px; height:42px; border-radius:13px;
   background:color-mix(in srgb,var(--ed) 20%,transparent); color:var(--ed-acc);
