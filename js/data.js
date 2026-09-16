@@ -203,22 +203,11 @@ const PRODUCTS = [
     compareAt: { adult: 359, kids: 239 },
     badgeAr: "الأكثر مبيعاً",
     badgeEn: "Best seller"
-  },
-  {
-    id: "terrace",
-    sallaId: null,
-    instantUrl: null,
-    ar: "إصدار المدرجات",
-    en: "The Terrace Edition",
-    descAr: "شيربا أثقل 450 جم، أكمام أطول، وجيب داخلي مبطّن للجوال.",
-    descEn: "Heavier 450 gsm sherpa, longer sleeves, lined inner phone pocket.",
-    sizes: ["adult", "kids"],
-    prices:    { adult: 379, kids: 249 },
-    compareAt: { adult: 449, kids: 299 },
-    badgeAr: "إصدار محدود",
-    badgeEn: "Limited"
   }
 ];
+/* "terrace" (إصدار المدرجات / The Terrace Edition — 450 gsm, longer
+   sleeves, lined phone pocket) removed 2026-09-16: no physical product
+   yet. Re-add here when it actually exists. */
 
 /* ---------------------------------------------------------
    UI STRINGS used by JS-rendered markup

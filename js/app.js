@@ -20,6 +20,13 @@
   const t  = (k) => (T[k] ? T[k][state.lang] : k);
   const ed = (id) => EDITIONS.find((e) => e.id === id) || EDITIONS[0];
   const prod = (id) => PRODUCTS.find((p) => p.id === id);
+
+  // A saved cart can outlive the catalogue — a returning shopper may hold a
+  // product or edition we've since retired. Drop those lines instead of
+  // letting every lookup below throw and take the whole page down.
+  state.cart = state.cart.filter(
+    (l) => prod(l.pid) && EDITIONS.some((e) => e.id === l.ed)
+  );
   const money = (n) => `${Number(n).toLocaleString("en-US")} ${t("sar")}`;
 
   // Prices vary by size (adult vs kids), so every lookup needs both.
@@ -208,9 +215,11 @@
       const pick = state.picked[p.id] || p.sizes[0];
       state.picked[p.id] = pick;
 
+      const badge = state.lang === "ar" ? p.badgeAr : p.badgeEn;
+
       return `
       <article class="pc io" data-p="${p.id}">
-        <span class="pc__tag">${state.lang === "ar" ? p.badgeAr : p.badgeEn}</span>
+        ${badge ? `<span class="pc__tag">${badge}</span>` : ""}
         <div class="pc__art">${shot(null)}</div>
         <h3 class="pc__t">${p[state.lang]}</h3>
         <p class="pc__d">${state.lang === "ar" ? p.descAr : p.descEn}</p>
