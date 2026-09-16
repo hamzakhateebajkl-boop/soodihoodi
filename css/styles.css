@@ -224,7 +224,7 @@ html[dir="rtl"] .nav{ direction:rtl; }
   display:flex; gap:.5em; flex-wrap:wrap; justify-content:center;
 }
 .hero h1.hero__line span{ display:inline; }
-.hero h1.hero__line span:first-child{ color:var(--ed-acc); }
+.hero h1.hero__line span:last-child{ color:var(--ed-acc); }
 
 /* ---- big stage: full-bleed family, giant wordmark behind, bottom dissolve ---- */
 .bigstage{
