@@ -102,6 +102,15 @@
       sPre.complete ? sSwap() : (sPre.onload = sSwap, sPre.onerror = sSwap);
     }
 
+    const lifeImg = $("#lifeImg");
+    if (lifeImg && e.life && lifeImg.getAttribute("src") !== e.life) {
+      lifeImg.classList.add("swapping");
+      const lPre = new Image();
+      lPre.src = e.life;
+      const lSwap = () => { lifeImg.src = e.life; lifeImg.classList.remove("swapping"); };
+      lPre.complete ? lSwap() : (lPre.onload = lSwap, lPre.onerror = lSwap);
+    }
+
     $$("[data-shot]").forEach((im) => {
       if (im.getAttribute("src") !== e.img) im.src = e.img;
       im.alt = e[state.lang];
@@ -641,6 +650,32 @@
     );
   }
 
+
+  /* =========================================================
+     HERO SWIPE — swipe the family photo left/right to change team
+     ========================================================= */
+  function swipeInit() {
+    const stage = $(".bigstage");
+    if (!stage) return;
+    const ids = () => EDITIONS.filter((e) => !e.comingSoon).map((e) => e.id);
+    const step = (dir) => {
+      const list = ids();
+      let i = list.indexOf(state.edition);
+      if (i < 0) i = 0;
+      i = (i + dir + list.length) % list.length;
+      applyEdition(list[i], true);
+    };
+    let x0 = null, y0 = null;
+    stage.addEventListener("pointerdown", (ev) => { x0 = ev.clientX; y0 = ev.clientY; }, { passive: true });
+    stage.addEventListener("pointerup", (ev) => {
+      if (x0 == null) return;
+      const dx = ev.clientX - x0, dy = ev.clientY - y0;
+      x0 = null;
+      if (Math.abs(dx) < 48 || Math.abs(dx) < Math.abs(dy) * 1.2) return;
+      step(dx < 0 ? 1 : -1);
+    }, { passive: true });
+  }
+
   /* =========================================================
      BOOT
      ========================================================= */
@@ -663,6 +698,7 @@
 
     cineInit();
     tiltInit();
+    swipeInit();
     addEventListener("load", () => setTimeout(heroTour, 1400), { once: true });
 
     // header shadow on scroll

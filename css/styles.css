@@ -229,6 +229,7 @@ html[dir="rtl"] .nav{ direction:rtl; }
 /* ---- big stage: full-bleed family, giant wordmark behind, bottom dissolve ---- */
 .bigstage{
   position:relative; width:100%; overflow:hidden;
+  touch-action:pan-y; cursor:grab;
   height:clamp(380px,68vh,720px);
   margin-block-start:0;
   /* light edition-tinted field — hides cutout edges, dissolves into the dark page */
@@ -260,6 +261,7 @@ html[dir="rtl"] .nav{ direction:rtl; }
 }
 .bigstage__fam{
   position:relative; z-index:2;
+  -webkit-user-drag:none; user-select:none;
   width:100%; height:100%;
   object-fit:cover; object-position:50% 12%;
   filter:drop-shadow(0 24px 40px rgba(10,14,22,.30));
@@ -530,6 +532,8 @@ html[data-lang="en"] .hero h1{ line-height:.92; }
    ========================================================= */
 .scale{ padding-block:clamp(64px,9vw,120px); background:var(--ink-1); }
 .scale__fig img{ transition:opacity .28s ease; }
+.life__img{ transition:opacity .28s ease; }
+.life__img.swapping{ opacity:0; }
 .scale__fig img.swapping{ opacity:0; }
 .scale__in{ display:grid; grid-template-columns:1fr 1fr; gap:clamp(28px,5vw,64px); align-items:center; }
 .scale__fig{ margin:0; position:relative; border-radius:var(--r-xl); overflow:hidden; border:1px solid var(--line); }

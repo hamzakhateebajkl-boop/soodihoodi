@@ -71,6 +71,7 @@ const EDITIONS = [
     fam: "img/fam-najd.jpg",
     cut: "img/cut/fam-najd.webp",
     scale: "img/scale-najd.jpg",
+    life: "img/stadium-najd.jpg",
     sky: "#8FC9FF", // light backdrop wash behind the hero family // hero cutout — people only, transparent bg // family gallery shot — section hides for editions without one
     ink: "#0B4EA2",   // text-safe dark variant — NEVER use primary for text on white
     ar: "زعيم الدفا",
@@ -87,6 +88,7 @@ const EDITIONS = [
     fam: "img/fam-hijaz.jpg",
     cut: "img/cut/fam-hijaz.webp",
     scale: "img/scale-hijaz.jpg",
+    life: "img/stadium-hijaz.jpg",
     sky: "#FFD98A", // light backdrop wash behind the hero family // hero cutout — people only, transparent bg
     fg: "#14161A",
     img: "img/hijaz.jpg",
@@ -105,6 +107,7 @@ const EDITIONS = [
     fam: "img/fam-watan.jpg",
     cut: "img/cut/fam-watan.webp",
     scale: "img/scale-watan.jpg",
+    life: "img/stadium-watan.jpg",
     sky: "#9ADFB8", // light backdrop wash behind the hero family // hero cutout — people only, transparent bg
     img: "img/watan.jpg",
     ink: "#046A38",   // text-safe dark variant — NEVER use primary for text on white
@@ -122,6 +125,7 @@ const EDITIONS = [
     fam: "img/fam-nassr.jpg",
     cut: "img/cut/fam-nassr.webp",
     scale: "img/scale-nassr.jpg",
+    life: "img/stadium-nassr.jpg",
     sky: "#FFE08A", // light backdrop wash behind the hero family // hero cutout — people only, transparent bg
     fg: "#14161A",
     img: "img/nassr.jpg",
@@ -140,6 +144,7 @@ const EDITIONS = [
     fam: "img/fam-shabab.jpg",
     cut: "img/cut/fam-shabab.webp",
     scale: "img/scale-shabab.jpg",
+    life: "img/stadium-shabab.jpg",
     sky: "#E8DCC8", // light backdrop wash behind the hero family // hero cutout — people only, transparent bg
     fg: "#14161A",
     img: "img/shabab.jpg",
