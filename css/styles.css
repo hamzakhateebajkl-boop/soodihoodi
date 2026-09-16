@@ -1045,10 +1045,6 @@ html.gated .gate::before{
   display:grid; gap:18px; justify-items:center; text-align:center;
 }
 .gate__logo{ width:min(240px,74%); height:auto; }
-.gate__tag{
-  font-family:var(--disp); font-weight:700;
-  font-size:clamp(0.9375rem,3.6vw,1.125rem); color:#ECEEF2; letter-spacing:.01em;
-}
 .gate__soon{
   font-family:var(--disp); font-weight:900;
   font-size:0.75rem; letter-spacing:.34em; color:#0B4EA2;
