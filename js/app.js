@@ -92,6 +92,15 @@
       }
     }
 
+    const scaleImg = $("#scaleImg");
+    if (scaleImg && e.scale && scaleImg.getAttribute("src") !== e.scale) {
+      scaleImg.classList.add("swapping");
+      const sPre = new Image();
+      sPre.src = e.scale;
+      const sSwap = () => { scaleImg.src = e.scale; scaleImg.classList.remove("swapping"); };
+      sPre.complete ? sSwap() : (sPre.onload = sSwap, sPre.onerror = sSwap);
+    }
+
     $$("[data-shot]").forEach((im) => {
       if (im.getAttribute("src") !== e.img) im.src = e.img;
       im.alt = e[state.lang];
