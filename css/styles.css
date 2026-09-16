@@ -1015,21 +1015,75 @@ html[dir="rtl"] .cart{ transform:translateX(-100%); }
 }
 
 
-/* ============ private gate ============ */
+/* ============ private gate / coming soon ============ */
 .gate{ display:none; }
 html.gated .gate{
-  display:grid; place-items:center; position:fixed; inset:0; z-index:9999;
-  background:var(--ink); padding:20px;
+  display:grid; place-items:start center; align-content:start;
+  position:fixed; inset:0; z-index:9999;
+  min-height:100dvh;
+  padding:clamp(40px,11vh,90px) 20px calc(clamp(24px,7vw,48px) + env(safe-area-inset-bottom));
+  background:#07080B url("../img/coming-soon.jpg") center/cover no-repeat;
+  overflow-y:auto;
 }
 html.gated body > *:not(.gate){ visibility:hidden; }
-.gate__box{ text-align:center; display:grid; gap:16px; justify-items:center; max-width:340px; width:100%; }
-.gate__logo{ height:30px; width:auto; }
-.gate__hint{ color:var(--mut); font-size:0.875rem; }
-.gate__form{ display:flex; gap:8px; width:100%; }
-.gate__input{
-  flex:1; min-width:0; background:var(--ink-2); border:1px solid var(--line); border-radius:12px;
-  color:var(--txt); padding:12px 16px; font:inherit; text-align:center; letter-spacing:.2em;
+html.gated body{ overflow:hidden; }
+
+/* readability scrim over the photo */
+html.gated .gate::before{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background:linear-gradient(180deg,
+    rgba(7,8,11,.92) 0%,
+    rgba(7,8,11,.80) 30%,
+    rgba(7,8,11,.38) 52%,
+    rgba(7,8,11,.30) 70%,
+    rgba(7,8,11,.72) 100%);
 }
-.gate__input:focus{ outline:2px solid var(--ed-acc); outline-offset:2px; }
-.gate__btn{ white-space:nowrap; }
-.gate__err{ color:#ff8f8f; font-size:0.8125rem; }
+
+.gate__box{
+  position:relative; z-index:1;
+  width:100%; max-width:420px;
+  display:grid; gap:18px; justify-items:center; text-align:center;
+}
+.gate__logo{ width:min(240px,74%); height:auto; }
+.gate__tag{
+  font-family:var(--disp); font-weight:700;
+  font-size:clamp(0.9375rem,3.6vw,1.125rem); color:#ECEEF2; letter-spacing:.01em;
+}
+.gate__soon{
+  font-family:var(--disp); font-weight:900;
+  font-size:0.75rem; letter-spacing:.34em; color:#0B4EA2;
+  background:#fff; border-radius:99px; padding:7px 20px 7px 24px; line-height:1;
+}
+.gate__hint{ font-size:0.875rem; line-height:1.7; color:#A8AFBB; max-width:30ch; }
+
+.gate__form{ display:grid; gap:10px; width:100%; margin-block-start:2px; }
+.gate__input{
+  width:100%; min-width:0;
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.18); border-radius:14px;
+  color:#fff; padding:15px 18px;
+  font-family:var(--body); font-size:1rem; /* 16px — stops iOS zoom-on-focus */
+  text-align:center; letter-spacing:.06em;
+  transition:border-color .25s,background .25s;
+}
+.gate__input::placeholder{ color:rgba(255,255,255,.42); letter-spacing:normal; }
+.gate__input:focus{ outline:none; border-color:#8FC2FF; background:rgba(255,255,255,.11); }
+.gate__btn{
+  width:100%; padding:15px 22px; border-radius:99px;
+  background:#fff; color:#0B1220;
+  font-family:var(--disp); font-weight:800; font-size:1rem; line-height:1;
+  transition:transform .2s var(--ease-o),box-shadow .25s;
+  box-shadow:0 12px 30px -12px rgba(0,0,0,.7);
+}
+.gate__btn:hover{ transform:translateY(-2px); box-shadow:0 18px 40px -14px rgba(0,0,0,.8); }
+.gate__btn:active{ transform:translateY(1px) scale(.985); }
+.gate__err{ color:#FF9B9B; font-size:0.8125rem; }
+
+@media (min-width:520px){
+  .gate__form{ grid-template-columns:1fr auto; }
+  .gate__btn{ width:auto; }
+}
+@media (max-width:360px){
+  .gate__box{ gap:14px; }
+  .gate__logo{ width:200px; }
+}
