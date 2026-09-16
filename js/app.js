@@ -61,7 +61,17 @@
 
     const hero = $("#heroShot");
     if (hero) {
-      if (hero.getAttribute("src") !== e.img) hero.src = e.img;
+      const shot = e.cut || e.img;
+      if (hero.getAttribute("src") !== shot) {
+        hero.classList.add("swapping");
+        const pre = new Image();
+        pre.src = shot;
+        const swap = () => {
+          hero.src = shot;
+          hero.classList.remove("swapping");
+        };
+        pre.complete ? swap() : (pre.onload = swap, pre.onerror = swap);
+      }
       hero.alt = `${state.lang === "ar" ? "سودي هودي" : "SoodiHoodi"} — ${e[state.lang]}`;
     }
     const crew = $("#crew"), crewImg = $("#crewImg");
@@ -110,9 +120,11 @@
               aria-checked="${e.id === state.edition}"
               title="${e[state.lang]}${e.comingSoon ? " — " + t("soonBadge") : ""}"
               aria-label="${e[state.lang]}${e.comingSoon ? " — " + t("soonBadge") : ""}">
-        <i style="background:${e.primary}">
+        <span class="sw__img"><img src="${e.img}" alt="" loading="lazy" width="120" height="120"></span>
+        <i class="sw__bar" aria-hidden="true" style="background:${e.primary}">
           <b style="position:absolute;inset-block:0;inset-inline-end:0;width:38%;background:${e.secondary}"></b>
         </i>
+        <span class="sw__name">${e[state.lang]}</span>
       </button>`
     ).join("");
 
@@ -598,6 +610,35 @@
   }
 
   /* =========================================================
+     HERO TOUR — cycle every edition once on load so visitors
+     discover the five team colours without touching anything.
+     Stops the moment the user interacts.
+     ========================================================= */
+  function heroTour() {
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const ids = EDITIONS.filter((e) => !e.comingSoon).map((e) => e.id);
+    if (ids.length < 2) return;
+
+    // warm the cache so swaps never flash
+    ids.forEach((id) => { const e = ed(id); const i = new Image(); i.src = e.cut || e.img; });
+
+    let i = ids.indexOf(state.edition);
+    if (i < 0) i = 0;
+    let steps = 0;
+    const timer = setInterval(() => {
+      if (document.hidden) return;
+      i = (i + 1) % ids.length;
+      steps++;
+      applyEdition(ids[i], false);
+      if (steps >= ids.length) stop(); // one full lap, back where we started
+    }, 2600);
+    const stop = () => clearInterval(timer);
+    ["pointerdown", "keydown", "wheel", "touchstart"].forEach((ev) =>
+      addEventListener(ev, stop, { once: true, passive: true })
+    );
+  }
+
+  /* =========================================================
      BOOT
      ========================================================= */
   function init() {
@@ -619,6 +660,7 @@
 
     cineInit();
     tiltInit();
+    addEventListener("load", () => setTimeout(heroTour, 1400), { once: true });
 
     // header shadow on scroll
     const hdr = $("#hdr");

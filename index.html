@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&family=Archivo:wdth,wght@62..125,400..900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/styles.css?v=3">
 </head>
 <body>
 
@@ -71,50 +71,43 @@
   <div class="hero__grid" aria-hidden="true"></div>
   <div class="hero__glow" aria-hidden="true"></div>
 
-  <div class="wrap hero__in">
-    <div class="hero__copy">
-      <p class="eyebrow rv" style="--d:0ms">
-        <span class="dot" aria-hidden="true"></span>
-        <span data-ar="صُنع لعشّاق الكورة في السعودية" data-en="Made for football nights in Saudi">صُنع لعشّاق الكورة في السعودية</span>
-      </p>
+  <div class="wrap hero__head">
+    <p class="eyebrow rv" style="--d:0ms">
+      <span class="dot" aria-hidden="true"></span>
+      <span data-ar="صُنع لعشّاق الكورة في السعودية" data-en="Made for football nights in Saudi">صُنع لعشّاق الكورة في السعودية</span>
+    </p>
 
-      <h1 class="rv" style="--d:80ms">
-        <span class="l1" data-ar="مو هودي." data-en="NOT A HOODIE.">مو هودي.</span>
-        <span class="l2" data-ar="بطانية تلبسها" data-en="A BLANKET YOU WEAR">بطانية تلبسها</span>
-      </h1>
+    <h1 class="rv" style="--d:80ms">
+      <span class="l1" data-ar="مو هودي." data-en="NOT A HOODIE.">مو هودي.</span>
+      <span class="l2" data-ar="بطانية تلبسها" data-en="A BLANKET YOU WEAR">بطانية تلبسها</span>
+    </h1>
+  </div>
 
-      <p class="lede rv" style="--d:180ms" data-ar="هودي بطانية واسع يلفّك من راسك إلى ركبك. اقعد في الاستراحة، شغّل المباراة، وخلّ المكيّف يسوي اللي يبيه." data-en="An oversized blanket hoodie that wraps you head to knee. Settle into the istiraha, start the match, and let the AC do its worst.">
-        هودي بطانية واسع يلفّك من راسك إلى ركبك. اقعد في الاستراحة، شغّل المباراة، وخلّ المكيّف يسوي اللي يبيه.
-      </p>
+  <!-- full-bleed: giant wordmark behind the family -->
+  <div class="bigstage rv" style="--d:140ms">
+    <div class="bigstage__mark" aria-hidden="true">SOODIHOODI</div>
+    <img class="bigstage__fam" id="heroShot" src="img/cut/fam-najd.png" alt="عائلة تلبس هودي بطانية سودي هودي" width="1200" height="895" fetchpriority="high">
+    <div class="bigstage__floor" aria-hidden="true"></div>
+  </div>
 
-      <div class="hero__cta rv" style="--d:260ms">
-        <a href="#shop" class="btn btn--go" data-ar="اختر إصدارك" data-en="Pick your edition">اختر إصدارك</a>
-        <a href="#fabric" class="btn btn--ghost" data-ar="وش الخامة؟" data-en="See the fabric">وش الخامة؟</a>
-      </div>
-
-      <ul class="hero__pills rv" style="--d:340ms">
-        <li data-ar="٣٨٠ جم/م² شيربا" data-en="380 gsm sherpa">٣٨٠ جم/م² شيربا</li>
-        <li data-ar="مقاس واحد يلبس الكل" data-en="One size fits most">مقاس واحد يلبس الكل</li>
-        <li data-ar="جيب يبلع جوالين وريموت" data-en="Pocket fits 2 phones + remote">جيب يبلع جوالين وريموت</li>
-      </ul>
+  <div class="wrap hero__foot">
+    <div class="hero__cta rv" style="--d:200ms">
+      <a href="#shop" class="btn btn--go" data-ar="اختر إصدارك" data-en="Pick your edition">اختر إصدارك</a>
+      <a href="#fabric" class="btn btn--ghost" data-ar="وش الخامة؟" data-en="See the fabric">وش الخامة؟</a>
     </div>
 
-    <div class="hero__art rv" style="--d:140ms">
-      <div class="stage">
-        <div class="stage__ring" aria-hidden="true"></div>
-        <div class="stage__ring stage__ring--2" aria-hidden="true"></div>
-        <img class="shot shot--hero" id="heroShot" src="img/najd.jpg" alt="هودي بطانية سودي هودي" width="1400" height="1400">
-        <div class="stage__shine" aria-hidden="true"></div>
-        <div class="stage__floor" aria-hidden="true"></div>
-      </div>
+    <ul class="hero__pills rv" style="--d:260ms">
+      <li data-ar="٣٨٠ جم/م² شيربا" data-en="380 gsm sherpa">٣٨٠ جم/م² شيربا</li>
+      <li data-ar="يوصل تحت الركبة — بطانية فعلاً" data-en="Knee-length — an actual blanket">يوصل تحت الركبة — بطانية فعلاً</li>
+      <li data-ar="جيب يبلع جوالين وريموت" data-en="Pocket fits 2 phones + remote">جيب يبلع جوالين وريموت</li>
+    </ul>
 
-      <div class="swatchbar" role="radiogroup" aria-label="Edition">
-        <!-- injected -->
-      </div>
-      <p class="swatchbar__lbl">
-        <span data-ar="الإصدار الحالي:" data-en="Current edition:">الإصدار الحالي:</span>
-        <b id="edName">أزرق نجد</b>
-      </p>
+    <p class="teampick__hd rv" style="--d:320ms">
+      <span class="teampick__title" data-ar="اختر فريقك" data-en="Pick your team">اختر فريقك</span>
+      <em class="teampick__hint" data-ar="اضغط اللون — والموقع كله يتغيّر معك" data-en="Tap a colour — the whole page re-themes">اضغط اللون — والموقع كله يتغيّر معك</em>
+    </p>
+    <div class="swatchbar rv" style="--d:380ms" role="radiogroup" aria-label="Edition">
+      <!-- injected -->
     </div>
   </div>
 
@@ -469,7 +462,7 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="js/data.js"></script>
-<script src="js/app.js"></script>
+<script src="js/data.js?v=3"></script>
+<script src="js/app.js?v=3"></script>
 </body>
 </html>
