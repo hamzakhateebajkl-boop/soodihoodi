@@ -54,6 +54,7 @@
     r.setProperty("--ed-acc", e.accent);
     r.setProperty("--ed-glow", e.glow);
     r.setProperty("--ed-fg", e.fg || "#fff");
+    r.setProperty("--ed-sky", e.sky || "transparent");
     document.documentElement.dataset.edition = e.id;
 
     const nameEl = $("#edName");
