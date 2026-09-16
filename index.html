@@ -6,6 +6,7 @@
 <title>سودي هودي — مو هودي، بطانية تلبسها | SoodiHoodi</title>
 <meta name="description" content="هودي بطانية واسع يلفّك من راسك لركبتك — صُنع لعشّاق الكورة في السعودية. اختر ألوان فريقك، وتوصيل سريع خلال 4 أيام.">
 <meta name="theme-color" content="#08090C">
+<meta name="robots" content="noindex, nofollow">
 
 <!-- Social sharing (WhatsApp / Twitter / iMessage) -->
 <link rel="canonical" href="https://soodihoodi.com/">
@@ -31,6 +32,35 @@
 <link rel="stylesheet" href="css/styles.css?v=6">
 </head>
 <body>
+
+<!-- ============ PRIVATE GATE (remove this block + noindex meta to go public) ============ -->
+<div class="gate" id="gate">
+  <div class="gate__box">
+    <img src="img/logo.png" alt="SoodiHoodi" class="gate__logo">
+    <p class="gate__hint" data-ar="الموقع تحت التجهيز — أدخل كلمة المرور" data-en="Private preview — enter password">الموقع تحت التجهيز — أدخل كلمة المرور</p>
+    <form class="gate__form" id="gateForm">
+      <input class="gate__input" id="gateInput" type="password" autocomplete="off" placeholder="••••••••" aria-label="Password">
+      <button class="btn btn--go gate__btn" type="submit" data-ar="دخول" data-en="Enter">دخول</button>
+    </form>
+    <p class="gate__err" id="gateErr" hidden data-ar="كلمة المرور غير صحيحة" data-en="Wrong password">كلمة المرور غير صحيحة</p>
+  </div>
+</div>
+<script>
+(function(){
+  var KEY="sh_gate_v1", PASS="SOODI2026";
+  try{ if(localStorage.getItem(KEY)===PASS){ document.documentElement.classList.add("ungated"); return; } }catch(e){}
+  document.documentElement.classList.add("gated");
+  addEventListener("DOMContentLoaded",function(){
+    document.getElementById("gateForm").addEventListener("submit",function(ev){
+      ev.preventDefault();
+      var v=document.getElementById("gateInput").value.trim();
+      if(v.toUpperCase()===PASS){ try{localStorage.setItem(KEY,PASS)}catch(e){}
+        document.documentElement.classList.remove("gated"); document.documentElement.classList.add("ungated");
+      } else { document.getElementById("gateErr").hidden=false; }
+    });
+  });
+})();
+</script>
 
 <a class="skip" href="#main" data-ar="تخطَّ إلى المحتوى" data-en="Skip to content">تخطَّ إلى المحتوى</a>
 

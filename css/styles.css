@@ -1013,3 +1013,23 @@ html[dir="rtl"] .cart{ transform:translateX(-100%); }
   .ci{ grid-template-columns:56px 1fr auto; }
   .ftr__col a{ padding-block:10px; }
 }
+
+
+/* ============ private gate ============ */
+.gate{ display:none; }
+html.gated .gate{
+  display:grid; place-items:center; position:fixed; inset:0; z-index:9999;
+  background:var(--ink); padding:20px;
+}
+html.gated body > *:not(.gate){ visibility:hidden; }
+.gate__box{ text-align:center; display:grid; gap:16px; justify-items:center; max-width:340px; width:100%; }
+.gate__logo{ height:30px; width:auto; }
+.gate__hint{ color:var(--mut); font-size:0.875rem; }
+.gate__form{ display:flex; gap:8px; width:100%; }
+.gate__input{
+  flex:1; min-width:0; background:var(--ink-2); border:1px solid var(--line); border-radius:12px;
+  color:var(--txt); padding:12px 16px; font:inherit; text-align:center; letter-spacing:.2em;
+}
+.gate__input:focus{ outline:2px solid var(--ed-acc); outline-offset:2px; }
+.gate__btn{ white-space:nowrap; }
+.gate__err{ color:#ff8f8f; font-size:0.8125rem; }
