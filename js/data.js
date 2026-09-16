@@ -52,6 +52,9 @@ const SHOPIFY = {
     "classic-watan-adult": "53971290751341", "classic-watan-kids": "53971290784109",
     "classic-nassr-adult": "53971290816877", "classic-nassr-kids": "53971290849645",
     "classic-shabab-adult": "53971290882413","classic-shabab-kids": "53971290915181",
+    /* TODO: the five "classic-<edition>-baby" variants don't exist in Shopify
+       yet — create them there and paste the ids here before going live.
+       Until then checkout falls back to WhatsApp for any baby line. */
     "terrace-najd-adult": "53971294650733",  "terrace-najd-kids": "53971294683501",
     "terrace-hijaz-adult": "53971294716269", "terrace-hijaz-kids": "53971294749037",
     "terrace-watan-adult": "53971294781805", "terrace-watan-kids": "53971294814573",
@@ -166,6 +169,7 @@ const EDITIONS = [
    SIZES
    --------------------------------------------------------- */
 const SIZES = {
+  baby:  { ar: "بيبي",    en: "Baby"  },
   kids:  { ar: "أطفال",   en: "Kids"  },
   adult: { ar: "كبار",    en: "Adult" }
 };
@@ -198,9 +202,9 @@ const PRODUCTS = [
     en: "The Classic Blanket Hoodie",
     descAr: "طبقتين، مقاس واسع، وجيب كنغر كبير. نقطة البداية الصح.",
     descEn: "Two layers, oversized cut, big kangaroo pocket. The right place to start.",
-    sizes: ["adult", "kids"],
-    prices:    { adult: 299, kids: 199 },
-    compareAt: { adult: 359, kids: 239 },
+    sizes: ["adult", "kids", "baby"],
+    prices:    { adult: 299, kids: 199, baby: 149 },
+    compareAt: { adult: 359, kids: 239, baby: 179 },
     badgeAr: "الأكثر مبيعاً",
     badgeEn: "Best seller"
   }
