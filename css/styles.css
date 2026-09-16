@@ -170,7 +170,8 @@ html[dir="rtl"] .ticker__row{ animation-name:tick-rtl; }
 /* =========================================================
    HERO
    ========================================================= */
-.hero{ position:relative; overflow:hidden; padding-block:clamp(48px,7vw,88px) clamp(60px,9vw,120px); isolation:isolate; }
+.hero{ position:relative; overflow:hidden; padding-block:clamp(20px,3vw,40px) clamp(60px,9vw,120px); isolation:isolate; }
+.hero__head{ margin-block-start:clamp(20px,3vw,34px); }
 
 .hero__glow{
   position:absolute; z-index:-3; inset-block-start:-24%; inset-inline-end:-8%;
