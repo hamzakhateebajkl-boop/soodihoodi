@@ -18,6 +18,12 @@
   const $  = (s, r) => (r || document).querySelector(s);
   const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
   const t  = (k) => (T[k] ? T[k][state.lang] : k);
+  // t() with {placeholder} substitution, e.g. tf("bundleOn", {pct: 15})
+  const tf = (k, vars) =>
+    Object.entries(vars).reduce(
+      (str, [key, val]) => str.replace(new RegExp("\\{" + key + "\\}", "g"), val),
+      t(k)
+    );
   const ed = (id) => EDITIONS.find((e) => e.id === id) || EDITIONS[0];
   const prod = (id) => PRODUCTS.find((p) => p.id === id);
 
@@ -158,6 +164,146 @@
   }
 
   /* =========================================================
+     FAMILY BUNDLE BUILDER
+
+     state.build is a flat list of people: [{size, ed}, ...]. Each person
+     carries their own edition, which is the whole reason this is a builder
+     and not a set of fixed pack SKUs — a household split between two clubs
+     still has to be able to order together.
+     ========================================================= */
+  state.build = [];
+
+  const buildSubtotal = () =>
+    state.build.reduce((sum, r) => sum + unitPrice("classic", r.size), 0);
+  const buildPct = () => (tierFor(state.build.length) || { pct: 0 }).pct;
+  const buildSaving = () => Math.round((buildSubtotal() * buildPct()) / 100);
+
+  function renderPacks() {
+    const el = $("#bldPacks");
+    if (!el) return;
+    el.innerHTML = PACKS.map((pk) => {
+      const from = pk.slots.reduce((n, sz) => n + unitPrice("classic", sz), 0);
+      const pct = (tierFor(pk.slots.length) || { pct: 0 }).pct;
+      const who = pk.slots
+        .map((sz) => SIZES[sz][state.lang])
+        .join(state.lang === "ar" ? " + " : " + ");
+      return `<button class="pack" type="button" data-pack="${pk.id}">
+          <b>${pk[state.lang]}</b>
+          <span>${who}</span>
+          <em dir="ltr">${money(Math.round(from - (from * pct) / 100))}</em>
+        </button>`;
+    }).join("");
+
+    $$(".pack", el).forEach((b) =>
+      b.addEventListener("click", () => {
+        const pk = PACKS.find((x) => x.id === b.dataset.pack);
+        if (!pk) return;
+        // A pack is a starting point, not a fixed SKU: every slot defaults to
+        // the edition currently being browsed, then each row can change.
+        state.build = pk.slots.map((sz) => ({ size: sz, ed: state.edition }));
+        renderBuild();
+        $("#bldRows").scrollIntoView({ behavior: "smooth", block: "center" });
+      })
+    );
+  }
+
+  function renderBuild() {
+    const rows = $("#bldRows");
+    if (!rows) return;
+
+    if (!state.build.length) {
+      rows.innerHTML = `<div class="bld__empty">${t("bldEmpty")}</div>`;
+    } else {
+      rows.innerHTML = state.build
+        .map((r, i) => {
+          const sz = SIZES[r.size];
+          return `
+        <div class="brow" data-i="${i}">
+          <div class="brow__top">
+            <span class="brow__who">
+              <b>${sz[state.lang === "ar" ? "ageAr" : "ageEn"]}</b>
+              <span>${sz[state.lang]}</span>
+            </span>
+            <span class="brow__p" dir="ltr">${money(unitPrice("classic", r.size))}</span>
+            <button class="brow__x" type="button">${t("remove")}</button>
+          </div>
+          <div class="brow__eds" role="group" aria-label="${t("chooseEd")}">
+            ${EDITIONS.map(
+              (e) => `<button class="bed" type="button" data-ed="${e.id}"
+                        aria-pressed="${e.id === r.ed}" title="${e[state.lang]}"
+                        aria-label="${e[state.lang]}">
+                        <i style="background:${e.primary}"></i><i style="background:${e.secondary}"></i>
+                      </button>`
+            ).join("")}
+          </div>
+        </div>`;
+        })
+        .join("");
+
+      $$(".brow", rows).forEach((row) => {
+        const i = Number(row.dataset.i);
+        $(".brow__x", row).addEventListener("click", () => {
+          state.build.splice(i, 1);
+          renderBuild();
+        });
+        $$(".bed", row).forEach((b) =>
+          b.addEventListener("click", () => {
+            state.build[i].ed = b.dataset.ed;
+            renderBuild();
+          })
+        );
+      });
+    }
+
+    // add-a-person buttons
+    const add = $("#bldAdd");
+    add.innerHTML = Object.keys(SIZES)
+      .reverse()
+      .map(
+        (sz) => `<button class="badd" type="button" data-size="${sz}">
+            + ${SIZES[sz][state.lang]} <span>${SIZES[sz][state.lang === "ar" ? "ageAr" : "ageEn"]}</span>
+          </button>`
+      )
+      .join("");
+    $$(".badd", add).forEach((b) =>
+      b.addEventListener("click", () => {
+        state.build.push({ size: b.dataset.size, ed: state.edition });
+        renderBuild();
+      })
+    );
+
+    // summary
+    const sum = $("#bldSum");
+    const n = state.build.length;
+    if (!n) { sum.innerHTML = ""; return; }
+
+    const sub = buildSubtotal();
+    const pct = buildPct();
+    const saving = buildSaving();
+    const nt = nextTier(n);
+
+    sum.innerHTML = `
+      <div class="bsum__r"><span>${t("subtotal")}</span><b dir="ltr">${money(sub)}</b></div>
+      ${saving ? `<div class="bsum__r bsum__r--save">
+        <span>${tf("bundleOn", { pct })}</span><b dir="ltr">− ${money(saving)}</b></div>` : ""}
+      <div class="bsum__r bsum__r--total"><span>${t("total")}</span>
+        <b dir="ltr">${money(sub - saving)}</b></div>
+      ${nt ? `<p class="bsum__next">${tf(
+          nt.min - n > 1 ? "bundleAdd2" : "bundleAdd1", { pct: nt.pct }
+        )}</p>` : ""}
+      <button class="btn btn--go" type="button" id="bldAddAll">${tf("bldAddAll", { n })}</button>`;
+
+    $("#bldAddAll").addEventListener("click", () => {
+      const n = state.build.length;
+      state.build.forEach((r) => addToCart("classic", r.size, r.ed, true));
+      state.build = [];
+      renderBuild();
+      toast(tf("bldAdded", { n }));
+      openCart(true);
+    });
+  }
+
+  /* =========================================================
      RENDER — swatches
      ========================================================= */
   function renderSwatches() {
@@ -255,7 +401,11 @@
           ${p.sizes
             .map(
               (s) => `<button class="szb" type="button" data-size="${s}"
-                        aria-pressed="${pick === s}">${SIZES[s][state.lang]}</button>`
+                        aria-pressed="${pick === s}"
+                        aria-label="${SIZES[s][state.lang]} — ${SIZES[s][state.lang === "ar" ? "ageAr" : "ageEn"]}">
+                        <b>${SIZES[s][state.lang === "ar" ? "ageAr" : "ageEn"]}</b>
+                        <i>${SIZES[s][state.lang]}</i>
+                      </button>`
             )
             .join("")}
         </div>
@@ -293,15 +443,18 @@
   /* =========================================================
      CART
      ========================================================= */
-  function addToCart(pid, size) {
-    const key = `${pid}|${size}|${state.edition}`;
+  // edId is optional: the product card passes nothing and follows the browsed
+  // edition, while the bundle builder passes one edition per person.
+  function addToCart(pid, size, edId, quiet) {
+    const e = edId || state.edition;
+    const key = `${pid}|${size}|${e}`;
     const line = state.cart.find((l) => l.key === key);
     if (line) line.qty += 1;
-    else state.cart.push({ key, pid, size, ed: state.edition, qty: 1 });
+    else state.cart.push({ key, pid, size, ed: e, qty: 1 });
     save();
     renderCart();
     bumpCount();
-    toast(t("added"));
+    if (!quiet) toast(t("added"));
   }
 
   function setQty(key, delta) {
@@ -326,10 +479,15 @@
     state.cart.reduce((sum, l) => sum + unitPrice(l.pid, l.size) * l.qty, 0);
   const cartCount = () => state.cart.reduce((n, l) => n + l.qty, 0);
 
-  // Family bundle: buy BUNDLE.minQty or more, take BUNDLE.pct off the order.
-  const bundleOn = () => cartCount() >= BUNDLE.minQty;
+  // Family bundle: tiered by headcount, highest matching tier wins.
+  const tierFor = (n) => BUNDLE.tiers.find((t) => n >= t.min) || null;
+  const nextTier = (n) =>
+    [...BUNDLE.tiers].reverse().find((t) => t.min > n) || null;
+
+  const bundlePct = () => (tierFor(cartCount()) || { pct: 0 }).pct;
+  const bundleOn = () => bundlePct() > 0;
   const bundleSaving = () =>
-    bundleOn() ? Math.round((cartSubtotal() * BUNDLE.pct) / 100) : 0;
+    Math.round((cartSubtotal() * bundlePct()) / 100);
   const cartTotal = () => cartSubtotal() - bundleSaving();
 
   function bumpCount() {
@@ -394,14 +552,18 @@
     if (saving) {
       bEl.hidden = false;
       bEl.className = "cart__bundle cart__bundle--on";
-      bEl.textContent = `${t("bundleOn")} — ${t("saved")} ${money(saving)}`;
+      bEl.textContent =
+        `${tf("bundleOn", { pct: bundlePct() })} — ${t("saved")} ${money(saving)}`;
       subRow.hidden = false;
       $("#cartSub").textContent = money(sub);
     } else {
       subRow.hidden = true;
       bEl.hidden = !state.cart.length;
       bEl.className = "cart__bundle";
-      bEl.textContent = t("bundleNudge");
+      const nt = nextTier(cartCount());
+      bEl.textContent = nt
+        ? tf(nt.min - cartCount() > 1 ? "bundleAdd2" : "bundleAdd1", { pct: nt.pct })
+        : "";
     }
 
     $("#cartTotal").textContent = money(total);
@@ -523,6 +685,8 @@
     renderSwatches();
     renderRail();
     renderShop();
+    renderPacks();
+    renderBuild();
     renderCart();
     applyEdition(state.edition, false);
   }
@@ -724,12 +888,14 @@
       renderSwatches();
       renderRail();
       renderShop();
+      renderPacks();
+      renderBuild();
       renderCart();
       applyEdition(state.edition, false);
     }
 
     // static reveals
-    observe($$(".sec-h, .why__c, .rev, .acc__i, .tbl-wrap, .fab__art, .fab__copy, .strip__in"));
+    observe($$(".sec-h, .why__c, .rev, .acc__i, .tbl-wrap, .fab__art, .fab__copy, .strip__in, .bld__box"));
 
     cineInit();
     tiltInit();

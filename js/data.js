@@ -198,18 +198,53 @@ const EDITIONS = [
 /* ---------------------------------------------------------
    SIZES
    --------------------------------------------------------- */
+/* Parents shop by age, not by our category names, so the age band is the
+   headline on every size control and the category name is the subtitle.
+
+   The bands are set by the garment length, not by guesswork: a hem reaches
+   the knee at roughly 55% of the wearer's height. Baby is 58 cm long, so it
+   stops covering the knee past ~110 cm (age 5). Kids is 80 cm, so it stops
+   past ~150 cm (age 12) — a 14-year-old belongs in the adult size, which
+   already covers 150–200 cm. */
 const SIZES = {
-  baby:  { ar: "بيبي",    en: "Baby"  },
-  kids:  { ar: "أطفال",   en: "Kids"  },
-  adult: { ar: "كبار",    en: "Adult" }
+  baby:  { ar: "بيبي",  en: "Baby",  ageAr: "2–5 سنوات",   ageEn: "Ages 2–5"  },
+  kids:  { ar: "أطفال", en: "Kids",  ageAr: "6–12 سنة",    ageEn: "Ages 6–12" },
+  adult: { ar: "كبار",  en: "Adult", ageAr: "13 سنة فأكثر", ageEn: "Ages 13+"  }
 };
 
 /* ---------------------------------------------------------
    FAMILY BUNDLE
    The whole point is getting one household to buy two or three.
-   Change `pct` to whatever your margin actually supports.
+
+   Tiered, not flat: every extra person visibly raises the discount, which
+   is the only reason a "family bundle" persuades anyone. Highest matching
+   tier wins. Change the percentages to whatever your margin supports —
+   at 20% off a 4-person set still clears roughly 50% gross.
    --------------------------------------------------------- */
-const BUNDLE = { minQty: 2, pct: 15 };
+const BUNDLE = {
+  tiers: [
+    { min: 4, pct: 20 },
+    { min: 3, pct: 15 },
+    { min: 2, pct: 10 }
+  ]
+};
+
+/* ---------------------------------------------------------
+   PACKS — one-tap starting points for the bundle builder.
+
+   These are NOT fixed SKUs. Two adults plus one kid, with five editions to
+   choose from per person, would be 125 variants — and the whole point is
+   that a household supporting two different clubs can still buy together.
+   So a pack just pre-fills the builder with a row per person; the shopper
+   then picks the edition for each row independently.
+   --------------------------------------------------------- */
+const PACKS = [
+  { id: "trio-kid",   ar: "عائلة + طفل",    en: "Family + kid",     slots: ["adult", "adult", "kids"] },
+  { id: "trio-baby",  ar: "عائلة + بيبي",   en: "Family + baby",    slots: ["adult", "adult", "baby"] },
+  { id: "quad-kids",  ar: "عائلة + طفلين",  en: "Family + 2 kids",  slots: ["adult", "adult", "kids", "kids"] },
+  { id: "quad-mixed", ar: "عائلة + طفل وبيبي", en: "Family + kid & baby", slots: ["adult", "adult", "kids", "baby"] },
+  { id: "siblings",   ar: "طقم الإخوان",    en: "Siblings kit",     slots: ["kids", "baby"] }
+];
 
 /* ---------------------------------------------------------
    PRODUCTS
@@ -233,8 +268,11 @@ const PRODUCTS = [
     descAr: "طبقتين، مقاس واسع، وجيب كنغر كبير. نقطة البداية الصح.",
     descEn: "Two layers, oversized cut, big kangaroo pocket. The right place to start.",
     sizes: ["adult", "kids", "baby"],
-    prices:    { adult: 299, kids: 199, baby: 149 },
-    compareAt: { adult: 359, kids: 239, baby: 179 },
+    /* Nothing below 200 SAR. Unit cost is ~100–120, but the ladder between
+       sizes deliberately does NOT track fabric cost — a matching family set
+       is the product, and a 149 price tag makes the whole line read cheap. */
+    prices:    { adult: 299, kids: 259, baby: 229 },
+    compareAt: { adult: 359, kids: 309, baby: 279 },
     badgeAr: "الأكثر مبيعاً",
     badgeEn: "Best seller"
   }
@@ -265,12 +303,20 @@ const T = {
   soonBadge:   { ar: "قريباً",                 en: "Soon" },
   soonMsg:     { ar: "هذا الإصدار قريباً — تابعنا وبنعلمك أول ما ينزل",
                  en: "This edition is coming soon — follow us and we'll tell you the moment it drops" },
-  bundleNudge: {
-    ar: "أضف قطعة ثانية ووفّر 15٪ على الطلب",
-    en: "Add a second one and save 15% on the order"
-  },
-  bundleOn:    { ar: "خصم العائلة 15٪ مفعّل ✓", en: "Family discount 15% applied ✓" },
+  /* {pct} is filled from the live BUNDLE tier, so the copy can never drift
+     out of sync with the actual discount the cart is applying. */
+  bundleAdd1:  { ar: "أضف قطعة وحدة ووفّر {pct}٪ على الطلب",
+                 en: "Add 1 more and save {pct}% on your order" },
+  bundleAdd2:  { ar: "أضف قطعتين ووفّر {pct}٪ على الطلب",
+                 en: "Add 2 and save {pct}% on your order" },
+  bundleOn:    { ar: "خصم العائلة {pct}٪ مفعّل ✓", en: "Family discount {pct}% applied ✓" },
   saved:       { ar: "وفّرت",                    en: "You saved" },
+  total:       { ar: "المجموع",                  en: "Total" },
+  chooseEd:    { ar: "اختر الإصدار",             en: "Choose an edition" },
+  bldEmpty:    { ar: "ابدأ بطقم جاهز فوق، أو أضف أول واحد من الأزرار تحت.",
+                 en: "Start from a ready pack above, or add your first person below." },
+  bldAddAll:   { ar: "أضف {n} قطع إلى السلة",    en: "Add all {n} to cart" },
+  bldAdded:    { ar: "تمّت إضافة {n} قطع",       en: "Added {n} items" },
   subtotal:    { ar: "قبل الخصم",                en: "Before discount" },
   waIntro:     { ar: "السلام عليكم، أبغى أطلب من سودي هودي:",
                  en: "Hi! I'd like to order from SoodiHoodi:" },
