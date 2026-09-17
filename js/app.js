@@ -158,6 +158,7 @@
     $$(".edc").forEach((c) =>
       c.setAttribute("aria-current", String(c.dataset.ed === e.id))
     );
+    syncTeamChip();
 
     save();
     if (announce) toast(`${t("edSwitched")} ${e[state.lang]}`);
@@ -301,6 +302,58 @@
       toast(tf("bldAdded", { n }));
       openCart(true);
     });
+  }
+
+  /* =========================================================
+     PERSISTENT TEAM SWITCHER
+     ========================================================= */
+  function renderTeamSheet() {
+    const grid = $("#teamGrid");
+    if (!grid) return;
+    grid.innerHTML = EDITIONS.map(
+      (e) => `
+      <button class="tcard" type="button" role="radio" data-ed="${e.id}"
+              aria-checked="${e.id === state.edition}" aria-label="${e[state.lang]}">
+        <span class="tcard__on" aria-hidden="true">✓</span>
+        <span class="tcard__img"><img src="${e.img}" alt="" loading="lazy" width="120" height="120"></span>
+        <i class="tcard__bar" aria-hidden="true">
+          <i style="background:${e.primary}"></i><i style="background:${e.secondary}"></i>
+        </i>
+        <span class="tcard__n">${e[state.lang]}</span>
+      </button>`
+    ).join("");
+
+    $$(".tcard", grid).forEach((b) =>
+      b.addEventListener("click", () => {
+        applyEdition(b.dataset.ed, true);
+        openTeamSheet(false);
+      })
+    );
+  }
+
+  function openTeamSheet(open) {
+    const sheet = $("#teamSheet");
+    if (!sheet) return;
+    if (open) openCart(false);
+    sheet.classList.toggle("open", open);
+    sheet.setAttribute("aria-hidden", String(!open));
+    $("#teamBtn").setAttribute("aria-expanded", String(open));
+    $("#scrim").hidden = !open;
+    document.body.style.overflow = open ? "hidden" : "";
+    if (open) $(".tcard[aria-checked='true']", sheet)?.focus();
+  }
+
+  // The chip is the running "a team is selected" signal, so it has to track
+  // the edition wherever the switch happened — hero, swipe, sheet or rail.
+  function syncTeamChip() {
+    const e = ed(state.edition);
+    const n = $("#teamChipName");
+    if (n) n.textContent = e[state.lang];
+    const btn = $("#teamBtn");
+    if (btn) btn.setAttribute("aria-label", `${t("changeTeam")} — ${e[state.lang]}`);
+    $$(".tcard").forEach((c) =>
+      c.setAttribute("aria-checked", String(c.dataset.ed === state.edition))
+    );
   }
 
   /* =========================================================
@@ -585,6 +638,10 @@
 
   /* ---- drawer ---- */
   function openCart(open) {
+    if (open) {
+      const sheet = $("#teamSheet");
+      if (sheet && sheet.classList.contains("open")) openTeamSheet(false);
+    }
     $("#cart").classList.toggle("open", open);
     $("#cart").setAttribute("aria-hidden", String(!open));
     $("#cartBtn").setAttribute("aria-expanded", String(open));
@@ -683,6 +740,7 @@
 
     save();
     renderSwatches();
+    renderTeamSheet();
     renderRail();
     renderShop();
     renderPacks();
@@ -886,6 +944,7 @@
     if (state.lang !== "ar") applyLang(state.lang);
     else {
       renderSwatches();
+      renderTeamSheet();
       renderRail();
       renderShop();
       renderPacks();
@@ -902,19 +961,38 @@
     swipeInit();
     addEventListener("load", () => setTimeout(heroTour, 1400), { once: true });
 
-    // header shadow on scroll
+    // header shadow on scroll — and, once per session, a nudge on the team
+    // chip the first time the hero picker scrolls away, which is the exact
+    // moment the switcher stops being visible on the page itself.
     const hdr = $("#hdr");
-    const onScroll = () => hdr.classList.toggle("stuck", window.scrollY > 12);
+    const bar = $(".swatchbar");
+    const chip = $("#teamBtn");
+    let hinted = true;
+    try { hinted = !!sessionStorage.getItem("sh_chip_hint"); } catch (e) {}
+
+    const onScroll = () => {
+      hdr.classList.toggle("stuck", window.scrollY > 12);
+      if (hinted || !bar || !chip) return;
+      if (bar.getBoundingClientRect().bottom > 0) return;
+      hinted = true;
+      try { sessionStorage.setItem("sh_chip_hint", "1"); } catch (e) {}
+      chip.classList.add("hint");
+      setTimeout(() => chip.classList.remove("hint"), 5200);
+    };
     window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
+    hdr.classList.toggle("stuck", window.scrollY > 12);
 
     // cart wiring
     $("#cartBtn").addEventListener("click", () => openCart(true));
     $("#cartClose").addEventListener("click", () => openCart(false));
-    $("#scrim").addEventListener("click", () => openCart(false));
+    $("#teamBtn").addEventListener("click", () =>
+      openTeamSheet(!$("#teamSheet").classList.contains("open"))
+    );
+    $("#teamClose").addEventListener("click", () => openTeamSheet(false));
+    $("#scrim").addEventListener("click", () => { openCart(false); openTeamSheet(false); });
     $("#checkout").addEventListener("click", checkout);
     document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") openCart(false);
+      if (e.key === "Escape") { openCart(false); openTeamSheet(false); }
     });
 
     // language toggle

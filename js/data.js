@@ -313,6 +313,7 @@ const T = {
   saved:       { ar: "وفّرت",                    en: "You saved" },
   total:       { ar: "المجموع",                  en: "Total" },
   chooseEd:    { ar: "اختر الإصدار",             en: "Choose an edition" },
+  changeTeam:  { ar: "غيّر فريقك",               en: "Change your team" },
   bldEmpty:    { ar: "ابدأ بطقم جاهز فوق، أو أضف أول واحد من الأزرار تحت.",
                  en: "Start from a ready pack above, or add your first person below." },
   bldAddAll:   { ar: "أضف {n} قطع إلى السلة",    en: "Add all {n} to cart" },
