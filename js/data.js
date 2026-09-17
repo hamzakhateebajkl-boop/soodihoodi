@@ -71,6 +71,12 @@ const EDITIONS = [
   {
     id: "najd",
     img: "img/najd.jpg",
+    /* product-card shots: same three models, garment re-coloured per edition */
+    shots: {
+      adult: "img/shot-najd-adult.jpg",
+      kids:  "img/shot-najd-kids.jpg",
+      baby:  "img/shot-najd-baby.jpg"
+    },
     fam: "img/fam-najd.jpg",
     cut: "img/cut/fam-najd.webp",
     scale: "img/scale-najd.jpg",
@@ -95,6 +101,12 @@ const EDITIONS = [
     sky: "#FFD98A", // light backdrop wash behind the hero family // hero cutout — people only, transparent bg
     fg: "#14161A",
     img: "img/hijaz.jpg",
+    /* product-card shots: same three models, garment re-coloured per edition */
+    shots: {
+      adult: "img/shot-hijaz-adult.jpg",
+      kids:  "img/shot-hijaz-kids.jpg",
+      baby:  "img/shot-hijaz-baby.jpg"
+    },
     ink: "#7A5C00",   // text-safe dark variant — NEVER use primary for text on white
     ar: "عميد المدرجات",
     en: "Ameed Al-Mudarrajat",
@@ -113,6 +125,12 @@ const EDITIONS = [
     life: "img/stadium-watan.jpg",
     sky: "#9ADFB8", // light backdrop wash behind the hero family // hero cutout — people only, transparent bg
     img: "img/watan.jpg",
+    /* product-card shots: same three models, garment re-coloured per edition */
+    shots: {
+      adult: "img/shot-watan-adult.jpg",
+      kids:  "img/shot-watan-kids.jpg",
+      baby:  "img/shot-watan-baby.jpg"
+    },
     ink: "#046A38",   // text-safe dark variant — NEVER use primary for text on white
     ar: "راقي الدفا",
     en: "Raqi Al-Dafa",
@@ -132,6 +150,12 @@ const EDITIONS = [
     sky: "#FFE08A", // light backdrop wash behind the hero family // hero cutout — people only, transparent bg
     fg: "#14161A",
     img: "img/nassr.jpg",
+    /* product-card shots: same three models, garment re-coloured per edition */
+    shots: {
+      adult: "img/shot-nassr-adult.jpg",
+      kids:  "img/shot-nassr-kids.jpg",
+      baby:  "img/shot-nassr-baby.jpg"
+    },
     ink: "#1C3F94",
     ar: "فارس الدفا",
     en: "Faris Al-Dafa",
@@ -151,6 +175,12 @@ const EDITIONS = [
     sky: "#E8DCC8", // light backdrop wash behind the hero family // hero cutout — people only, transparent bg
     fg: "#14161A",
     img: "img/shabab.jpg",
+    /* product-card shots: same three models, garment re-coloured per edition */
+    shots: {
+      adult: "img/shot-shabab-adult.jpg",
+      kids:  "img/shot-shabab-kids.jpg",
+      baby:  "img/shot-shabab-baby.jpg"
+    },
     ink: "#1A1A1A",
     ar: "ليث الشتا",
     en: "Laith Al-Shita",

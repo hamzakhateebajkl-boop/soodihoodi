@@ -38,6 +38,26 @@
     localStorage.setItem(LS.lang, state.lang);
   };
 
+  // Product-card shot: a model wearing this edition in the picked size.
+  // Falls back to the flat garment shot if an edition has no model photos yet.
+  const cardShot = (e, size) => (e.shots && e.shots[size]) || e.img;
+
+  // Swap a card's photo when the size or the edition changes, with the same
+  // cross-fade the hero uses so the card doesn't flash white mid-swap.
+  function setCardShot(card, pid) {
+    const im = $("[data-pshot]", card);
+    if (!im) return;
+    const e = ed(state.edition);
+    const src = cardShot(e, state.picked[pid]);
+    im.alt = e[state.lang];
+    if (im.getAttribute("src") === src) return;
+    im.classList.add("swapping");
+    const pre = new Image();
+    pre.src = src;
+    const swap = () => { im.src = src; im.classList.remove("swapping"); };
+    pre.complete ? swap() : (pre.onload = swap, pre.onerror = swap);
+  }
+
   // Product shot for a given edition. Passing null follows the current edition.
   const shot = (e, cls) => {
     const x = e || ed(state.edition);
@@ -122,6 +142,9 @@
       if (im.getAttribute("src") !== e.img) im.src = e.img;
       im.alt = e[state.lang];
     });
+
+    // Product cards carry a model shot per size, so they swap separately.
+    $$(".pc").forEach((card) => setCardShot(card, card.dataset.p));
 
     $$(".sw").forEach((b) =>
       b.setAttribute("aria-checked", String(b.dataset.ed === e.id))
@@ -216,11 +239,13 @@
       state.picked[p.id] = pick;
 
       const badge = state.lang === "ar" ? p.badgeAr : p.badgeEn;
+      const e = ed(state.edition);
 
       return `
       <article class="pc io" data-p="${p.id}">
         ${badge ? `<span class="pc__tag">${badge}</span>` : ""}
-        <div class="pc__art">${shot(null)}</div>
+        <div class="pc__art"><img class="shot" data-pshot
+          src="${cardShot(e, pick)}" alt="${e[state.lang]}" loading="lazy"></div>
         <h3 class="pc__t">${p[state.lang]}</h3>
         <p class="pc__d">${state.lang === "ar" ? p.descAr : p.descEn}</p>
 
@@ -251,6 +276,7 @@
             x.setAttribute("aria-pressed", String(x === b))
           );
           $(".pc__price", card).innerHTML = priceBlock(pid, size);
+          setCardShot(card, pid);
         })
       );
 

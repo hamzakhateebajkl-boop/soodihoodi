@@ -722,14 +722,18 @@ html[dir="rtl"] .edc:hover .edc__go::after{ transform:translateX(-4px); }
 }
 .pc__art{
   position:relative; display:grid; place-items:center;
-  aspect-ratio:1/.9; margin-block-end:16px; border-radius:var(--r-l);
+  /* Portrait: the card shot is a full-body model and the knee-length hem is
+     the whole point — a landscape frame would crop the legs off. */
+  aspect-ratio:1/1.25; margin-block-end:16px; border-radius:var(--r-l);
   background:radial-gradient(ellipse at 50% 42%,color-mix(in srgb,var(--ed-glow) 22%,transparent),transparent 66%);
   overflow:hidden;
 }
 .pc__art .shot{
   width:100%; height:100%; object-fit:cover; border-radius:var(--r-l);
-  mix-blend-mode:normal; transition:transform .6s var(--ease-o);
+  mix-blend-mode:normal;
+  transition:transform .6s var(--ease-o), opacity .28s ease;
 }
+.pc__art .shot.swapping{ opacity:0; }
 .pc:hover .pc__art .shot{ transform:scale(1.06); }
 
 .pc__t{ font-size:1.3125rem; margin-block-end:5px; }
