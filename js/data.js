@@ -63,6 +63,11 @@ const SHOPIFY = {
   }
 };
 
+/* The edition every first-time visitor lands on. Named rather than taken
+   from EDITIONS[0], so reordering the list can never silently change the
+   first impression. Returning visitors keep their own last choice. */
+const DEFAULT_EDITION = "najd"; // زعيم الدفا
+
 /* ---------------------------------------------------------
    EDITIONS
    Colour-inspired only. No club names, crests, or marks.
@@ -76,6 +81,14 @@ const EDITIONS = [
       adult: "img/shot-najd-adult.jpg",
       kids:  "img/shot-najd-kids.jpg",
       baby:  "img/shot-najd-baby.jpg"
+    },
+    /* ~6 KB square crops of the same shots, for the bundle builder's
+       per-person picker — parents pick a design by seeing it, not by
+       decoding a colour chip. */
+    thumbs: {
+      adult: "img/thumb/shot-najd-adult.webp",
+      kids:  "img/thumb/shot-najd-kids.webp",
+      baby:  "img/thumb/shot-najd-baby.webp"
     },
     fam: "img/fam-najd.jpg",
     cut: "img/cut/fam-najd.webp",
@@ -107,6 +120,14 @@ const EDITIONS = [
       kids:  "img/shot-hijaz-kids.jpg",
       baby:  "img/shot-hijaz-baby.jpg"
     },
+    /* ~6 KB square crops of the same shots, for the bundle builder's
+       per-person picker — parents pick a design by seeing it, not by
+       decoding a colour chip. */
+    thumbs: {
+      adult: "img/thumb/shot-hijaz-adult.webp",
+      kids:  "img/thumb/shot-hijaz-kids.webp",
+      baby:  "img/thumb/shot-hijaz-baby.webp"
+    },
     ink: "#7A5C00",   // text-safe dark variant — NEVER use primary for text on white
     ar: "عميد المدرجات",
     en: "Ameed Al-Mudarrajat",
@@ -130,6 +151,14 @@ const EDITIONS = [
       adult: "img/shot-watan-adult.jpg",
       kids:  "img/shot-watan-kids.jpg",
       baby:  "img/shot-watan-baby.jpg"
+    },
+    /* ~6 KB square crops of the same shots, for the bundle builder's
+       per-person picker — parents pick a design by seeing it, not by
+       decoding a colour chip. */
+    thumbs: {
+      adult: "img/thumb/shot-watan-adult.webp",
+      kids:  "img/thumb/shot-watan-kids.webp",
+      baby:  "img/thumb/shot-watan-baby.webp"
     },
     ink: "#046A38",   // text-safe dark variant — NEVER use primary for text on white
     ar: "راقي الدفا",
@@ -156,6 +185,14 @@ const EDITIONS = [
       kids:  "img/shot-nassr-kids.jpg",
       baby:  "img/shot-nassr-baby.jpg"
     },
+    /* ~6 KB square crops of the same shots, for the bundle builder's
+       per-person picker — parents pick a design by seeing it, not by
+       decoding a colour chip. */
+    thumbs: {
+      adult: "img/thumb/shot-nassr-adult.webp",
+      kids:  "img/thumb/shot-nassr-kids.webp",
+      baby:  "img/thumb/shot-nassr-baby.webp"
+    },
     ink: "#1C3F94",
     ar: "فارس الدفا",
     en: "Faris Al-Dafa",
@@ -180,6 +217,14 @@ const EDITIONS = [
       adult: "img/shot-shabab-adult.jpg",
       kids:  "img/shot-shabab-kids.jpg",
       baby:  "img/shot-shabab-baby.jpg"
+    },
+    /* ~6 KB square crops of the same shots, for the bundle builder's
+       per-person picker — parents pick a design by seeing it, not by
+       decoding a colour chip. */
+    thumbs: {
+      adult: "img/thumb/shot-shabab-adult.webp",
+      kids:  "img/thumb/shot-shabab-kids.webp",
+      baby:  "img/thumb/shot-shabab-baby.webp"
     },
     ink: "#1A1A1A",
     ar: "ليث الشتا",

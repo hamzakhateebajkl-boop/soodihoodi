@@ -430,7 +430,7 @@ html[data-lang="en"] .hero h1{ line-height:.92; }
   background:color-mix(in srgb,var(--txt) 6%,transparent);
 }
 .sw__img img{ width:100%; height:100%; object-fit:cover; display:block; }
-.sw__bar{ display:block; width:60px; height:8px; border-radius:99px; position:relative; overflow:hidden; }
+.sw__bar{ display:block; width:60px; height:8px; border-radius:99px; }
 .sw__name{
   font-family:var(--disp); font-weight:700; font-size:0.6875rem; line-height:1.25;
   color:var(--mut); transition:color .3s; text-align:center;
@@ -673,10 +673,7 @@ html[dir="ltr"] .life__scrim{
 }
 .edc:hover{ transform:translateY(-7px); box-shadow:0 22px 44px -22px rgba(0,0,0,.34); }
 .edc[aria-current="true"]{ border-color:currentColor; box-shadow:0 0 0 2px currentColor inset; }
-.edc__sw{ height:78px; border-radius:var(--r-m); position:relative; overflow:hidden; }
-.edc__sw span{ position:absolute; inset-block:0; }
-.edc__sw span:nth-child(1){ inset-inline:0; }
-.edc__sw span:nth-child(2){ inset-inline-end:0; width:34%; }
+.edc__sw{ height:78px; border-radius:var(--r-m); display:block; }
 .edc--soon .edc__sw{ filter:saturate(.9); }
 .edc__badge{
   position:absolute; inset-block-start:12px; inset-inline-end:12px; z-index:2;
@@ -1149,15 +1146,31 @@ html.gated .gate::before{
 .brow__x:hover{ color:#FF7B7B; }
 
 /* per-row edition picker: two-tone chips, no club names */
-.brow__eds{ display:flex; gap:7px; flex-wrap:wrap; }
-.bed{
-  width:40px; height:26px; border-radius:8px; padding:0;
-  border:1.5px solid var(--line); overflow:hidden; position:relative;
-  display:flex; transition:border-color .2s,transform .2s;
+/* A parent picks a design by seeing it worn, not by decoding a colour chip. */
+.brow__eds{
+  /* Big enough to actually read the design — five across a phone gives 46px
+     thumbs, which defeats the point of showing photos at all. */
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(84px,1fr)); gap:8px;
 }
-.bed:hover{ transform:translateY(-1px); }
-.bed i{ flex:1; display:block; }
-.bed[aria-pressed="true"]{ border-color:var(--txt); box-shadow:0 0 0 2px color-mix(in srgb,var(--txt) 22%,transparent); }
+.bed{
+  padding:0; border-radius:11px; border:1.5px solid var(--line);
+  background:rgba(255,255,255,.03); overflow:hidden;
+  transition:border-color .2s,transform .2s,background .2s;
+}
+/* height:auto is load-bearing — the img's height="220" attribute is a
+   presentational hint that otherwise wins over aspect-ratio. */
+.bed img{ width:100%; height:auto; aspect-ratio:1; object-fit:cover; display:block; }
+.bed span{
+  display:block; font-size:0.625rem; font-weight:700; line-height:1.3;
+  padding:5px 3px 6px; color:var(--mut);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.bed:hover{ transform:translateY(-2px); border-color:var(--ed); }
+.bed[aria-pressed="true"]{
+  border-color:var(--ed-acc);
+  background:color-mix(in srgb,var(--ed) 18%,transparent);
+}
+.bed[aria-pressed="true"] span{ color:var(--txt); }
 
 /* ---- add-a-person row ---- */
 .bld__add{ display:flex; gap:8px; flex-wrap:wrap; margin-block-start:14px; }
@@ -1203,12 +1216,17 @@ html.gated .gate::before{
   color:var(--mut); transition:.25s; max-width:min(42vw,190px);
 }
 .teamchip:hover{ color:var(--txt); border-color:var(--ed); background:color-mix(in srgb,var(--ed) 12%,transparent); }
+/* Painted from the live edition tokens, so it needs no JS to stay in sync
+   and no child elements that Safari could drop inside a <button>. */
 .teamchip__bar{
-  flex:0 0 auto; width:24px; height:15px; border-radius:5px;
-  overflow:hidden; display:flex; border:1px solid rgba(255,255,255,.18);
-  background:var(--ed);
+  flex:0 0 auto; width:24px; height:15px; border-radius:5px; display:block;
+  border:1px solid rgba(255,255,255,.18);
+  background:linear-gradient(to left,var(--ed) 0 62%,var(--ed2) 62% 100%);
+  transition:background .65s var(--ease);
 }
-.teamchip__bar b{ width:38%; margin-inline-start:auto; background:var(--ed2); display:block; }
+html[dir="ltr"] .teamchip__bar{
+  background:linear-gradient(to right,var(--ed) 0 62%,var(--ed2) 62% 100%);
+}
 .teamchip__n{
   font-size:0.75rem; font-weight:700; white-space:nowrap;
   overflow:hidden; text-overflow:ellipsis; color:var(--txt);
@@ -1257,8 +1275,7 @@ html.gated .gate::before{
 }
 .tcard__img{ width:100%; aspect-ratio:1; border-radius:11px; overflow:hidden; background:var(--ink-2); }
 .tcard__img img{ width:100%; height:100%; object-fit:cover; }
-.tcard__bar{ width:100%; height:7px; border-radius:99px; overflow:hidden; display:flex; }
-.tcard__bar i{ flex:1; display:block; }
+.tcard__bar{ width:100%; height:7px; border-radius:99px; display:block; }
 .tcard__n{ font-size:0.6875rem; font-weight:700; line-height:1.35; text-align:center; color:var(--txt); }
 .tcard__on{
   position:absolute; inset-block-start:-7px; inset-inline-end:-7px;

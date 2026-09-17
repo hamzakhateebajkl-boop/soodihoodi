@@ -10,7 +10,7 @@
 
   const state = {
     lang: localStorage.getItem(LS.lang) || "ar",
-    edition: localStorage.getItem(LS.ed) || EDITIONS[0].id,
+    edition: localStorage.getItem(LS.ed) || DEFAULT_EDITION,
     cart: JSON.parse(localStorage.getItem(LS.cart) || "[]"),
     picked: {} // productId -> sizeKey
   };
@@ -24,7 +24,11 @@
       (str, [key, val]) => str.replace(new RegExp("\\{" + key + "\\}", "g"), val),
       t(k)
     );
-  const ed = (id) => EDITIONS.find((e) => e.id === id) || EDITIONS[0];
+  const ed = (id) =>
+    EDITIONS.find((e) => e.id === id) ||
+    EDITIONS.find((e) => e.id === DEFAULT_EDITION) ||
+    EDITIONS[0];
+  if (!EDITIONS.some((e) => e.id === state.edition)) state.edition = DEFAULT_EDITION;
   const prod = (id) => PRODUCTS.find((p) => p.id === id);
 
   // A saved cart can outlive the catalogue — a returning shopper may hold a
@@ -43,6 +47,22 @@
     localStorage.setItem(LS.ed, state.edition);
     localStorage.setItem(LS.lang, state.lang);
   };
+
+  /* Safari refuses to let a <button> be a real flex or positioning container:
+     it wraps button content in an anonymous box, so `flex:1` children collapse
+     to zero width and absolutely-positioned children never resolve. Every
+     two-tone swatch on this page lived inside a button and rendered blank on
+     iOS. Painting the split as a gradient on a single element sidesteps the
+     whole class of bug — no children to lose. */
+  const twoTone = (e, pct) => {
+    const p = pct == null ? 62 : pct;
+    const to = state.lang === "ar" ? "left" : "right";
+    return `linear-gradient(to ${to},${e.primary} 0 ${p}%,${e.secondary} ${p}% 100%)`;
+  };
+
+  // Small square crop of the model shot, for the bundle builder's picker.
+  const cardThumb = (e, size) =>
+    (e.thumbs && e.thumbs[size]) || (e.shots && e.shots[size]) || e.img;
 
   // Product-card shot: a model wearing this edition in the picked size.
   // Falls back to the flat garment shot if an edition has no model photos yet.
@@ -233,7 +253,8 @@
               (e) => `<button class="bed" type="button" data-ed="${e.id}"
                         aria-pressed="${e.id === r.ed}" title="${e[state.lang]}"
                         aria-label="${e[state.lang]}">
-                        <i style="background:${e.primary}"></i><i style="background:${e.secondary}"></i>
+                        <img src="${cardThumb(e, r.size)}" alt="" loading="lazy" width="220" height="220">
+                        <span>${e[state.lang]}</span>
                       </button>`
             ).join("")}
           </div>
@@ -316,9 +337,7 @@
               aria-checked="${e.id === state.edition}" aria-label="${e[state.lang]}">
         <span class="tcard__on" aria-hidden="true">✓</span>
         <span class="tcard__img"><img src="${e.img}" alt="" loading="lazy" width="120" height="120"></span>
-        <i class="tcard__bar" aria-hidden="true">
-          <i style="background:${e.primary}"></i><i style="background:${e.secondary}"></i>
-        </i>
+        <i class="tcard__bar" aria-hidden="true" style="background:${twoTone(e, 50)}"></i>
         <span class="tcard__n">${e[state.lang]}</span>
       </button>`
     ).join("");
@@ -369,9 +388,7 @@
               title="${e[state.lang]}${e.comingSoon ? " — " + t("soonBadge") : ""}"
               aria-label="${e[state.lang]}${e.comingSoon ? " — " + t("soonBadge") : ""}">
         <span class="sw__img"><img src="${e.img}" alt="" loading="lazy" width="120" height="120"></span>
-        <i class="sw__bar" aria-hidden="true" style="background:${e.primary}">
-          <b style="position:absolute;inset-block:0;inset-inline-end:0;width:38%;background:${e.secondary}"></b>
-        </i>
+        <i class="sw__bar" aria-hidden="true" style="background:${twoTone(e)}"></i>
         <span class="sw__name">${e[state.lang]}</span>
       </button>`
     ).join("");
@@ -394,10 +411,7 @@
         ${e.comingSoon ? `<span class="edc__badge">${t("soonBadge")}</span>` : ""}
         ${e.comingSoon && e.img
           ? `<span class="edc__sw edc__sw--img" aria-hidden="true" style="background-image:url('${e.img}')"></span>`
-          : `<span class="edc__sw" aria-hidden="true">
-              <span style="background:${e.primary}"></span>
-              <span style="background:${e.secondary}"></span>
-            </span>`}
+          : `<span class="edc__sw" aria-hidden="true" style="background:${twoTone(e, 66)}"></span>`}
         <span class="edc__t">${e[state.lang]}</span>
         <span class="edc__s">${state.lang === "ar" ? e.tagAr : e.tagEn}</span>
         <span class="edc__go">${e.comingSoon ? t("soonMsg") : t("pickEdition")}</span>
@@ -959,7 +973,11 @@
     cineInit();
     tiltInit();
     swipeInit();
-    addEventListener("load", () => setTimeout(heroTour, 1400), { once: true });
+    /* The hero used to auto-cycle all five editions on load. It existed to
+       make the picker discoverable — a job the header chip and its one-time
+       pulse now do without hijacking the first impression, which has to stay
+       on the default edition. heroTour() is left below, unused, if you ever
+       want it back. */
 
     // header shadow on scroll — and, once per session, a nudge on the team
     // chip the first time the hero picker scrolls away, which is the exact
