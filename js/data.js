@@ -387,7 +387,7 @@ const T = {
   packSave:    { ar: "وفّر {pct}٪",              en: "Save {pct}%" },
   bldAdded:    { ar: "تمّت إضافة {n} قطع",       en: "Added {n} items" },
   subtotal:    { ar: "قبل الخصم",                en: "Before discount" },
-  waIntro:     { ar: "السلام عليكم، أبغى أطلب من سودي هودي:",
+  waIntro:     { ar: "السلام عليكم، أبغى أطلب من SoodiHoodi:",
                  en: "Hi! I'd like to order from SoodiHoodi:" },
   waTotal:     { ar: "الإجمالي",                 en: "Total" },
   waBundle:    { ar: "بعد خصم العائلة 15٪",      en: "after 15% family discount" },

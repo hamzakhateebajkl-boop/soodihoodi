@@ -126,7 +126,8 @@
         };
         pre.complete ? swap() : (pre.onload = swap, pre.onerror = swap);
       }
-      hero.alt = `${state.lang === "ar" ? "سودي هودي" : "SoodiHoodi"} — ${e[state.lang]}`;
+      // The brand name is always written in Latin, in both languages.
+      hero.alt = `SoodiHoodi — ${e[state.lang]}`;
     }
     const crew = $("#crew"), crewImg = $("#crewImg");
     if (crew && crewImg) {
