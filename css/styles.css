@@ -1097,27 +1097,73 @@ html.gated .gate::before{
    a household split between two clubs can still order together.
    So a pack only pre-fills rows; each row picks its own edition.
    ========================================================= */
-.bld{ padding-block:clamp(56px,8vw,104px); background:linear-gradient(var(--ink),var(--ink-1)); }
+/* This is the main intended path, not a sidebar to the single-item shop, so
+   it gets its own lit backdrop rather than blending into the dark stack. */
+.bld{
+  padding-block:clamp(64px,9vw,120px);
+  background:
+    radial-gradient(ellipse 80% 55% at 50% 0%,
+      color-mix(in srgb,var(--ed-glow) 20%,transparent), transparent 70%),
+    linear-gradient(var(--ink-1),var(--ink));
+  border-block:1px solid var(--line-2);
+  transition:background .7s var(--ease);
+}
 
 /* ---- ready packs ---- */
 .bld__packs{
-  display:flex; gap:10px; margin-block-end:clamp(18px,3vw,26px);
+  display:flex; gap:clamp(10px,1.6vw,16px); margin-block-end:clamp(20px,3vw,30px);
   overflow-x:auto; scroll-snap-type:x mandatory;
-  padding-block-end:6px; margin-inline:calc(var(--gut) * -1); padding-inline:var(--gut);
+  padding-block-end:8px; margin-inline:calc(var(--gut) * -1); padding-inline:var(--gut);
   scrollbar-width:none;
 }
 .bld__packs::-webkit-scrollbar{ display:none; }
+
 .pack{
-  flex:0 0 auto; scroll-snap-align:start;
-  min-width:150px; padding:13px 15px; border-radius:var(--r-m);
-  border:1px solid var(--line); background:rgba(255,255,255,.03);
-  display:grid; gap:6px; justify-items:start; text-align:start;
+  flex:0 0 auto; scroll-snap-align:start; position:relative;
+  width:clamp(232px,74vw,280px);
+  padding:12px 12px 14px; border-radius:var(--r-l);
+  border:1px solid var(--line); background:rgba(255,255,255,.04);
+  display:grid; gap:11px; text-align:start;
   transition:border-color .25s,background .25s,transform .25s var(--ease-o);
 }
-.pack:hover{ border-color:var(--ed); background:color-mix(in srgb,var(--ed) 10%,transparent); transform:translateY(-2px); }
-.pack b{ font-size:0.875rem; font-weight:700; }
-.pack span{ font-size:0.6875rem; color:var(--mut); line-height:1.5; }
-.pack em{ font-style:normal; font-size:0.75rem; font-weight:700; color:var(--ed-acc); }
+.pack:hover{
+  border-color:var(--ed); background:color-mix(in srgb,var(--ed) 11%,transparent);
+  transform:translateY(-3px);
+}
+
+/* The three faces ARE the pitch: different sizes, deliberately different
+   teams, so mix-and-match needs no explaining. */
+.pack__faces{ display:flex; gap:6px; }
+.pack__faces img{
+  flex:1 1 0; min-width:0; aspect-ratio:1; height:auto;
+  object-fit:cover; border-radius:13px;
+  border:1.5px solid rgba(255,255,255,.10); background:var(--ink-2);
+}
+.pack__body{ display:grid; gap:3px; }
+.pack__t{ font-size:1rem; font-weight:700; color:var(--txt); }
+.pack__who{ font-size:0.6875rem; color:var(--mut); letter-spacing:.01em; }
+.pack__pr{ display:flex; align-items:baseline; gap:8px; margin-block-start:4px; }
+.pack__pr em{ font-style:normal; font-family:var(--disp); font-size:1.1875rem; font-weight:700; color:var(--txt); }
+.pack__pr s{ font-size:0.75rem; color:var(--mut); }
+.pack__save{
+  position:absolute; inset-block-start:20px; inset-inline-end:20px;
+  font-size:0.6875rem; font-weight:700; padding:4px 9px; border-radius:99px;
+  background:#6FD9A4; color:#06240F;
+}
+.pack__mix{
+  font-size:0.625rem; font-weight:600; color:var(--ed-acc);
+  display:flex; align-items:center; gap:5px;
+}
+.pack__mix::before{ content:"⇄"; font-size:0.8125rem; }
+
+/* one tap back to a single-club set */
+.bmatch{
+  width:100%; padding:10px; border-radius:11px; margin-block-end:4px;
+  border:1px dashed var(--ed); color:var(--ed-acc);
+  background:color-mix(in srgb,var(--ed) 10%,transparent);
+  font-size:0.8125rem; font-weight:700; transition:.22s;
+}
+.bmatch:hover{ background:color-mix(in srgb,var(--ed) 20%,transparent); color:var(--txt); }
 
 /* ---- the builder card ---- */
 .bld__box{

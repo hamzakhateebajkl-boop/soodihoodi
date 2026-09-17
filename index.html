@@ -29,7 +29,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&family=Archivo:wdth,wght@62..125,400..900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css?v=18">
+<link rel="stylesheet" href="css/styles.css?v=19">
 </head>
 <body>
 
@@ -94,6 +94,7 @@
 
     <nav class="nav" aria-label="Main">
       <a href="#editions" data-ar="الإصدارات" data-en="Editions">الإصدارات</a>
+      <a href="#bundle" data-ar="طلب العائلة" data-en="Family">طلب العائلة</a>
       <a href="#shop" data-ar="المتجر" data-en="Shop">المتجر</a>
       <a href="#fabric" data-ar="الخامة" data-en="Fabric">الخامة</a>
       <a href="#sizes" data-ar="المقاسات" data-en="Sizes">المقاسات</a>
@@ -150,7 +151,7 @@
     </h1>
 
     <div class="hero__cta rv" style="--d:280ms">
-      <a href="#shop" class="btn btn--go" data-ar="اختر إصدارك" data-en="Pick your edition">اختر إصدارك</a>
+      <a href="#bundle" class="btn btn--go" data-ar="اطلبوا كعائلة" data-en="Order as a family">اطلبوا كعائلة</a>
       <a href="#fabric" class="btn btn--ghost" data-ar="وش الخامة؟" data-en="See the fabric">وش الخامة؟</a>
     </div>
 
@@ -279,26 +280,14 @@
   </div>
 </section>
 
-<!-- ============ SHOP ============ -->
-<section class="shop" id="shop">
-  <div class="wrap">
-    <header class="sec-h">
-      <span class="sec-h__num">03</span>
-      <h2 data-ar="اطلب الحين" data-en="Shop now">اطلب الحين</h2>
-      <p data-ar="اختر مقاسك — كبار، أطفال، أو بيبي. اللون يتبع الإصدار اللي فوق." data-en="Pick your size — adult, kids or baby. The colour follows the edition you selected above.">اختر مقاسك — كبار، أطفال، أو بيبي. اللون يتبع الإصدار اللي فوق.</p>
-    </header>
-    <div class="shop__grid" id="shopGrid"><!-- injected --></div>
-  </div>
-</section>
-
 <!-- ============ FAMILY BUNDLE BUILDER ============ -->
 <section class="bld" id="bundle">
   <div class="wrap">
     <header class="sec-h">
-      <span class="sec-h__num">04</span>
+      <span class="sec-h__num">03</span>
       <h2 data-ar="اطلبوا كعائلة" data-en="Order as a family">اطلبوا كعائلة</h2>
-      <p data-ar="ابدأ بطقم جاهز أو ركّب طلبك بنفسك. كل واحد يختار فريقه — ما يلزم تكونون مشجّعين لنفس النادي."
-         data-en="Start from a ready pack or build your own. Everyone picks their own team — you don't all have to support the same club.">ابدأ بطقم جاهز أو ركّب طلبك بنفسك. كل واحد يختار فريقه — ما يلزم تكونون مشجّعين لنفس النادي.</p>
+      <p data-ar="كل واحد وفريقه — الأب أزرق، الأم أصفر، والصغير أخضر. ما يلزم تكونون مع نفس النادي. اختر طقم جاهز وعدّله كيف ما تبغى، وكل ما زاد العدد زاد الخصم."
+         data-en="Everyone in their own colours — dad in blue, mum in yellow, the little one in green. You don't all have to support the same club. Start from a pack, change any of it, and the more you add the bigger the discount.">كل واحد وفريقه — الأب أزرق، الأم أصفر، والصغير أخضر. ما يلزم تكونون مع نفس النادي. اختر طقم جاهز وعدّله كيف ما تبغى، وكل ما زاد العدد زاد الخصم.</p>
     </header>
 
     <div class="bld__packs" id="bldPacks" role="group" aria-label="Ready packs"><!-- injected --></div>
@@ -308,6 +297,18 @@
       <div class="bld__add" id="bldAdd"><!-- injected --></div>
       <div class="bld__sum" id="bldSum"><!-- injected --></div>
     </div>
+  </div>
+</section>
+
+<!-- ============ SHOP ============ -->
+<section class="shop" id="shop">
+  <div class="wrap">
+    <header class="sec-h">
+      <span class="sec-h__num">04</span>
+      <h2 data-ar="تبغى وحدة بس؟" data-en="Just want one?">تبغى وحدة بس؟</h2>
+      <p data-ar="اختر مقاسك — كبار، أطفال، أو بيبي. اللون يتبع الإصدار اللي فوق." data-en="Pick your size — adult, kids or baby. The colour follows the edition you selected above.">اختر مقاسك — كبار، أطفال، أو بيبي. اللون يتبع الإصدار اللي فوق.</p>
+    </header>
+    <div class="shop__grid" id="shopGrid"><!-- injected --></div>
   </div>
 </section>
 
@@ -550,7 +551,7 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="js/data.js?v=12"></script>
-<script src="js/app.js?v=15"></script>
+<script src="js/data.js?v=13"></script>
+<script src="js/app.js?v=17"></script>
 </body>
 </html>

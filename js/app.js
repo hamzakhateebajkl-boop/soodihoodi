@@ -205,13 +205,37 @@
     el.innerHTML = PACKS.map((pk) => {
       const from = pk.slots.reduce((n, sz) => n + unitPrice("classic", sz), 0);
       const pct = (tierFor(pk.slots.length) || { pct: 0 }).pct;
-      const who = pk.slots
-        .map((sz) => SIZES[sz][state.lang])
-        .join(state.lang === "ar" ? " + " : " + ");
+      const mix = pk.mix || pk.slots.map(() => state.edition);
+
+      // one model photo per person, each in a different edition — this is the
+      // card doing the explaining, not the copy underneath it
+      const faces = pk.slots
+        .map((sz, i) => {
+          const e = ed(mix[i]);
+          return `<img src="${cardThumb(e, sz)}" alt="" loading="lazy"
+                       width="220" height="220" title="${e[state.lang]}">`;
+        })
+        .join("");
+
+      // "كبار ×2 · أطفال" reads far better than repeating the full age band
+      // three times; the exact ages are on the builder rows below.
+      const counts = pk.slots.reduce((m, sz) => ((m[sz] = (m[sz] || 0) + 1), m), {});
+      const who = Object.keys(counts)
+        .map((sz) => SIZES[sz][state.lang] + (counts[sz] > 1 ? ` ×${counts[sz]}` : ""))
+        .join(" · ");
+
       return `<button class="pack" type="button" data-pack="${pk.id}">
-          <b>${pk[state.lang]}</b>
-          <span>${who}</span>
-          <em dir="ltr">${money(Math.round(from - (from * pct) / 100))}</em>
+          <span class="pack__faces" aria-hidden="true">${faces}</span>
+          <span class="pack__body">
+            <b class="pack__t">${pk[state.lang]}</b>
+            <span class="pack__who">${who}</span>
+            <span class="pack__pr">
+              <em dir="ltr">${money(Math.round(from - (from * pct) / 100))}</em>
+              <s dir="ltr">${money(from)}</s>
+            </span>
+          </span>
+          ${pct ? `<span class="pack__save">${tf("packSave", { pct })}</span>` : ""}
+          <span class="pack__mix">${t("bldMixed")}</span>
         </button>`;
     }).join("");
 
@@ -219,9 +243,13 @@
       b.addEventListener("click", () => {
         const pk = PACKS.find((x) => x.id === b.dataset.pack);
         if (!pk) return;
-        // A pack is a starting point, not a fixed SKU: every slot defaults to
-        // the edition currently being browsed, then each row can change.
-        state.build = pk.slots.map((sz) => ({ size: sz, ed: state.edition }));
+        // Load exactly what the card pictured, mixed teams and all — showing
+        // one thing and loading another would be a bait and switch.
+        const mix = pk.mix || [];
+        state.build = pk.slots.map((sz, i) => ({
+          size: sz,
+          ed: EDITIONS.some((e) => e.id === mix[i]) ? mix[i] : state.edition
+        }));
         renderBuild();
         $("#bldRows").scrollIntoView({ behavior: "smooth", block: "center" });
       })
@@ -304,7 +332,11 @@
     const saving = buildSaving();
     const nt = nextTier(n);
 
+    const allSame = state.build.every((r) => r.ed === state.build[0].ed);
     sum.innerHTML = `
+      ${allSame ? "" : `<button class="bmatch" type="button" id="bldMatch">${
+        tf("bldMatch", { ed: ed(state.edition)[state.lang] })
+      }</button>`}
       <div class="bsum__r"><span>${t("subtotal")}</span><b dir="ltr">${money(sub)}</b></div>
       ${saving ? `<div class="bsum__r bsum__r--save">
         <span>${tf("bundleOn", { pct })}</span><b dir="ltr">− ${money(saving)}</b></div>` : ""}
@@ -314,6 +346,14 @@
           nt.min - n > 1 ? "bundleAdd2" : "bundleAdd1", { pct: nt.pct }
         )}</p>` : ""}
       <button class="btn btn--go" type="button" id="bldAddAll">${tf("bldAddAll", { n })}</button>`;
+
+    const match = $("#bldMatch");
+    if (match) {
+      match.addEventListener("click", () => {
+        state.build.forEach((r) => { r.ed = state.edition; });
+        renderBuild();
+      });
+    }
 
     $("#bldAddAll").addEventListener("click", () => {
       const n = state.build.length;

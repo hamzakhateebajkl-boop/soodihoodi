@@ -283,12 +283,27 @@ const BUNDLE = {
    So a pack just pre-fills the builder with a row per person; the shopper
    then picks the edition for each row independently.
    --------------------------------------------------------- */
+/* `mix` is the edition shown — and loaded — for each slot. They are
+   deliberately DIFFERENT teams: the pack card is the one place on the page
+   that has to teach, at a glance and without copy, that a household split
+   between clubs can still order together. The builder then lets any row
+   change, and "match all" collapses the set to one team in a tap. */
 const PACKS = [
-  { id: "trio-kid",   ar: "عائلة + طفل",    en: "Family + kid",     slots: ["adult", "adult", "kids"] },
-  { id: "trio-baby",  ar: "عائلة + بيبي",   en: "Family + baby",    slots: ["adult", "adult", "baby"] },
-  { id: "quad-kids",  ar: "عائلة + طفلين",  en: "Family + 2 kids",  slots: ["adult", "adult", "kids", "kids"] },
-  { id: "quad-mixed", ar: "عائلة + طفل وبيبي", en: "Family + kid & baby", slots: ["adult", "adult", "kids", "baby"] },
-  { id: "siblings",   ar: "طقم الإخوان",    en: "Siblings kit",     slots: ["kids", "baby"] }
+  { id: "trio-kid",   ar: "عائلة + طفل",       en: "Family + kid",
+    slots: ["adult", "adult", "kids"],
+    mix:   ["najd", "hijaz", "watan"] },
+  { id: "trio-baby",  ar: "عائلة + بيبي",      en: "Family + baby",
+    slots: ["adult", "adult", "baby"],
+    mix:   ["watan", "nassr", "najd"] },
+  { id: "quad-kids",  ar: "عائلة + طفلين",     en: "Family + 2 kids",
+    slots: ["adult", "adult", "kids", "kids"],
+    mix:   ["najd", "shabab", "hijaz", "nassr"] },
+  { id: "quad-mixed", ar: "عائلة + طفل وبيبي", en: "Family + kid & baby",
+    slots: ["adult", "adult", "kids", "baby"],
+    mix:   ["hijaz", "najd", "watan", "shabab"] },
+  { id: "siblings",   ar: "طقم الإخوان",       en: "Siblings kit",
+    slots: ["kids", "baby"],
+    mix:   ["nassr", "watan"] }
 ];
 
 /* ---------------------------------------------------------
@@ -362,6 +377,9 @@ const T = {
   bldEmpty:    { ar: "ابدأ بطقم جاهز فوق، أو أضف أول واحد من الأزرار تحت.",
                  en: "Start from a ready pack above, or add your first person below." },
   bldAddAll:   { ar: "أضف {n} قطع إلى السلة",    en: "Add all {n} to cart" },
+  bldMatch:    { ar: "خلّهم كلهم {ed}",          en: "Match all to {ed}" },
+  bldMixed:    { ar: "كل واحد وفريقه",           en: "Everyone picks their own" },
+  packSave:    { ar: "وفّر {pct}٪",              en: "Save {pct}%" },
   bldAdded:    { ar: "تمّت إضافة {n} قطع",       en: "Added {n} items" },
   subtotal:    { ar: "قبل الخصم",                en: "Before discount" },
   waIntro:     { ar: "السلام عليكم، أبغى أطلب من سودي هودي:",
