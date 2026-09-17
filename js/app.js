@@ -451,7 +451,10 @@
         ${e.comingSoon ? `<span class="edc__badge">${t("soonBadge")}</span>` : ""}
         ${e.comingSoon && e.img
           ? `<span class="edc__sw edc__sw--img" aria-hidden="true" style="background-image:url('${e.img}')"></span>`
-          : `<span class="edc__sw" aria-hidden="true" style="background:${twoTone(e, 66)}"></span>`}
+          : `<span class="edc__sw">
+              <img src="${e.card || e.img}" alt="${e[state.lang]}" loading="lazy" width="640" height="800">
+              <i aria-hidden="true" style="background:${twoTone(e, 66)}"></i>
+            </span>`}
         <span class="edc__t">${e[state.lang]}</span>
         <span class="edc__s">${state.lang === "ar" ? e.tagAr : e.tagEn}</span>
         <span class="edc__go">${e.comingSoon ? t("soonMsg") : t("pickEdition")}</span>

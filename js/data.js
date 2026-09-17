@@ -76,6 +76,7 @@ const EDITIONS = [
   {
     id: "najd",
     img: "img/najd.jpg",
+    card: "img/ed/najd.webp", // 4:5 lookbook shot for the editions rail
     /* product-card shots: same three models, garment re-coloured per edition */
     shots: {
       adult: "img/shot-najd-adult.jpg",
@@ -114,6 +115,7 @@ const EDITIONS = [
     sky: "#FFD98A", // light backdrop wash behind the hero family // hero cutout — people only, transparent bg
     fg: "#14161A",
     img: "img/hijaz.jpg",
+    card: "img/ed/hijaz.webp", // 4:5 lookbook shot for the editions rail
     /* product-card shots: same three models, garment re-coloured per edition */
     shots: {
       adult: "img/shot-hijaz-adult.jpg",
@@ -146,6 +148,7 @@ const EDITIONS = [
     life: "img/stadium-watan.jpg",
     sky: "#9ADFB8", // light backdrop wash behind the hero family // hero cutout — people only, transparent bg
     img: "img/watan.jpg",
+    card: "img/ed/watan.webp", // 4:5 lookbook shot for the editions rail
     /* product-card shots: same three models, garment re-coloured per edition */
     shots: {
       adult: "img/shot-watan-adult.jpg",
@@ -179,6 +182,7 @@ const EDITIONS = [
     sky: "#FFE08A", // light backdrop wash behind the hero family // hero cutout — people only, transparent bg
     fg: "#14161A",
     img: "img/nassr.jpg",
+    card: "img/ed/nassr.webp", // 4:5 lookbook shot for the editions rail
     /* product-card shots: same three models, garment re-coloured per edition */
     shots: {
       adult: "img/shot-nassr-adult.jpg",
@@ -212,6 +216,7 @@ const EDITIONS = [
     sky: "#E8DCC8", // light backdrop wash behind the hero family // hero cutout — people only, transparent bg
     fg: "#14161A",
     img: "img/shabab.jpg",
+    card: "img/ed/shabab.webp", // 4:5 lookbook shot for the editions rail
     /* product-card shots: same three models, garment re-coloured per edition */
     shots: {
       adult: "img/shot-shabab-adult.jpg",
