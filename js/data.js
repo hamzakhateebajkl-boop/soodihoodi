@@ -262,44 +262,31 @@ const EDITIONS = [
   }
 ,
   /* ---------------------------------------------------------
-     COMING SOON — no physical product yet.
+     COMING SOON — a single unnamed placeholder.
 
-     Colourway-inspired only, exactly like the five above: no club names,
-     no crests, no registered marks. `comingSoon` makes the picker show a
-     "Soon" badge and refuse selection, and swipe / the edition rail both
-     already filter these out. Give them `shots`, `thumbs` and `card` and
-     drop the flag to make either one live.
+     Deliberately blank: plain white, no colourway, no club reference, no
+     edition name. It says only "New / Soon", which promises more is coming
+     without committing to which team or when.
+
+     `comingSoon` dims it, blocks selection and fires the "we'll tell you
+     when it drops" toast; swipe and the editions rail filter it out. Give
+     it a real name, colours, shots/thumbs/card and drop the flag to ship it.
      --------------------------------------------------------- */
   {
-    id: "malaki",
+    id: "soon",
     comingSoon: true,
-    img: "img/malaki.jpg",
-    sky: "#F3E7C4",
+    img: "img/soon.jpg",
+    sky: "#F0F1F3",
     fg: "#14161A",
-    ink: "#7A6210",
-    ar: "ملكي الدفا",
-    en: "Malaki Al-Dafa",
-    tagAr: "أبيض ناصع وذهبي",
-    tagEn: "Clean white and gold",
-    primary: "#C9A227",
+    ink: "#4A5058",
+    ar: "جديد",
+    en: "New",
+    tagAr: "إصدار جديد قريباً",
+    tagEn: "A new edition, soon",
+    primary: "#B9BEC7",
     secondary: "#FFFFFF",
-    accent:  "#E8C766",
-    glow:    "#A8861B"
-  },
-  {
-    id: "anaabi",
-    comingSoon: true,
-    img: "img/anaabi.jpg",
-    sky: "#E8C2CE",
-    ink: "#8C0F33",
-    ar: "عنّابي الدفا",
-    en: "Anaabi Al-Dafa",
-    tagAr: "أزرق وعنّابي",
-    tagEn: "Blue and garnet",
-    primary: "#A1123C",
-    secondary: "#1B3C8C",
-    accent:  "#E0718F",
-    glow:    "#7A0D2D"
+    accent:  "#DDE1E6",
+    glow:    "#8A9099"
   }
 ];
 
