@@ -1385,47 +1385,68 @@ html[dir="ltr"] .teamchip__bar{
     font-size:clamp(7rem,13vw,15rem); opacity:.14;
   }
 
+  /* A soft wash under the copy so type never has to fight the photo or the
+     edition tint — cheaper and cleaner than text-shadow on every element. */
+  .bigstage::after{
+    content:""; position:absolute; inset:0; z-index:1; pointer-events:none;
+    background:linear-gradient(to var(--herowash,right),
+      rgba(255,255,255,.88) 0%, rgba(255,255,255,.62) 26%, transparent 56%);
+  }
+  html[dir="ltr"] .bigstage{ --herowash:left; }
+
   .herobig{
-    display:grid; gap:10px; justify-items:start; text-align:start;
+    display:grid; gap:0; justify-items:start; text-align:start;
     position:absolute; z-index:3;
-    inset-block-end:clamp(60px,10vh,120px);
+    inset-block-end:clamp(56px,9vh,110px);
     inset-inline-start:max(var(--gut),calc((100% - var(--max)) / 2 + var(--gut)));
-    max-width:min(42%,520px);
+    max-width:min(44%,540px);
   }
+
+  /* Dark pill, not a tinted one: it has to read on all five editions. */
   .herobig__eye{
-    font-size:0.8125rem; font-weight:800; letter-spacing:.14em;
-    text-transform:uppercase; color:var(--ed);
-    background:color-mix(in srgb,#fff 82%,transparent);
-    padding:6px 13px; border-radius:99px;
-    backdrop-filter:blur(6px);
+    font-size:0.75rem; font-weight:800; letter-spacing:.16em;
+    text-transform:uppercase; color:#fff;
+    background:#12151B; padding:7px 15px; border-radius:99px;
+    margin-block-end:18px;
   }
+
   .herobig__h{
-    font-family:var(--disp); font-weight:900; line-height:.95;
-    font-size:clamp(3rem,5.6vw,5.4rem); letter-spacing:-.02em;
-    color:var(--sand-ink);
-    display:flex; align-items:baseline; gap:.18em; flex-wrap:wrap;
-    text-shadow:0 2px 26px rgba(255,255,255,.55);
+    font-family:var(--disp); font-weight:800; line-height:1;
+    font-size:clamp(2rem,3.4vw,3.1rem); letter-spacing:-.02em;
+    color:#12151B;
   }
-  .herobig__h b{ color:var(--ed); font-weight:900; }
+  /* --ed-ink, never --ed: the fill colour goes invisible on the pale stage. */
+  .herobig__n{
+    font-family:var(--disp); font-weight:900; line-height:.86;
+    font-size:clamp(4.2rem,8.4vw,7.6rem); letter-spacing:-.045em;
+    color:var(--ed-ink,#12151B);
+    margin-block:2px 0;
+    transition:color .65s var(--ease);
+  }
+
   .herobig__s{
-    font-size:1rem; line-height:1.55; color:#2A3140;
-    max-width:34ch; font-weight:500;
-    text-shadow:0 1px 14px rgba(255,255,255,.7);
+    font-size:1.0625rem; line-height:1.55; color:#39414F;
+    max-width:32ch; font-weight:500;
+    margin-block-start:16px;
   }
+
   .herobig__cta{
-    margin-block-start:6px;
-    display:inline-flex; align-items:center; gap:9px;
-    background:var(--ed); color:var(--ed-fg);
+    margin-block-start:24px;
+    display:inline-flex; align-items:center; gap:10px;
+    background:var(--ed-ink,#12151B); color:#fff;
     font-weight:800; font-size:1rem;
-    padding:15px 30px; border-radius:99px;
-    box-shadow:0 14px 34px -12px color-mix(in srgb,var(--ed) 70%,transparent);
-    transition:transform .25s var(--ease-o),box-shadow .25s;
+    padding:16px 32px; border-radius:99px;
+    box-shadow:0 16px 34px -16px rgba(10,14,22,.6);
+    transition:transform .25s var(--ease-o),box-shadow .25s,background .65s var(--ease);
   }
   .herobig__cta::after{ content:"←"; transition:transform .3s; }
   html[dir="ltr"] .herobig__cta::after{ content:"→"; }
-  .herobig__cta:hover{ transform:translateY(-3px); }
+  .herobig__cta:hover{ transform:translateY(-3px); box-shadow:0 20px 40px -16px rgba(10,14,22,.7); }
   .herobig__cta:hover::after{ transform:translateX(-4px); }
   html[dir="ltr"] .herobig__cta:hover::after{ transform:translateX(4px); }
+
+  /* Keep the giant wordmark clear of the copy block. */
+  .bigstage__mark{ opacity:.09; }
 
   /* the picker sits under a taller stage, so pull it up a touch less */
   .hero__foot{ margin-block-start:clamp(-56px,-4vh,-28px); }
