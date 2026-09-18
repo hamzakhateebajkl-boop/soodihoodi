@@ -29,7 +29,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&family=Archivo:wdth,wght@62..125,400..900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css?v=23">
+<link rel="stylesheet" href="css/styles.css?v=25">
 </head>
 <body>
 
@@ -141,7 +141,13 @@
       <p class="herobig__n" dir="ltr">20%</p>
       <p class="herobig__s" data-ar="كل واحد وفريقه — والخصم يكبر كل ما زاد العدد."
          data-en="Everyone in their own colours — the more you add, the bigger the discount.">كل واحد وفريقه — والخصم يكبر كل ما زاد العدد.</p>
-      <a href="#bundle" class="herobig__cta" data-ar="ابدأ طقم العائلة" data-en="Build your family set">ابدأ طقم العائلة</a>
+      <!-- The label lives in its own span: applyLang() overwrites textContent
+           on every [data-ar], which would wipe the pitch and ball markup. -->
+      <a href="#bundle" class="herobig__cta">
+        <span class="cta__pitch" aria-hidden="true"></span>
+        <span class="cta__t" data-ar="ابدأ طقم العائلة" data-en="Build your family set">ابدأ طقم العائلة</span>
+        <span class="cta__ball" aria-hidden="true"></span>
+      </a>
     </div>
 
     <div class="bigstage__floor" aria-hidden="true"></div>
