@@ -367,6 +367,79 @@
   }
 
   /* =========================================================
+     FIRST-VISIT OFFER
+     ========================================================= */
+  function openOffer(open) {
+    const el = $("#offer");
+    if (!el) return;
+    el.classList.toggle("open", open);
+    el.setAttribute("aria-hidden", String(!open));
+    $("#scrim").hidden = !open;
+    document.body.style.overflow = open ? "hidden" : "";
+    if (open) {
+      const e = ed(state.edition);
+      const im = $("#offerImg");
+      if (im) { im.src = e.card || e.img; im.alt = e[state.lang]; }
+      setTimeout(() => $("#offerName")?.focus(), 380);
+    }
+  }
+
+  function seenOffer() {
+    try { return !!localStorage.getItem(OFFER.storageKey); } catch (e) { return true; }
+  }
+  function markOffer(v) {
+    try { localStorage.setItem(OFFER.storageKey, v); } catch (e) {}
+  }
+
+  function offerInit() {
+    const el = $("#offer");
+    if (!el || typeof OFFER === "undefined" || !OFFER.enabled) return;
+
+    $("#offerClose").addEventListener("click", () => { markOffer("dismissed"); openOffer(false); });
+    $("#offerNo").addEventListener("click", () => { markOffer("dismissed"); openOffer(false); });
+
+    $("#offerForm").addEventListener("submit", (ev) => {
+      ev.preventDefault();
+      const name = $("#offerName").value.trim();
+      const mail = $("#offerMail").value.trim();
+      const ok = name.length > 1 && /^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(mail);
+      $("#offerErr").hidden = ok;
+      if (!ok) return;
+
+      markOffer("joined");
+
+      if (OFFER.endpoint) {
+        // Fire-and-forget: a form handler's response is irrelevant to the
+        // shopper, and blocking the UI on it only ever makes things worse.
+        fetch(OFFER.endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+          body: JSON.stringify({ name, email: mail, source: "site-offer", edition: state.edition })
+        }).catch(() => {});
+      } else if (SALLA.whatsapp) {
+        // No endpoint configured yet — hand the lead to WhatsApp rather than
+        // drop it on the floor. Same fallback checkout already uses.
+        const msg = tf("offerWa", { pct: OFFER.pct, name, mail });
+        window.open(`https://wa.me/${SALLA.whatsapp}?text=${encodeURIComponent(msg)}`, "_blank");
+      }
+
+      openOffer(false);
+      toast(t("offerThanks"));
+    });
+
+    if (seenOffer()) return;
+    setTimeout(() => {
+      // Never interrupt someone mid-task: not while the cart, team sheet or
+      // the gate is up, and not once they've already started shopping.
+      if (document.documentElement.classList.contains("gated")) return;
+      if ($("#cart").classList.contains("open")) return;
+      if ($("#teamSheet").classList.contains("open")) return;
+      if (state.cart.length) return;
+      openOffer(true);
+    }, OFFER.delayMs);
+  }
+
+  /* =========================================================
      PERSISTENT TEAM SWITCHER
      ========================================================= */
   function renderTeamSheet() {
@@ -394,7 +467,7 @@
   function openTeamSheet(open) {
     const sheet = $("#teamSheet");
     if (!sheet) return;
-    if (open) openCart(false);
+    if (open) { openCart(false); openOffer(false); }
     sheet.classList.toggle("open", open);
     sheet.setAttribute("aria-hidden", String(!open));
     $("#teamBtn").setAttribute("aria-expanded", String(open));
@@ -699,6 +772,7 @@
     if (open) {
       const sheet = $("#teamSheet");
       if (sheet && sheet.classList.contains("open")) openTeamSheet(false);
+      if ($("#offer") && $("#offer").classList.contains("open")) openOffer(false);
     }
     $("#cart").classList.toggle("open", open);
     $("#cart").setAttribute("aria-hidden", String(!open));
@@ -1014,6 +1088,7 @@
     // static reveals
     observe($$(".sec-h, .why__c, .rev, .acc__i, .tbl-wrap, .fab__art, .fab__copy, .strip__in, .bld__box"));
 
+    offerInit();
     cineInit();
     tiltInit();
     swipeInit();
@@ -1051,10 +1126,16 @@
       openTeamSheet(!$("#teamSheet").classList.contains("open"))
     );
     $("#teamClose").addEventListener("click", () => openTeamSheet(false));
-    $("#scrim").addEventListener("click", () => { openCart(false); openTeamSheet(false); });
+    $("#scrim").addEventListener("click", () => {
+      openCart(false); openTeamSheet(false);
+      if ($("#offer").classList.contains("open")) { markOffer("dismissed"); openOffer(false); }
+    });
     $("#checkout").addEventListener("click", checkout);
     document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") { openCart(false); openTeamSheet(false); }
+      if (e.key === "Escape") {
+        openCart(false); openTeamSheet(false);
+        if ($("#offer").classList.contains("open")) { markOffer("dismissed"); openOffer(false); }
+      }
     });
 
     // language toggle

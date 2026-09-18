@@ -63,6 +63,25 @@ const SHOPIFY = {
   }
 };
 
+/* ---------------------------------------------------------
+   FIRST-VISIT OFFER
+
+   `endpoint` takes a form-handler URL that accepts a POST — Formspree,
+   Getform, Basin, or a Google Form. Two minutes to set up, and it is the
+   only thing standing between this popup and a real mailing list.
+
+   Until it is set, a submission falls back to opening WhatsApp with the
+   name and email prefilled, exactly as checkout already does — so a lead
+   is never silently lost. Set `endpoint` and the fallback stops.
+   --------------------------------------------------------- */
+const OFFER = {
+  enabled: true,
+  pct: 15,
+  delayMs: 8000,       // let them see the hero first
+  endpoint: "",        // e.g. "https://formspree.io/f/xxxxxxx"
+  storageKey: "sh_offer_v1"
+};
+
 /* The edition every first-time visitor lands on. Named rather than taken
    from EDITIONS[0], so reordering the list can never silently change the
    first impression. Returning visitors keep their own last choice. */
@@ -379,6 +398,10 @@ const T = {
   total:       { ar: "المجموع",                  en: "Total" },
   chooseEd:    { ar: "اختر الإصدار",             en: "Choose an edition" },
   changeTeam:  { ar: "غيّر فريقك",               en: "Change your team" },
+  offerThanks: { ar: "تمام! بنرسل لك الكود على الإيميل.",
+                 en: "Done — we'll email you the code." },
+  offerWa:     { ar: "خصم {pct}% — الاسم: {name} — الإيميل: {mail}",
+                 en: "{pct}% off — Name: {name} — Email: {mail}" },
   bldEmpty:    { ar: "ابدأ بطقم جاهز فوق، أو أضف أول واحد من الأزرار تحت.",
                  en: "Start from a ready pack above, or add your first person below." },
   bldAddAll:   { ar: "أضف {n} قطع إلى السلة",    en: "Add all {n} to cart" },

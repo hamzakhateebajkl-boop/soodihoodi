@@ -1357,3 +1357,138 @@ html[dir="ltr"] .teamchip__bar{
   .tsheet.open{ transform:translateY(-50%) scale(1); opacity:1; pointer-events:auto; }
   .tsheet__grab{ display:none; }
 }
+
+/* =========================================================
+   DESKTOP HERO SLAB  (≥1024px only — mobile hero is untouched)
+   The wide layout had a capped, centred cutout floating in a lot of
+   empty stage. Here the family goes big and crops, and a real offer
+   block carries the left side.
+   ========================================================= */
+.herobig{ display:none; }
+
+@media (min-width:1024px){
+  .bigstage{
+    height:min(90vh,880px);
+    align-items:flex-end;
+    justify-content:flex-end;
+  }
+  /* Let the trio fill the right-hand side and crop at the floor —
+     showing the whole hoodie matters less than presence. */
+  .bigstage__fam{
+    width:min(62%,900px); height:100%;
+    object-fit:cover; object-position:50% 6%;
+    margin-inline-end:clamp(8px,4vw,70px);
+  }
+  .bigstage__mark{
+    inset-block-start:auto; inset-block-end:-2%; transform:none;
+    text-align:start; padding-inline-start:var(--gut);
+    font-size:clamp(7rem,13vw,15rem); opacity:.14;
+  }
+
+  .herobig{
+    display:grid; gap:10px; justify-items:start; text-align:start;
+    position:absolute; z-index:3;
+    inset-block-end:clamp(60px,10vh,120px);
+    inset-inline-start:max(var(--gut),calc((100% - var(--max)) / 2 + var(--gut)));
+    max-width:min(42%,520px);
+  }
+  .herobig__eye{
+    font-size:0.8125rem; font-weight:800; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--ed);
+    background:color-mix(in srgb,#fff 82%,transparent);
+    padding:6px 13px; border-radius:99px;
+    backdrop-filter:blur(6px);
+  }
+  .herobig__h{
+    font-family:var(--disp); font-weight:900; line-height:.95;
+    font-size:clamp(3rem,5.6vw,5.4rem); letter-spacing:-.02em;
+    color:var(--sand-ink);
+    display:flex; align-items:baseline; gap:.18em; flex-wrap:wrap;
+    text-shadow:0 2px 26px rgba(255,255,255,.55);
+  }
+  .herobig__h b{ color:var(--ed); font-weight:900; }
+  .herobig__s{
+    font-size:1rem; line-height:1.55; color:#2A3140;
+    max-width:34ch; font-weight:500;
+    text-shadow:0 1px 14px rgba(255,255,255,.7);
+  }
+  .herobig__cta{
+    margin-block-start:6px;
+    display:inline-flex; align-items:center; gap:9px;
+    background:var(--ed); color:var(--ed-fg);
+    font-weight:800; font-size:1rem;
+    padding:15px 30px; border-radius:99px;
+    box-shadow:0 14px 34px -12px color-mix(in srgb,var(--ed) 70%,transparent);
+    transition:transform .25s var(--ease-o),box-shadow .25s;
+  }
+  .herobig__cta::after{ content:"←"; transition:transform .3s; }
+  html[dir="ltr"] .herobig__cta::after{ content:"→"; }
+  .herobig__cta:hover{ transform:translateY(-3px); }
+  .herobig__cta:hover::after{ transform:translateX(-4px); }
+  html[dir="ltr"] .herobig__cta:hover::after{ transform:translateX(4px); }
+
+  /* the picker sits under a taller stage, so pull it up a touch less */
+  .hero__foot{ margin-block-start:clamp(-56px,-4vh,-28px); }
+}
+
+/* =========================================================
+   FIRST-VISIT OFFER
+   ========================================================= */
+.offer{
+  position:fixed; z-index:95; inset-block-end:0; inset-inline:0;
+  background:var(--ink-1); border-block-start:1px solid var(--line);
+  border-start-start-radius:var(--r-xl); border-start-end-radius:var(--r-xl);
+  transform:translateY(102%); transition:transform .42s var(--ease-o);
+  max-height:92dvh; overflow-y:auto;
+}
+.offer.open{ transform:none; }
+.offer__art{ display:none; }
+.offer__body{
+  position:relative;
+  padding:26px clamp(18px,5vw,30px) calc(24px + env(safe-area-inset-bottom));
+  display:grid; gap:11px; justify-items:center; text-align:center;
+}
+.offer__x{
+  position:absolute; inset-block-start:12px; inset-inline-end:12px;
+  width:34px; height:34px; border-radius:50%;
+  border:1px solid var(--line); color:var(--mut); font-size:0.875rem;
+}
+.offer__x:hover{ color:var(--txt); border-color:var(--ed); }
+.offer__logo{ height:22px; width:auto; opacity:.9; margin-block-end:2px; }
+.offer__h{ font-size:1.375rem; line-height:1.3; max-width:16ch; }
+.offer__s{ font-size:0.875rem; color:var(--mut); max-width:30ch; }
+.offer__form{ display:grid; gap:9px; width:100%; max-width:340px; margin-block-start:6px; }
+.offer__in{
+  width:100%; padding:14px 16px; border-radius:12px;
+  border:1px solid var(--line); background:rgba(255,255,255,.04);
+  color:var(--txt); font-size:1rem; /* 16px — stops iOS zoom-on-focus */
+}
+.offer__in::placeholder{ color:var(--mut); }
+.offer__in:focus{ outline:none; border-color:var(--ed-acc); background:rgba(255,255,255,.07); }
+.offer__btn{
+  width:100%; padding:15px; border-radius:12px;
+  background:var(--ed); color:var(--ed-fg); font-weight:800; font-size:0.9375rem;
+  transition:transform .2s var(--ease-o);
+}
+.offer__btn:hover{ transform:translateY(-2px); }
+.offer__err{ font-size:0.8125rem; color:#FF8E8E; }
+.offer__no{
+  font-size:0.8125rem; color:var(--mut); text-decoration:underline;
+  text-underline-offset:3px; margin-block-start:2px;
+}
+.offer__no:hover{ color:var(--txt); }
+
+@media (min-width:760px){
+  .offer{
+    inset-block-start:50%; inset-block-end:auto;
+    inset-inline:0; width:min(760px,92vw); margin-inline:auto;
+    border-radius:var(--r-xl); border:1px solid var(--line);
+    transform:translateY(-50%) scale(.96); opacity:0; pointer-events:none;
+    transition:opacity .3s var(--ease-o),transform .3s var(--ease-o);
+    display:grid; grid-template-columns:1fr 1fr; overflow:hidden;
+  }
+  .offer.open{ transform:translateY(-50%) scale(1); opacity:1; pointer-events:auto; }
+  .offer__art{ display:block; background:var(--ink-2); }
+  .offer__art img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .offer__body{ padding:34px 32px; align-content:center; }
+}

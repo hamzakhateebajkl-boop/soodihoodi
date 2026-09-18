@@ -29,7 +29,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&family=Archivo:wdth,wght@62..125,400..900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css?v=20">
+<link rel="stylesheet" href="css/styles.css?v=21">
 </head>
 <body>
 
@@ -133,6 +133,19 @@
   <div class="bigstage rv" style="--d:0ms">
     <div class="bigstage__mark" aria-hidden="true">SOODIHOODI</div>
     <img class="bigstage__fam" id="heroShot" src="img/cut/fam-najd.webp" alt="عائلة تلبس هودي بطانية SoodiHoodi" width="1200" height="895" fetchpriority="high">
+
+    <!-- Desktop only. Hidden below 1024px so the mobile hero is untouched. -->
+    <div class="herobig">
+      <span class="herobig__eye" data-ar="اطلبوا كعائلة" data-en="Order as a family">اطلبوا كعائلة</span>
+      <p class="herobig__h">
+        <span data-ar="وفّروا حتى" data-en="Save up to">وفّروا حتى</span>
+        <b dir="ltr">20%</b>
+      </p>
+      <p class="herobig__s" data-ar="كل واحد وفريقه — والخصم يكبر كل ما زاد العدد."
+         data-en="Everyone in their own colours — the more you add, the bigger the discount.">كل واحد وفريقه — والخصم يكبر كل ما زاد العدد.</p>
+      <a href="#bundle" class="herobig__cta" data-ar="ابدأ طقم العائلة" data-en="Build your family set">ابدأ طقم العائلة</a>
+    </div>
+
     <div class="bigstage__floor" aria-hidden="true"></div>
   </div>
 
@@ -509,6 +522,32 @@
   </div>
 </footer>
 
+<!-- ============ FIRST-VISIT OFFER ============ -->
+<div class="offer" id="offer" role="dialog" aria-modal="true" aria-hidden="true"
+     aria-labelledby="offerTitle">
+  <div class="offer__art" aria-hidden="true"><img id="offerImg" src="" alt=""></div>
+  <div class="offer__body">
+    <button class="offer__x" id="offerClose" type="button" aria-label="Close">✕</button>
+    <img class="offer__logo" src="img/logo.png" alt="SoodiHoodi" width="1200" height="189">
+    <h3 id="offerTitle" class="offer__h"
+        data-ar="تبغى خصم 15% على أول طلب؟" data-en="Want 15% off your first order?">تبغى خصم 15% على أول طلب؟</h3>
+    <p class="offer__s" data-ar="اكتب اسمك وإيميلك، ويوصلك الكود."
+       data-en="Drop your name and email and we'll send you the code.">اكتب اسمك وإيميلك، ويوصلك الكود.</p>
+    <form class="offer__form" id="offerForm" novalidate>
+      <input class="offer__in" id="offerName" type="text" name="name" autocomplete="given-name"
+             required placeholder="الاسم" aria-label="الاسم">
+      <input class="offer__in" id="offerMail" type="email" name="email" autocomplete="email"
+             required placeholder="الإيميل" aria-label="الإيميل" enterkeyhint="send">
+      <button class="offer__btn" type="submit"
+              data-ar="أرسل لي الكود" data-en="Send me the code">أرسل لي الكود</button>
+    </form>
+    <p class="offer__err" id="offerErr" hidden
+       data-ar="تأكد من الاسم والإيميل" data-en="Check your name and email">تأكد من الاسم والإيميل</p>
+    <button class="offer__no" id="offerNo" type="button"
+            data-ar="لا شكراً" data-en="No thanks">لا شكراً</button>
+  </div>
+</div>
+
 <!-- ============ TEAM SWITCHER SHEET ============ -->
 <div class="scrim" id="scrim" hidden></div>
 <div class="tsheet" id="teamSheet" role="dialog" aria-modal="true" aria-hidden="true"
@@ -551,7 +590,7 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="js/data.js?v=15"></script>
-<script src="js/app.js?v=19"></script>
+<script src="js/data.js?v=16"></script>
+<script src="js/app.js?v=20"></script>
 </body>
 </html>
