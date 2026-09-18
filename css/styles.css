@@ -1428,25 +1428,34 @@ html[dir="ltr"] .teamchip__bar{
     margin-block-end:14px;
   }
 
+  /* Arabic needs real headroom here: Noto Kufi's diacritics (the shadda on
+     وفّروا) sit above the cap line and ى drops well below the baseline, so a
+     line-height of 1 clips the glyphs outside their box and they collide
+     with the number below. English is tightened back up separately. */
   .herobig__h{
-    font-family:var(--disp); font-weight:800; line-height:1;
+    font-family:var(--disp); font-weight:800; line-height:1.34;
     font-size:clamp(1.8rem,2.8vw,2.6rem); letter-spacing:-.02em;
     color:#12151B;
   }
   /* --ed-ink, never --ed: the fill colour goes invisible on the pale stage. */
   .herobig__n{
-    font-family:var(--disp); font-weight:900; line-height:.86;
+    font-family:var(--disp); font-weight:900; line-height:1;
     font-size:clamp(3.4rem,6.6vw,6rem); letter-spacing:-.045em;
     color:var(--ed-ink,#12151B);
-    margin-block:2px 0;
+    margin-block:6px 0;
     transition:color .65s var(--ease);
   }
 
   .herobig__s{
-    font-size:1.0625rem; line-height:1.55; color:#39414F;
+    font-size:1.0625rem; line-height:1.75; color:#39414F;
     max-width:32ch; font-weight:500;
-    margin-block-start:13px;
+    margin-block-start:14px;
   }
+
+  /* Latin has none of that vertical overhang, so pull it back tight. */
+  html[data-lang="en"] .herobig__h{ line-height:1.05; }
+  html[data-lang="en"] .herobig__n{ line-height:.88; margin-block:0; }
+  html[data-lang="en"] .herobig__s{ line-height:1.55; }
 
   .herobig__cta{
     margin-block-start:20px;
