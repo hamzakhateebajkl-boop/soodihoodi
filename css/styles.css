@@ -428,6 +428,7 @@ html[data-lang="en"] .hero h1{ line-height:.92; }
 .sw__img{
   display:block; width:60px; height:60px; border-radius:12px; overflow:hidden;
   background:color-mix(in srgb,var(--txt) 6%,transparent);
+  position:relative; /* containing block for the "soon" badge */
 }
 .sw__img img{ width:100%; height:100%; object-fit:cover; display:block; }
 .sw__bar{ display:block; width:60px; height:8px; border-radius:99px; }
@@ -447,8 +448,18 @@ html[data-lang="en"] .hero h1{ line-height:.92; }
   width:20px; height:20px; border-radius:99px; display:grid; place-items:center;
   background:var(--ed-acc); color:var(--ed-fg,#fff); font-size:11px; font-weight:900;
 }
-.sw--soon{ opacity:.5; }
+/* Dimmed, but not so far that the badge becomes unreadable. */
+.sw--soon{ opacity:.72; cursor:default; }
 .sw--soon .sw__img{ outline:1.5px dashed color-mix(in srgb,var(--txt) 40%,transparent); outline-offset:2px; }
+.sw--soon .sw__img img{ filter:grayscale(.35) brightness(.72); }
+.sw--soon .sw__name{ opacity:.8; }
+.sw__soon{
+  position:absolute; inset-inline:0; inset-block-end:0;
+  background:rgba(8,9,12,.82); color:#fff;
+  font-size:0.5625rem; font-weight:800; letter-spacing:.06em;
+  padding-block:3px; text-align:center; line-height:1.2;
+  backdrop-filter:blur(2px);
+}
 @media (max-width:480px){
   .swatchbar{ gap:6px; }
   .sw{ width:62px; padding:5px 2px 6px; }
@@ -1368,10 +1379,14 @@ html[dir="ltr"] .teamchip__bar{
 
 @media (min-width:1024px){
   .bigstage{
-    height:min(90vh,880px);
+    /* Leave room for the team picker below: the whole point of the hero is
+       that you can change team, and that control has to be reachable without
+       scrolling. ~380px covers ticker + header + the picker block. */
+    height:clamp(360px,calc(100dvh - 380px),620px);
     align-items:flex-end;
     justify-content:flex-end;
   }
+  .hero{ padding-block-end:clamp(20px,3vh,44px); }
   /* Let the trio fill the right-hand side and crop at the floor —
      showing the whole hoodie matters less than presence. */
   .bigstage__fam{
@@ -1410,18 +1425,18 @@ html[dir="ltr"] .teamchip__bar{
     font-size:0.75rem; font-weight:800; letter-spacing:.16em;
     text-transform:uppercase; color:#fff;
     background:#12151B; padding:7px 15px; border-radius:99px;
-    margin-block-end:18px;
+    margin-block-end:14px;
   }
 
   .herobig__h{
     font-family:var(--disp); font-weight:800; line-height:1;
-    font-size:clamp(2rem,3.4vw,3.1rem); letter-spacing:-.02em;
+    font-size:clamp(1.8rem,2.8vw,2.6rem); letter-spacing:-.02em;
     color:#12151B;
   }
   /* --ed-ink, never --ed: the fill colour goes invisible on the pale stage. */
   .herobig__n{
     font-family:var(--disp); font-weight:900; line-height:.86;
-    font-size:clamp(4.2rem,8.4vw,7.6rem); letter-spacing:-.045em;
+    font-size:clamp(3.4rem,6.6vw,6rem); letter-spacing:-.045em;
     color:var(--ed-ink,#12151B);
     margin-block:2px 0;
     transition:color .65s var(--ease);
@@ -1430,11 +1445,11 @@ html[dir="ltr"] .teamchip__bar{
   .herobig__s{
     font-size:1.0625rem; line-height:1.55; color:#39414F;
     max-width:32ch; font-weight:500;
-    margin-block-start:16px;
+    margin-block-start:13px;
   }
 
   .herobig__cta{
-    margin-block-start:24px;
+    margin-block-start:20px;
     display:inline-flex; align-items:center; gap:10px;
     background:var(--ed-ink,#12151B); color:#fff;
     font-weight:800; font-size:1rem;

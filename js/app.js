@@ -504,7 +504,8 @@
               aria-checked="${e.id === state.edition}"
               title="${e[state.lang]}${e.comingSoon ? " — " + t("soonBadge") : ""}"
               aria-label="${e[state.lang]}${e.comingSoon ? " — " + t("soonBadge") : ""}">
-        <span class="sw__img"><img src="${e.img}" alt="" loading="lazy" width="120" height="120"></span>
+        <span class="sw__img"><img src="${e.img}" alt="" loading="lazy" width="120" height="120"
+          >${e.comingSoon ? `<span class="sw__soon">${t("soonBadge")}</span>` : ""}</span>
         <i class="sw__bar" aria-hidden="true" style="background:${twoTone(e)}"></i>
         <span class="sw__name">${e[state.lang]}</span>
       </button>`

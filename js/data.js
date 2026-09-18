@@ -260,9 +260,48 @@ const EDITIONS = [
     accent:  "#F5F5F5",
     glow:    "#6B6E76"
   }
+,
+  /* ---------------------------------------------------------
+     COMING SOON — no physical product yet.
+
+     Colourway-inspired only, exactly like the five above: no club names,
+     no crests, no registered marks. `comingSoon` makes the picker show a
+     "Soon" badge and refuse selection, and swipe / the edition rail both
+     already filter these out. Give them `shots`, `thumbs` and `card` and
+     drop the flag to make either one live.
+     --------------------------------------------------------- */
+  {
+    id: "malaki",
+    comingSoon: true,
+    img: "img/malaki.jpg",
+    sky: "#F3E7C4",
+    fg: "#14161A",
+    ink: "#7A6210",
+    ar: "ملكي الدفا",
+    en: "Malaki Al-Dafa",
+    tagAr: "أبيض ناصع وذهبي",
+    tagEn: "Clean white and gold",
+    primary: "#C9A227",
+    secondary: "#FFFFFF",
+    accent:  "#E8C766",
+    glow:    "#A8861B"
+  },
+  {
+    id: "anaabi",
+    comingSoon: true,
+    img: "img/anaabi.jpg",
+    sky: "#E8C2CE",
+    ink: "#8C0F33",
+    ar: "عنّابي الدفا",
+    en: "Anaabi Al-Dafa",
+    tagAr: "أزرق وعنّابي",
+    tagEn: "Blue and garnet",
+    primary: "#A1123C",
+    secondary: "#1B3C8C",
+    accent:  "#E0718F",
+    glow:    "#7A0D2D"
+  }
 ];
-/* Editions sahara + layl removed 2026-08-31: no physical product yet.
-   Re-add here with real photography when they exist. */
 
 /* ---------------------------------------------------------
    SIZES
