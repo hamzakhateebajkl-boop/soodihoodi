@@ -1397,7 +1397,10 @@ html[dir="ltr"] .teamchip__bar{
   .herobig{
     display:grid; gap:0; justify-items:start; text-align:start;
     position:absolute; z-index:3;
-    inset-block-end:clamp(56px,9vh,110px);
+    /* Vertically centred on the stage rather than anchored to the floor —
+       it reads as a deliberate block instead of something that sank. */
+    inset-block-start:50%; inset-block-end:auto;
+    transform:translateY(-50%);
     inset-inline-start:max(var(--gut),calc((100% - var(--max)) / 2 + var(--gut)));
     max-width:min(44%,540px);
   }
