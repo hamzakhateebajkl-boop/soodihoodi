@@ -7,7 +7,7 @@
    ========================================================= */
 (function () {
   var CHAT = {
-    endpoint: "",                 // e.g. "https://soodihoodi-chat.<your-subdomain>.workers.dev"
+    endpoint: "https://soodihoodi-chat.hamzakhateebajkl.workers.dev",
     whatsapp: "96877083190",
     storageKey: "sh_chat_v1",
     maxTurns: 12
