@@ -382,7 +382,7 @@
     if (open) {
       const e = ed(state.edition);
       const im = $("#offerImg");
-      if (im) { im.src = e.card || e.img; im.alt = e[state.lang]; }
+      if (im) { im.src = OFFER.img || e.card || e.img; im.alt = ""; }
       setTimeout(() => $("#offerName")?.focus(), 380);
     }
   }
@@ -426,9 +426,23 @@
         window.open(`https://wa.me/${SALLA.whatsapp}?text=${encodeURIComponent(msg)}`, "_blank");
       }
 
+      if (OFFER.code) { showOfferCode(); return; }
       openOffer(false);
       toast(t("offerThanks"));
     });
+
+    // A fixed first-order code is shown on the spot instead of emailed.
+    function showOfferCode() {
+      ["#offerForm", "#offerErr", "#offerNo", "#offerSub"].forEach((s) => { if ($(s)) $(s).hidden = true; });
+      $("#offerCodeTxt").textContent = OFFER.code;
+      $("#offerDone").hidden = false;
+      setTimeout(() => $("#offerCode")?.focus(), 50);
+    }
+    $("#offerCode")?.addEventListener("click", () => {
+      const done = () => toast(t("offerCopied"));
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(OFFER.code).then(done).catch(() => {});
+    });
+    $("#offerGo")?.addEventListener("click", () => openOffer(false));
 
     if (seenOffer()) return;
     setTimeout(() => {
@@ -873,6 +887,11 @@
       const v = el.dataset[lang];
       if (v != null) el.textContent = v;
     });
+    // Placeholders, screen-reader labels and alt text follow the language too.
+    const sfx = lang === "ar" ? "Ar" : "En";
+    $$("[data-ph-ar]").forEach((el) => { const v = el.dataset["ph" + sfx]; if (v) el.placeholder = v; });
+    $$("[data-al-ar]").forEach((el) => { const v = el.dataset["al" + sfx]; if (v) el.setAttribute("aria-label", v); });
+    $$("[data-alt-ar]").forEach((el) => { const v = el.dataset["alt" + sfx]; if (v) el.alt = v; });
 
     save();
     renderSwatches();

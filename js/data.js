@@ -70,7 +70,11 @@ const OFFER = {
   enabled: true,
   pct: 15,
   delayMs: 8000,       // let them see the hero first
-  endpoint: "",        // e.g. "https://formspree.io/f/xxxxxxx"
+  code: "SOODI15",
+  img: "img/offer-family.webp",  // the whole family, every edition, from the ad campaign     // Shopify discount: 15% off, one use per customer; shown right after sign-up
+  /* Sign-ups go to the chat Worker, which forwards them to the team's
+     Telegram and keeps them in Workers KV for later export. */
+  endpoint: "https://soodihoodi-chat.hamzakhateebajkl.workers.dev/lead",
   storageKey: "sh_offer_v1"
 };
 
@@ -418,6 +422,7 @@ const T = {
   changeTeam:  { ar: "غيّر فريقك",               en: "Change your team" },
   offerThanks: { ar: "تمام! بنرسل لك الكود على الإيميل.",
                  en: "Done — we'll email you the code." },
+  offerCopied: { ar: "تم نسخ الكود ✓",          en: "Code copied ✓" },
   offerWa:     { ar: "خصم {pct}% — الاسم: {name} — الإيميل: {mail}",
                  en: "{pct}% off — Name: {name} — Email: {mail}" },
   bldEmpty:    { ar: "ابدأ بطقم جاهز فوق، أو أضف أول واحد من الأزرار تحت.",
