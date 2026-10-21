@@ -905,7 +905,7 @@ html[dir="rtl"] .tbl__hi{ box-shadow:inset -3px 0 0 var(--ed); }
    FOOTER
    ========================================================= */
 .ftr{ background:var(--ink); border-block-start:1px solid var(--line); padding-block:clamp(44px,6vw,72px) 26px; }
-.ftr__in{ display:grid; grid-template-columns:1.6fr 1fr 1fr 1.2fr; gap:clamp(22px,3vw,40px); }
+.ftr__in{ display:grid; grid-template-columns:1.6fr 1fr 1fr 1fr 1.2fr; gap:clamp(22px,3vw,40px); }
 .ftr__brand p{ font-size:0.875rem; color:var(--mut); margin-block-start:14px; max-width:34ch; }
 .ftr__col h4{ font-size:0.75rem; letter-spacing:.14em; color:var(--txt); margin-block-end:14px; }
 .ftr__col a{ display:block; font-size:0.875rem; color:var(--mut); padding-block:4px; transition:color .25s,padding-inline-start .25s; }
