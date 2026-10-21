@@ -47,19 +47,11 @@ const SHOPIFY = {
      To activate: set domain to "yk3hk2-pu.myshopify.com". */
   domain: "",
   variants: {
-    "classic-zaeem-adult": "53971290620269",  "classic-zaeem-kids": "53971290653037",
-    "classic-ameed-adult": "53971290685805", "classic-ameed-kids": "53971290718573",
-    "classic-raqi-adult": "53971290751341", "classic-raqi-kids": "53971290784109",
-    "classic-faris-adult": "53971290816877", "classic-faris-kids": "53971290849645",
-    "classic-laith-adult": "53971290882413","classic-laith-kids": "53971290915181",
-    /* TODO: the five "classic-<edition>-baby" variants don't exist in Shopify
-       yet — create them there and paste the ids here before going live.
-       Until then checkout falls back to WhatsApp for any baby line. */
-    "terrace-zaeem-adult": "53971294650733",  "terrace-zaeem-kids": "53971294683501",
-    "terrace-ameed-adult": "53971294716269", "terrace-ameed-kids": "53971294749037",
-    "terrace-raqi-adult": "53971294781805", "terrace-raqi-kids": "53971294814573",
-    "terrace-faris-adult": "53971294847341", "terrace-faris-kids": "53971294880109",
-    "terrace-laith-adult": "53971294912877","terrace-laith-kids": "53971294945645"
+    "classic-zaeem-adult": "53971290620269", "classic-zaeem-kids": "53971290653037", "classic-zaeem-baby": "67757252477293",
+    "classic-ameed-adult": "53971290685805", "classic-ameed-kids": "53971290718573", "classic-ameed-baby": "67757252510061",
+    "classic-raqi-adult":  "53971290751341", "classic-raqi-kids":  "53971290784109", "classic-raqi-baby":  "67757252542829",
+    "classic-faris-adult": "53971290816877", "classic-faris-kids": "53971290849645", "classic-faris-baby": "67757252575597",
+    "classic-laith-adult": "53971290882413", "classic-laith-kids": "53971290915181", "classic-laith-baby": "67757252608365"
   }
 };
 
