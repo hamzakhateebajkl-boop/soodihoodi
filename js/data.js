@@ -47,19 +47,19 @@ const SHOPIFY = {
      To activate: set domain to "yk3hk2-pu.myshopify.com". */
   domain: "",
   variants: {
-    "classic-najd-adult": "53971290620269",  "classic-najd-kids": "53971290653037",
-    "classic-hijaz-adult": "53971290685805", "classic-hijaz-kids": "53971290718573",
-    "classic-watan-adult": "53971290751341", "classic-watan-kids": "53971290784109",
-    "classic-nassr-adult": "53971290816877", "classic-nassr-kids": "53971290849645",
-    "classic-shabab-adult": "53971290882413","classic-shabab-kids": "53971290915181",
+    "classic-zaeem-adult": "53971290620269",  "classic-zaeem-kids": "53971290653037",
+    "classic-ameed-adult": "53971290685805", "classic-ameed-kids": "53971290718573",
+    "classic-raqi-adult": "53971290751341", "classic-raqi-kids": "53971290784109",
+    "classic-faris-adult": "53971290816877", "classic-faris-kids": "53971290849645",
+    "classic-laith-adult": "53971290882413","classic-laith-kids": "53971290915181",
     /* TODO: the five "classic-<edition>-baby" variants don't exist in Shopify
        yet — create them there and paste the ids here before going live.
        Until then checkout falls back to WhatsApp for any baby line. */
-    "terrace-najd-adult": "53971294650733",  "terrace-najd-kids": "53971294683501",
-    "terrace-hijaz-adult": "53971294716269", "terrace-hijaz-kids": "53971294749037",
-    "terrace-watan-adult": "53971294781805", "terrace-watan-kids": "53971294814573",
-    "terrace-nassr-adult": "53971294847341", "terrace-nassr-kids": "53971294880109",
-    "terrace-shabab-adult": "53971294912877","terrace-shabab-kids": "53971294945645"
+    "terrace-zaeem-adult": "53971294650733",  "terrace-zaeem-kids": "53971294683501",
+    "terrace-ameed-adult": "53971294716269", "terrace-ameed-kids": "53971294749037",
+    "terrace-raqi-adult": "53971294781805", "terrace-raqi-kids": "53971294814573",
+    "terrace-faris-adult": "53971294847341", "terrace-faris-kids": "53971294880109",
+    "terrace-laith-adult": "53971294912877","terrace-laith-kids": "53971294945645"
   }
 };
 
@@ -85,7 +85,7 @@ const OFFER = {
 /* The edition every first-time visitor lands on. Named rather than taken
    from EDITIONS[0], so reordering the list can never silently change the
    first impression. Returning visitors keep their own last choice. */
-const DEFAULT_EDITION = "najd"; // زعيم الدفا
+const DEFAULT_EDITION = "zaeem"; // زعيم الدفا
 
 /* ---------------------------------------------------------
    EDITIONS
@@ -93,27 +93,27 @@ const DEFAULT_EDITION = "najd"; // زعيم الدفا
    --------------------------------------------------------- */
 const EDITIONS = [
   {
-    id: "najd",
-    img: "img/najd.jpg",
-    card: "img/ed/najd.webp", // 4:5 lookbook shot for the editions rail
+    id: "zaeem",
+    img: "img/zaeem.jpg",
+    card: "img/ed/zaeem.webp", // 4:5 lookbook shot for the editions rail
     /* product-card shots: same three models, garment re-coloured per edition */
     shots: {
-      adult: "img/shot-najd-adult.jpg",
-      kids:  "img/shot-najd-kids.jpg",
-      baby:  "img/shot-najd-baby.jpg"
+      adult: "img/shot-zaeem-adult.jpg",
+      kids:  "img/shot-zaeem-kids.jpg",
+      baby:  "img/shot-zaeem-baby.jpg"
     },
     /* ~6 KB square crops of the same shots, for the bundle builder's
        per-person picker — parents pick a design by seeing it, not by
        decoding a colour chip. */
     thumbs: {
-      adult: "img/thumb/shot-najd-adult.webp",
-      kids:  "img/thumb/shot-najd-kids.webp",
-      baby:  "img/thumb/shot-najd-baby.webp"
+      adult: "img/thumb/shot-zaeem-adult.webp",
+      kids:  "img/thumb/shot-zaeem-kids.webp",
+      baby:  "img/thumb/shot-zaeem-baby.webp"
     },
-    fam: "img/fam-najd.jpg",
-    cut: "img/cut/fam-najd.webp",
-    scale: "img/scale-najd.jpg",
-    life: "img/stadium-najd.jpg",
+    fam: "img/fam-zaeem.jpg",
+    cut: "img/cut/fam-zaeem.webp",
+    scale: "img/scale-zaeem.jpg",
+    life: "img/stadium-zaeem.jpg",
     sky: "#8FC9FF", // light backdrop wash behind the hero family // hero cutout — people only, transparent bg // family gallery shot — section hides for editions without one
     ink: "#0B4EA2",   // text-safe dark variant — NEVER use primary for text on white
     ar: "زعيم الدفا",
@@ -126,28 +126,28 @@ const EDITIONS = [
     glow:    "#1C6FD8"
   },
   {
-    id: "hijaz",
-    fam: "img/fam-hijaz.jpg",
-    cut: "img/cut/fam-hijaz.webp",
-    scale: "img/scale-hijaz.jpg",
-    life: "img/stadium-hijaz.jpg",
+    id: "ameed",
+    fam: "img/fam-ameed.jpg",
+    cut: "img/cut/fam-ameed.webp",
+    scale: "img/scale-ameed.jpg",
+    life: "img/stadium-ameed.jpg",
     sky: "#FFD98A", // light backdrop wash behind the hero family // hero cutout — people only, transparent bg
     fg: "#14161A",
-    img: "img/hijaz.jpg",
-    card: "img/ed/hijaz.webp", // 4:5 lookbook shot for the editions rail
+    img: "img/ameed.jpg",
+    card: "img/ed/ameed.webp", // 4:5 lookbook shot for the editions rail
     /* product-card shots: same three models, garment re-coloured per edition */
     shots: {
-      adult: "img/shot-hijaz-adult.jpg",
-      kids:  "img/shot-hijaz-kids.jpg",
-      baby:  "img/shot-hijaz-baby.jpg"
+      adult: "img/shot-ameed-adult.jpg",
+      kids:  "img/shot-ameed-kids.jpg",
+      baby:  "img/shot-ameed-baby.jpg"
     },
     /* ~6 KB square crops of the same shots, for the bundle builder's
        per-person picker — parents pick a design by seeing it, not by
        decoding a colour chip. */
     thumbs: {
-      adult: "img/thumb/shot-hijaz-adult.webp",
-      kids:  "img/thumb/shot-hijaz-kids.webp",
-      baby:  "img/thumb/shot-hijaz-baby.webp"
+      adult: "img/thumb/shot-ameed-adult.webp",
+      kids:  "img/thumb/shot-ameed-kids.webp",
+      baby:  "img/thumb/shot-ameed-baby.webp"
     },
     ink: "#7A5C00",   // text-safe dark variant — NEVER use primary for text on white
     ar: "عميد المدرجات",
@@ -160,27 +160,27 @@ const EDITIONS = [
     glow:    "#D9A400"
   },
   {
-    id: "watan",
-    fam: "img/fam-watan.jpg",
-    cut: "img/cut/fam-watan.webp",
-    scale: "img/scale-watan.jpg",
-    life: "img/stadium-watan.jpg",
+    id: "raqi",
+    fam: "img/fam-raqi.jpg",
+    cut: "img/cut/fam-raqi.webp",
+    scale: "img/scale-raqi.jpg",
+    life: "img/stadium-raqi.jpg",
     sky: "#9ADFB8", // light backdrop wash behind the hero family // hero cutout — people only, transparent bg
-    img: "img/watan.jpg",
-    card: "img/ed/watan.webp", // 4:5 lookbook shot for the editions rail
+    img: "img/raqi.jpg",
+    card: "img/ed/raqi.webp", // 4:5 lookbook shot for the editions rail
     /* product-card shots: same three models, garment re-coloured per edition */
     shots: {
-      adult: "img/shot-watan-adult.jpg",
-      kids:  "img/shot-watan-kids.jpg",
-      baby:  "img/shot-watan-baby.jpg"
+      adult: "img/shot-raqi-adult.jpg",
+      kids:  "img/shot-raqi-kids.jpg",
+      baby:  "img/shot-raqi-baby.jpg"
     },
     /* ~6 KB square crops of the same shots, for the bundle builder's
        per-person picker — parents pick a design by seeing it, not by
        decoding a colour chip. */
     thumbs: {
-      adult: "img/thumb/shot-watan-adult.webp",
-      kids:  "img/thumb/shot-watan-kids.webp",
-      baby:  "img/thumb/shot-watan-baby.webp"
+      adult: "img/thumb/shot-raqi-adult.webp",
+      kids:  "img/thumb/shot-raqi-kids.webp",
+      baby:  "img/thumb/shot-raqi-baby.webp"
     },
     ink: "#046A38",   // text-safe dark variant — NEVER use primary for text on white
     ar: "راقي السهرة",
@@ -193,28 +193,28 @@ const EDITIONS = [
     glow:    "#089B54"
   },
   {
-    id: "nassr",
-    fam: "img/fam-nassr.jpg",
-    cut: "img/cut/fam-nassr.webp",
-    scale: "img/scale-nassr.jpg",
-    life: "img/stadium-nassr.jpg",
+    id: "faris",
+    fam: "img/fam-faris.jpg",
+    cut: "img/cut/fam-faris.webp",
+    scale: "img/scale-faris.jpg",
+    life: "img/stadium-faris.jpg",
     sky: "#FFE08A", // light backdrop wash behind the hero family // hero cutout — people only, transparent bg
     fg: "#14161A",
-    img: "img/nassr.jpg",
-    card: "img/ed/nassr.webp", // 4:5 lookbook shot for the editions rail
+    img: "img/faris.jpg",
+    card: "img/ed/faris.webp", // 4:5 lookbook shot for the editions rail
     /* product-card shots: same three models, garment re-coloured per edition */
     shots: {
-      adult: "img/shot-nassr-adult.jpg",
-      kids:  "img/shot-nassr-kids.jpg",
-      baby:  "img/shot-nassr-baby.jpg"
+      adult: "img/shot-faris-adult.jpg",
+      kids:  "img/shot-faris-kids.jpg",
+      baby:  "img/shot-faris-baby.jpg"
     },
     /* ~6 KB square crops of the same shots, for the bundle builder's
        per-person picker — parents pick a design by seeing it, not by
        decoding a colour chip. */
     thumbs: {
-      adult: "img/thumb/shot-nassr-adult.webp",
-      kids:  "img/thumb/shot-nassr-kids.webp",
-      baby:  "img/thumb/shot-nassr-baby.webp"
+      adult: "img/thumb/shot-faris-adult.webp",
+      kids:  "img/thumb/shot-faris-kids.webp",
+      baby:  "img/thumb/shot-faris-baby.webp"
     },
     ink: "#1C3F94",
     ar: "فارس الليل",
@@ -227,28 +227,28 @@ const EDITIONS = [
     glow:    "#C9A500"
   },
   {
-    id: "shabab",
-    fam: "img/fam-shabab.jpg",
-    cut: "img/cut/fam-shabab.webp",
-    scale: "img/scale-shabab.jpg",
-    life: "img/stadium-shabab.jpg",
+    id: "laith",
+    fam: "img/fam-laith.jpg",
+    cut: "img/cut/fam-laith.webp",
+    scale: "img/scale-laith.jpg",
+    life: "img/stadium-laith.jpg",
     sky: "#E8DCC8", // light backdrop wash behind the hero family // hero cutout — people only, transparent bg
     fg: "#14161A",
-    img: "img/shabab.jpg",
-    card: "img/ed/shabab.webp", // 4:5 lookbook shot for the editions rail
+    img: "img/laith.jpg",
+    card: "img/ed/laith.webp", // 4:5 lookbook shot for the editions rail
     /* product-card shots: same three models, garment re-coloured per edition */
     shots: {
-      adult: "img/shot-shabab-adult.jpg",
-      kids:  "img/shot-shabab-kids.jpg",
-      baby:  "img/shot-shabab-baby.jpg"
+      adult: "img/shot-laith-adult.jpg",
+      kids:  "img/shot-laith-kids.jpg",
+      baby:  "img/shot-laith-baby.jpg"
     },
     /* ~6 KB square crops of the same shots, for the bundle builder's
        per-person picker — parents pick a design by seeing it, not by
        decoding a colour chip. */
     thumbs: {
-      adult: "img/thumb/shot-shabab-adult.webp",
-      kids:  "img/thumb/shot-shabab-kids.webp",
-      baby:  "img/thumb/shot-shabab-baby.webp"
+      adult: "img/thumb/shot-laith-adult.webp",
+      kids:  "img/thumb/shot-laith-kids.webp",
+      baby:  "img/thumb/shot-laith-baby.webp"
     },
     ink: "#1A1A1A",
     ar: "ليث الشتا",
@@ -341,19 +341,19 @@ const BUNDLE = {
 const PACKS = [
   { id: "trio-kid",   ar: "عائلة + طفل",       en: "Family + kid",
     slots: ["adult", "adult", "kids"],
-    mix:   ["najd", "hijaz", "watan"] },
+    mix:   ["zaeem", "ameed", "raqi"] },
   { id: "trio-baby",  ar: "عائلة + بيبي",      en: "Family + baby",
     slots: ["adult", "adult", "baby"],
-    mix:   ["watan", "nassr", "najd"] },
+    mix:   ["raqi", "faris", "zaeem"] },
   { id: "quad-kids",  ar: "عائلة + طفلين",     en: "Family + 2 kids",
     slots: ["adult", "adult", "kids", "kids"],
-    mix:   ["najd", "shabab", "hijaz", "nassr"] },
+    mix:   ["zaeem", "laith", "ameed", "faris"] },
   { id: "quad-mixed", ar: "عائلة + طفل وبيبي", en: "Family + kid & baby",
     slots: ["adult", "adult", "kids", "baby"],
-    mix:   ["hijaz", "najd", "watan", "shabab"] },
+    mix:   ["ameed", "zaeem", "raqi", "laith"] },
   { id: "siblings",   ar: "طقم الإخوان",       en: "Siblings kit",
     slots: ["kids", "baby"],
-    mix:   ["nassr", "watan"] }
+    mix:   ["faris", "raqi"] }
 ];
 
 /* ---------------------------------------------------------

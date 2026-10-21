@@ -95,7 +95,7 @@ LIMITS
 `;
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const origin = request.headers.get("Origin") || "";
     const allowed = ALLOWED_ORIGINS.includes(origin);
     const cors = {
@@ -105,9 +105,13 @@ export default {
       "Access-Control-Max-Age": "86400",
       "Vary": "Origin"
     };
+    const later = (p) => { if (ctx && ctx.waitUntil) ctx.waitUntil(p); };
 
     if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: cors });
-    if (request.method === "GET") return json({ ok: true, service: "soodihoodi-chat" }, 200, cors);
+    if (request.method === "GET") {
+      if (new URL(request.url).pathname === "/telegram-setup") return telegramSetup(env, cors);
+      return json({ ok: true, service: "soodihoodi-chat", telegram: telegramReady(env) }, 200, cors);
+    }
     if (request.method !== "POST") return json({ error: "method_not_allowed" }, 405, cors);
     if (!allowed) return json({ error: "origin_not_allowed" }, 403, cors);
     if (!env.ANTHROPIC_API_KEY) return json({ error: "not_configured" }, 500, cors);
@@ -120,6 +124,11 @@ export default {
     const messages = clean(body && body.messages);
     if (!messages) return json({ error: "bad_messages" }, 400, cors);
     const lang = body.lang === "en" ? "en" : "ar";
+    const where = {
+      lang,
+      page: typeof body.page === "string" && body.page.charAt(0) === "/" ? body.page.slice(0, 80) : "",
+      country: (request.cf && request.cf.country) || ""
+    };
 
     const payload = {
       model: env.MODEL || MODEL,
@@ -140,6 +149,7 @@ export default {
         body: JSON.stringify(payload)
       });
     } catch (e) {
+      later(errorAlert(env, "The assistant could not reach Claude (network error)."));
       return json({ error: "upstream_unreachable" }, 502, cors);
     }
     if (!r.ok) {
@@ -147,15 +157,85 @@ export default {
       console.log("anthropic_error", r.status, raw.slice(0, 500));
       let detail = "";
       try { detail = (JSON.parse(raw).error || {}).message || ""; } catch (e) {}
+      later(errorAlert(env, `Claude returned ${r.status}: ${detail.slice(0, 200)}`));
       return json({ error: "upstream", status: r.status, detail: detail.slice(0, 200) }, 502, cors);
     }
     const data = await r.json();
     let reply = (data.content || []).filter(b => b.type === "text").map(b => b.text).join("").trim();
     const handoff = reply.includes("[[WHATSAPP]]");
     reply = reply.replace(/\[\[WHATSAPP\]\]/g, "").trim();
+
+    // Telegram: always when the customer is sent to the team; every new
+    // chat too when TELEGRAM_ALERTS is set to "all".
+    if (telegramReady(env)) {
+      if (handoff) later(chatAlert(env, "handoff", messages, reply, where));
+      else if (env.TELEGRAM_ALERTS === "all" && messages.length === 1) later(chatAlert(env, "new", messages, reply, where));
+    }
     return json({ reply, handoff }, 200, cors);
   }
 };
+
+/* ---------------- Telegram alerts ----------------
+   TELEGRAM_BOT_TOKEN (secret)  — from @BotFather
+   TELEGRAM_CHAT_ID   (text)    — your chat with the bot; /telegram-setup finds it
+   TELEGRAM_ALERTS    (text)    — optional: "all" also alerts on every new chat */
+function telegramReady(env) { return !!(env.TELEGRAM_BOT_TOKEN && env.TELEGRAM_CHAT_ID); }
+
+async function tg(env, method, body) {
+  const r = await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/${method}`, {
+    method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body || {})
+  });
+  const d = await r.json().catch(() => ({}));
+  if (!d.ok) console.log("telegram_error", method, r.status, JSON.stringify(d).slice(0, 300));
+  return d;
+}
+
+function riyadhTime() {
+  try {
+    return new Date().toLocaleString("en-GB", { timeZone: "Asia/Riyadh", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }) + " Riyadh";
+  } catch (e) { return new Date().toISOString().slice(0, 16).replace("T", " ") + " UTC"; }
+}
+
+function chatAlert(env, kind, messages, reply, where) {
+  const head = kind === "handoff"
+    ? "🟢 Customer needs the team"
+    : "💬 New chat on soodihoodi.com";
+  const meta = [where.lang === "ar" ? "Arabic site" : "English site", where.country, where.page, riyadhTime()].filter(Boolean).join(" · ");
+  const turns = messages.slice(-8).map(m => (m.role === "user" ? "👤 " : "🤖 ") + m.content.slice(0, 500));
+  turns.push("🤖 " + reply.slice(0, 500));
+  const foot = kind === "handoff"
+    ? "They were shown the WhatsApp button. If they tap it, their message arrives on +968 7708 3190."
+    : "";
+  const text = [head, meta, "", turns.join("\n\n"), foot ? "\n" + foot : ""].join("\n").slice(0, 3900);
+  return tg(env, "sendMessage", { chat_id: env.TELEGRAM_CHAT_ID, text, disable_web_page_preview: true }).catch(() => {});
+}
+
+let lastErrorAlert = 0;
+function errorAlert(env, detail) {
+  if (!telegramReady(env)) return Promise.resolve();
+  const now = Date.now();
+  if (now - lastErrorAlert < 10 * 60 * 1000) return Promise.resolve(); // at most one every 10 minutes
+  lastErrorAlert = now;
+  const text = "⚠️ Website chat assistant error\n" + detail + "\n\nCustomers are being shown the WhatsApp button meanwhile. Check credit and the API key in the Claude Console.";
+  return tg(env, "sendMessage", { chat_id: env.TELEGRAM_CHAT_ID, text }).catch(() => {});
+}
+
+/* One-time helper: after creating the bot and sending it any message, open
+   https://<worker>/telegram-setup. It finds your chat, sends you its ID in
+   Telegram, and stops working once TELEGRAM_CHAT_ID is set. */
+async function telegramSetup(env, cors) {
+  if (!env.TELEGRAM_BOT_TOKEN) return json({ error: "Add the TELEGRAM_BOT_TOKEN secret first." }, 400, cors);
+  if (env.TELEGRAM_CHAT_ID) return json({ ok: true, connected: true }, 200, cors);
+  const d = await tg(env, "getUpdates", { allowed_updates: ["message"] });
+  const chats = (d.result || []).map(u => u.message && u.message.chat).filter(c => c && c.type === "private");
+  if (!chats.length) return json({ error: "No message found. Open your bot in Telegram, press Start or send it any message, then reload this page." }, 404, cors);
+  const chat = chats[chats.length - 1];
+  await tg(env, "sendMessage", {
+    chat_id: chat.id,
+    text: `✅ SoodiHoodi alerts bot is working.\n\nYour chat ID is: ${chat.id}\n\nAdd it in Cloudflare as the variable TELEGRAM_CHAT_ID to switch alerts on.`
+  });
+  return json({ ok: true, chat_id: String(chat.id), name: chat.first_name || "" }, 200, cors);
+}
 
 /* Personal Console keys act as you. A key limited to one workspace needs
    nothing extra; a key that isn't needs the workspace id, which you can add

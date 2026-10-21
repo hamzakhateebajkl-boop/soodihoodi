@@ -160,6 +160,7 @@
 
     var payload = {
       lang: lang(),
+      page: location.pathname,
       messages: history.slice(-CHAT.maxTurns).map(function (m) { return { role: m.role, content: m.content }; })
     };
     fetch(CHAT.endpoint, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) })
