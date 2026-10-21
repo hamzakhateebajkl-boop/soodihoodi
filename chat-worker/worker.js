@@ -12,7 +12,8 @@
    ========================================================= */
 
 const MODEL = "claude-haiku-5-5";       // fast and inexpensive; enough for store questions
-const MAX_TOKENS = 400;
+const MAX_TOKENS = 1200;                 // room for the model's brief thinking plus a short reply
+const EFFORT = "low";                    // short store answers don't need deep thinking
 const ALLOWED_ORIGINS = [
   "https://soodihoodi.com",
   "https://www.soodihoodi.com",
@@ -123,7 +124,7 @@ export default {
     const payload = {
       model: env.MODEL || MODEL,
       max_tokens: MAX_TOKENS,
-      temperature: 0.3,
+      output_config: { effort: EFFORT },
       system: [
         { type: "text", text: RULES + "\nSTORE KNOWLEDGE\n" + KNOWLEDGE, cache_control: { type: "ephemeral" } },
         { type: "text", text: `The website is currently shown in ${lang === "ar" ? "Arabic" : "English"}; still reply in the language the customer writes in.` }
@@ -135,20 +136,18 @@ export default {
     try {
       r = await fetch("https://api.anthropic.com/v1/messages", {
         method: "POST",
-        headers: {
-          "content-type": "application/json",
-          "x-api-key": env.ANTHROPIC_API_KEY,
-          "anthropic-version": "2023-06-01"
-        },
+        headers: upstreamHeaders(env),
         body: JSON.stringify(payload)
       });
     } catch (e) {
       return json({ error: "upstream_unreachable" }, 502, cors);
     }
     if (!r.ok) {
-      const detail = await r.text().catch(() => "");
-      console.log("anthropic_error", r.status, detail.slice(0, 500));
-      return json({ error: "upstream", status: r.status }, 502, cors);
+      const raw = await r.text().catch(() => "");
+      console.log("anthropic_error", r.status, raw.slice(0, 500));
+      let detail = "";
+      try { detail = (JSON.parse(raw).error || {}).message || ""; } catch (e) {}
+      return json({ error: "upstream", status: r.status, detail: detail.slice(0, 200) }, 502, cors);
     }
     const data = await r.json();
     let reply = (data.content || []).filter(b => b.type === "text").map(b => b.text).join("").trim();
@@ -157,6 +156,19 @@ export default {
     return json({ reply, handoff }, 200, cors);
   }
 };
+
+/* Personal Console keys act as you. A key limited to one workspace needs
+   nothing extra; a key that isn't needs the workspace id, which you can add
+   as the plain variable ANTHROPIC_WORKSPACE_ID. */
+function upstreamHeaders(env) {
+  const h = {
+    "content-type": "application/json",
+    "authorization": "Bearer " + env.ANTHROPIC_API_KEY,
+    "anthropic-version": "2023-06-01"
+  };
+  if (env.ANTHROPIC_WORKSPACE_ID) h["anthropic-workspace-id"] = env.ANTHROPIC_WORKSPACE_ID;
+  return h;
+}
 
 /* Keep only well-formed, alternating user/assistant turns; cap length so a
    visitor can't run up the bill with huge pastes or endless history. */
