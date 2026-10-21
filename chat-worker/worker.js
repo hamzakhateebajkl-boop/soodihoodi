@@ -9,6 +9,11 @@
 
    To update what the assistant knows (prices, editions, policy),
    edit the KNOWLEDGE text below and press Deploy again.
+
+   Telegram (optional): alerts to the team, and replies from Telegram
+   back into the customer's website chat. Needs TELEGRAM_BOT_TOKEN
+   (secret), TELEGRAM_CHAT_ID (text) and, for replies, a Workers KV
+   namespace bound as CHAT_KV. Open /telegram-connect once after setup.
    ========================================================= */
 
 const MODEL = "claude-haiku-5-5";       // fast and inexpensive; enough for store questions
@@ -19,7 +24,10 @@ const ALLOWED_ORIGINS = [
   "https://www.soodihoodi.com",
   "http://localhost:4173"                // local preview
 ];
-const LIMIT = { perWindow: 30, windowMs: 10 * 60 * 1000 }; // per visitor IP, best effort
+const LIMIT = { perWindow: 30, windowMs: 10 * 60 * 1000 };       // chat messages per visitor IP, best effort
+const POLL_LIMIT = { perWindow: 150, windowMs: 10 * 60 * 1000 }; // inbox checks per visitor IP
+const SID_RE = /^[A-HJ-NP-Z2-9]{8}$/;                             // chat code shown in Telegram, e.g. #K3F9QZ7A
+const KEEP_SECONDS = 2 * 24 * 60 * 60;                            // team replies are kept for two days
 
 const KNOWLEDGE = `
 STORE: SoodiHoodi (soodihoodi.com) — oversized sherpa blanket hoodies in football-terrace colours, for fans in the Kingdom of Saudi Arabia and their families. Tagline: منسوجة بوفاك / Woven with your loyalty. An independent brand: NOT official merchandise of any club, federation or player. Editions are inspired by colours only.
@@ -96,39 +104,55 @@ LIMITS
 
 export default {
   async fetch(request, env, ctx) {
+    const url = new URL(request.url);
+    // Telegram calls this path directly (no browser, no Origin header).
+    if (url.pathname === "/telegram-webhook") return telegramWebhook(request, env);
+
     const origin = request.headers.get("Origin") || "";
     const allowed = ALLOWED_ORIGINS.includes(origin);
     const cors = {
       "Access-Control-Allow-Origin": allowed ? origin : ALLOWED_ORIGINS[0],
-      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type",
       "Access-Control-Max-Age": "86400",
       "Vary": "Origin"
     };
     const later = (p) => { if (ctx && ctx.waitUntil) ctx.waitUntil(p); };
+    const ip = request.headers.get("CF-Connecting-IP") || "unknown";
 
     if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: cors });
     if (request.method === "GET") {
-      if (new URL(request.url).pathname === "/telegram-setup") return telegramSetup(env, cors);
-      return json({ ok: true, service: "soodihoodi-chat", telegram: telegramReady(env) }, 200, cors);
+      if (url.pathname === "/inbox") return inbox(url, env, cors, allowed, ip);
+      if (url.pathname === "/telegram-setup") return telegramSetup(env, cors);
+      if (url.pathname === "/telegram-connect") return telegramConnect(url, env, cors);
+      return json({ ok: true, service: "soodihoodi-chat", telegram: telegramReady(env), replies: !!env.CHAT_KV }, 200, cors);
     }
     if (request.method !== "POST") return json({ error: "method_not_allowed" }, 405, cors);
     if (!allowed) return json({ error: "origin_not_allowed" }, 403, cors);
     if (!env.ANTHROPIC_API_KEY) return json({ error: "not_configured" }, 500, cors);
 
-    const ip = request.headers.get("CF-Connecting-IP") || "unknown";
-    if (!rateOk(ip)) return json({ error: "rate_limited" }, 429, cors);
+    if (!rateOk(ip, LIMIT)) return json({ error: "rate_limited" }, 429, cors);
 
     let body;
     try { body = await request.json(); } catch (e) { return json({ error: "bad_json" }, 400, cors); }
     const messages = clean(body && body.messages);
     if (!messages) return json({ error: "bad_messages" }, 400, cors);
     const lang = body.lang === "en" ? "en" : "ar";
+    const sid = typeof body.sid === "string" && SID_RE.test(body.sid) ? body.sid : "";
+    const mode = body.mode === "team" || body.mode === "handoff" ? body.mode : "";
     const where = {
-      lang,
+      lang, sid,
       page: typeof body.page === "string" && body.page.charAt(0) === "/" ? body.page.slice(0, 80) : "",
       country: (request.cf && request.cf.country) || ""
     };
+
+    // Once the team has answered in Telegram, the customer is talking to a
+    // person: pass their message straight to Telegram, no AI reply.
+    if (mode === "team" && sid && telegramReady(env)) {
+      const last = messages[messages.length - 1].content;
+      const r = await followUp(env, "team", where, last, "");
+      return json({ reply: "", team: true, delivered: !!(r && r.ok) }, 200, cors);
+    }
 
     const payload = {
       model: env.MODEL || MODEL,
@@ -165,15 +189,35 @@ export default {
     const handoff = reply.includes("[[WHATSAPP]]");
     reply = reply.replace(/\[\[WHATSAPP\]\]/g, "").trim();
 
-    // Telegram: always when the customer is sent to the team; every new
-    // chat too when TELEGRAM_ALERTS is set to "all".
+    // Telegram: always when the customer is sent to the team; follow-ups
+    // from a chat already sent to the team; every new chat too when
+    // TELEGRAM_ALERTS is set to "all".
     if (telegramReady(env)) {
-      if (handoff) later(chatAlert(env, "handoff", messages, reply, where));
-      else if (env.TELEGRAM_ALERTS === "all" && messages.length === 1) later(chatAlert(env, "new", messages, reply, where));
+      if (handoff && mode !== "handoff") {
+        later(chatAlert(env, "handoff", messages, reply, where));
+        if (sid && env.CHAT_KV) later(env.CHAT_KV.put("last", sid, { expirationTtl: KEEP_SECONDS }).catch(() => {}));
+      } else if (mode === "handoff" && sid) {
+        later(followUp(env, "handoff", where, messages[messages.length - 1].content, reply));
+      } else if (env.TELEGRAM_ALERTS === "all" && messages.length === 1) {
+        later(chatAlert(env, "new", messages, reply, where));
+      }
     }
     return json({ reply, handoff }, 200, cors);
   }
 };
+
+/* The customer's page asks every few seconds whether the team has replied
+   from Telegram. Replies live in KV under the chat code for two days. */
+async function inbox(url, env, cors, allowed, ip) {
+  if (!allowed) return json({ error: "origin_not_allowed" }, 403, cors);
+  const sid = url.searchParams.get("sid") || "";
+  if (!env.CHAT_KV || !SID_RE.test(sid)) return json({ msgs: [] }, 200, cors);
+  if (!rateOk("in:" + ip, POLL_LIMIT)) return json({ error: "rate_limited" }, 429, cors);
+  const after = Number(url.searchParams.get("after")) || 0;
+  const rec = await env.CHAT_KV.get("s:" + sid, "json").catch(() => null);
+  const msgs = rec && Array.isArray(rec.msgs) ? rec.msgs.filter(m => m.t > after) : [];
+  return json({ msgs }, 200, cors);
+}
 
 /* ---------------- Telegram alerts ----------------
    TELEGRAM_BOT_TOKEN (secret)  — from @BotFather
@@ -197,17 +241,83 @@ function riyadhTime() {
 }
 
 function chatAlert(env, kind, messages, reply, where) {
+  const code = where.sid ? ` · chat #${where.sid}` : "";
   const head = kind === "handoff"
-    ? "🟢 Customer needs the team"
-    : "💬 New chat on soodihoodi.com";
+    ? "🟢 Customer needs the team" + code
+    : "💬 New chat on soodihoodi.com" + code;
   const meta = [where.lang === "ar" ? "Arabic site" : "English site", where.country, where.page, riyadhTime()].filter(Boolean).join(" · ");
   const turns = messages.slice(-8).map(m => (m.role === "user" ? "👤 " : "🤖 ") + m.content.slice(0, 500));
   turns.push("🤖 " + reply.slice(0, 500));
+  const canReply = where.sid && env.CHAT_KV;
   const foot = kind === "handoff"
-    ? "They were shown the WhatsApp button. If they tap it, their message arrives on +968 7708 3190."
+    ? (canReply ? "↩️ Reply to this message to answer them in the website chat (while they still have it open).\n" : "")
+      + "They were also shown the WhatsApp button. If they tap it, their message arrives on +968 7708 3190."
     : "";
   const text = [head, meta, "", turns.join("\n\n"), foot ? "\n" + foot : ""].join("\n").slice(0, 3900);
   return tg(env, "sendMessage", { chat_id: env.TELEGRAM_CHAT_ID, text, disable_web_page_preview: true }).catch(() => {});
+}
+
+/* A customer already passed to the team keeps writing on the website:
+   forward each message so the conversation continues in Telegram. */
+function followUp(env, kind, where, text, reply) {
+  const lines = [`💬 Chat #${where.sid}` + (kind === "team" ? "" : " · the assistant is still answering"), "", "👤 " + text.slice(0, 1500)];
+  if (reply) lines.push("", "🤖 " + reply.slice(0, 800));
+  if (env.CHAT_KV) lines.push("", "↩️ Reply to this message to answer them.");
+  return tg(env, "sendMessage", { chat_id: env.TELEGRAM_CHAT_ID, text: lines.join("\n").slice(0, 3900), disable_web_page_preview: true }).catch(() => null);
+}
+
+async function webhookSecret(env) {
+  const bytes = new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode("soodihoodi:" + env.TELEGRAM_BOT_TOKEN)));
+  return Array.from(bytes, b => b.toString(16).padStart(2, "0")).join("").slice(0, 48);
+}
+
+const HELP = "This bot sends you website chats that need the team.\n\nTo answer a customer, swipe left on their alert (or long-press → Reply) and type your answer. It appears in their chat on soodihoodi.com while they still have the page open. A message that isn't a reply goes to the most recent chat.";
+
+/* Telegram → Worker: the team's replies. Only messages from the team chat
+   (TELEGRAM_CHAT_ID) are accepted, and Telegram must present the secret
+   set by /telegram-connect. */
+async function telegramWebhook(request, env) {
+  const ok = new Response("ok");
+  if (request.method !== "POST" || !env.TELEGRAM_BOT_TOKEN) return ok;
+  if (request.headers.get("X-Telegram-Bot-Api-Secret-Token") !== await webhookSecret(env)) return new Response("forbidden", { status: 403 });
+  let update;
+  try { update = await request.json(); } catch (e) { return ok; }
+  const m = update && update.message;
+  if (!m || !m.chat || String(m.chat.id) !== String(env.TELEGRAM_CHAT_ID)) return ok;
+  const say = (text) => tg(env, "sendMessage", { chat_id: m.chat.id, text, reply_to_message_id: m.message_id }).catch(() => null);
+
+  const text = (m.text || "").trim();
+  if (!text) { await say("Only text can be sent to the website chat."); return ok; }
+  if (text.charAt(0) === "/") { await say(HELP); return ok; }
+  if (!env.CHAT_KV) { await say("Replies to the website are not switched on yet: the CHAT_KV storage is missing in Cloudflare."); return ok; }
+
+  const quoted = (m.reply_to_message && m.reply_to_message.text) || "";
+  const found = quoted.match(/#([A-HJ-NP-Z2-9]{8})\b/);
+  let sid = found ? found[1] : "";
+  const latest = !sid;
+  if (latest) sid = (await env.CHAT_KV.get("last")) || "";
+  if (!SID_RE.test(sid)) { await say("I couldn't tell which customer this is for. Swipe left on their alert and reply to it."); return ok; }
+
+  const key = "s:" + sid;
+  const rec = (await env.CHAT_KV.get(key, "json").catch(() => null)) || { msgs: [] };
+  rec.msgs.push({ t: Date.now(), text: text.slice(0, 2000) });
+  rec.msgs = rec.msgs.slice(-50);
+  await env.CHAT_KV.put(key, JSON.stringify(rec), { expirationTtl: KEEP_SECONDS });
+  await say((latest ? `✅ Sent to the latest chat #${sid}. To answer someone else, reply to their alert.` : `✅ Sent to chat #${sid}.`)
+    + "\nIt shows within about a minute if they still have the page open. If they've left, check WhatsApp.");
+  return ok;
+}
+
+/* Run once after adding the bot token and chat ID: points Telegram at this
+   Worker so replies come back here. Safe to open again. */
+async function telegramConnect(url, env, cors) {
+  if (!env.TELEGRAM_BOT_TOKEN) return json({ error: "Add the TELEGRAM_BOT_TOKEN secret first." }, 400, cors);
+  const d = await tg(env, "setWebhook", {
+    url: `https://${url.host}/telegram-webhook`,
+    secret_token: await webhookSecret(env),
+    allowed_updates: ["message"]
+  });
+  return json({ ok: !!d.ok, description: d.description || "", replies: !!env.CHAT_KV }, d.ok ? 200 : 502, cors);
 }
 
 let lastErrorAlert = 0;
@@ -225,7 +335,7 @@ function errorAlert(env, detail) {
    Telegram, and stops working once TELEGRAM_CHAT_ID is set. */
 async function telegramSetup(env, cors) {
   if (!env.TELEGRAM_BOT_TOKEN) return json({ error: "Add the TELEGRAM_BOT_TOKEN secret first." }, 400, cors);
-  if (env.TELEGRAM_CHAT_ID) return json({ ok: true, connected: true }, 200, cors);
+  if (env.TELEGRAM_CHAT_ID) return json({ ok: true, connected: true, next: "Open /telegram-connect to receive replies." }, 200, cors);
   const d = await tg(env, "getUpdates", { allowed_updates: ["message"] });
   const chats = (d.result || []).map(u => u.message && u.message.chat).filter(c => c && c.type === "private");
   if (!chats.length) return json({ error: "No message found. Open your bot in Telegram, press Start or send it any message, then reload this page." }, 404, cors);
@@ -268,12 +378,12 @@ function clean(list) {
 }
 
 const hits = new Map();
-function rateOk(ip) {
+function rateOk(key, limit) {
   const now = Date.now();
-  const h = hits.get(ip);
-  if (!h || now > h.reset) { hits.set(ip, { n: 1, reset: now + LIMIT.windowMs }); return true; }
+  const h = hits.get(key);
+  if (!h || now > h.reset) { hits.set(key, { n: 1, reset: now + limit.windowMs }); return true; }
   h.n += 1;
-  return h.n <= LIMIT.perWindow;
+  return h.n <= limit.perWindow;
 }
 
 function json(obj, status, headers) {
