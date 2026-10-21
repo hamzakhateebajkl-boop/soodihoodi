@@ -33,6 +33,11 @@
                 en: "Something went wrong on my side. Try again, or message us on WhatsApp." },
     busy:     { ar: "وصلت لحد الأسئلة مؤقتاً. كلّمنا على واتساب ونخدمك.",
                 en: "You've reached the question limit for now. Message us on WhatsApp and we'll help." },
+    team:     { ar: "فريق SoodiHoodi",                  en: "SoodiHoodi team" },
+    waitHere: { ar: "وصّلنا سؤالك للفريق. كمّل معهم على واتساب، أو خلّ الصفحة مفتوحة وممكن يردون عليك هنا.",
+                en: "We've passed your question to the team. Continue on WhatsApp, or keep this page open and they may reply here." },
+    statusTeam: { ar: "تتكلم الحين مع فريق SoodiHoodi",  en: "You're chatting with the SoodiHoodi team" },
+    sent:     { ar: "وصلت للفريق ✓",                    en: "Sent to the team ✓" },
     chips: {
       ar: ["وش المقاس المناسب لي؟", "كم ياخذ التوصيل؟", "كيف أرجّع أو أبدّل؟", "وش خصم العائلة؟"],
       en: ["Which size fits me?", "How long is delivery?", "How do returns work?", "What's the family discount?"]
@@ -51,7 +56,7 @@
 
   // stylesheet
   var css = document.createElement("link");
-  css.rel = "stylesheet"; css.href = "/css/chat.css?v=1";
+  css.rel = "stylesheet"; css.href = "/css/chat.css?v=2";
   document.head.appendChild(css);
 
   // DOM
@@ -83,7 +88,26 @@
   try { history = JSON.parse(sessionStorage.getItem(CHAT.storageKey) || "[]"); } catch (e) { history = []; }
   var busy = false;
 
-  function save() { try { sessionStorage.setItem(CHAT.storageKey, JSON.stringify(history.slice(-30))); } catch (e) {} }
+  /* Chat code: shown to the team in Telegram, used to route their replies
+     back to this conversation. mode: "" → assistant, "handoff" → passed to
+     the team, "team" → the team has replied and is talking directly. */
+  var meta = { sid: "", mode: "", t: 0 };
+  try { meta = JSON.parse(sessionStorage.getItem(CHAT.storageKey + "_meta") || "null") || meta; } catch (e) {}
+  if (!/^[A-HJ-NP-Z2-9]{8}$/.test(meta.sid || "")) {
+    var abc = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789", buf = new Uint8Array(8), id = "";
+    try { crypto.getRandomValues(buf); } catch (e) { for (var k = 0; k < 8; k++) buf[k] = Math.floor(Math.random() * 256); }
+    for (var j = 0; j < 8; j++) id += abc[buf[j] % abc.length];
+    meta.sid = id;
+  }
+  var unread = 0, pollTimer = null, lastActive = Date.now();
+
+  function save() {
+    try {
+      sessionStorage.setItem(CHAT.storageKey, JSON.stringify(history.slice(-40)));
+      sessionStorage.setItem(CHAT.storageKey + "_meta", JSON.stringify(meta));
+    } catch (e) {}
+  }
+  save();
   function waLink(q) { return "https://wa.me/" + CHAT.whatsapp + "?text=" + encodeURIComponent(t("waMsg") + (q || "")); }
   function lastQuestion() { for (var i = history.length - 1; i >= 0; i--) if (history[i].role === "user") return history[i].content; return ""; }
 
@@ -100,11 +124,17 @@
 
   function bubble(role, text, extra) {
     var d = document.createElement("div");
-    d.className = "shc-m " + (role === "user" ? "me" : "bot") + (extra ? " " + extra : "");
+    var cls = role === "user" ? "me" : role === "team" ? "team" : role === "note" ? "note" : "bot";
+    d.className = "shc-m " + cls + (extra ? " " + extra : "");
     d.setAttribute("dir", "auto");
-    d.innerHTML = linkify(text);
+    d.innerHTML = (role === "team" ? '<b class="who">' + esc(t("team")) + "</b>" : "") + linkify(text);
     log.appendChild(d);
     return d;
+  }
+  function status(text) {
+    var d = document.createElement("div");
+    d.className = "shc-st"; d.textContent = text;
+    log.appendChild(d);
   }
   function waButton() {
     var a = document.createElement("a");
@@ -117,6 +147,7 @@
 
   function render() {
     box.querySelectorAll("[data-k]").forEach(function (el) { el.textContent = t(el.getAttribute("data-k")); });
+    if (meta.mode === "team") box.querySelector('[data-k="status"]').textContent = t("statusTeam");
     input.placeholder = t("ph");
     sendBtn.setAttribute("aria-label", t("send"));
     closeBtn.setAttribute("aria-label", t("close"));
@@ -126,8 +157,10 @@
     log.innerHTML = "";
     bubble("assistant", t("hello"));
     history.forEach(function (m) {
+      if (m.role === "note") { bubble("note", t(m.key)); return; }
       bubble(m.role, m.content);
       if (m.handoff) waButton();
+      if (m.sent) status(t("sent"));
     });
     chips.innerHTML = "";
     if (!history.length) {
@@ -144,38 +177,100 @@
   function open(on) {
     box.classList.toggle("open", on);
     fab.setAttribute("aria-expanded", on ? "true" : "false");
-    if (on) { render(); setTimeout(function () { input.focus(); }, 250); }
+    if (on) { unread = 0; badge(); render(); setTimeout(function () { input.focus(); }, 250); }
   }
+  function badge() {
+    var b = fab.querySelector(".badge");
+    if (!unread) { if (b) b.remove(); return; }
+    if (!b) { b = document.createElement("span"); b.className = "badge"; fab.appendChild(b); }
+    b.textContent = unread > 9 ? "9+" : String(unread);
+  }
+
+  /* ---------- replies from the team (Telegram → Worker → here) ---------- */
+  function base() { return CHAT.endpoint.replace(/\/+$/, ""); }
+  function schedule(ms) {
+    clearTimeout(pollTimer);
+    if (!meta.mode) return;
+    if (Date.now() - lastActive > 45 * 60 * 1000) return;       // stop after 45 quiet minutes
+    pollTimer = setTimeout(poll, ms);
+  }
+  function poll() {
+    if (document.visibilityState === "hidden") return;           // resumes on visibilitychange
+    fetch(base() + "/inbox?sid=" + meta.sid + "&after=" + (meta.t || 0))
+      .then(function (r) { return r.ok ? r.json() : { msgs: [] }; })
+      .then(function (d) {
+        var msgs = (d && d.msgs) || [];
+        if (msgs.length) {
+          msgs.forEach(function (m) {
+            if (m.t <= (meta.t || 0)) return;
+            meta.t = m.t;
+            history.push({ role: "team", content: String(m.text || "") });
+            if (box.classList.contains("open")) bubble("team", String(m.text || "")); else unread++;
+          });
+          lastActive = Date.now();
+          if (meta.mode !== "team") { meta.mode = "team"; box.querySelector('[data-k="status"]').textContent = t("statusTeam"); }
+          save(); badge(); scroll();
+        }
+      })
+      .catch(function () {})
+      .then(function () { schedule(8000); });
+  }
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === "visible" && meta.mode) { lastActive = Date.now(); schedule(300); }
+  });
 
   function ask(q) {
     q = (q || "").trim();
     if (!q || busy) return;
     busy = true; sendBtn.disabled = true; chips.innerHTML = "";
-    history.push({ role: "user", content: q.slice(0, 600) }); save();
+    lastActive = Date.now();
+    var mine = { role: "user", content: q.slice(0, 600) };
+    history.push(mine); save();
     bubble("user", q);
     input.value = ""; grow();
     var typing = document.createElement("div");
     typing.className = "shc-typing"; typing.innerHTML = "<i></i><i></i><i></i>";
-    log.appendChild(typing); scroll();
+    if (meta.mode !== "team") log.appendChild(typing);
+    scroll();
 
     var payload = {
       lang: lang(),
       page: location.pathname,
-      messages: history.slice(-CHAT.maxTurns).map(function (m) { return { role: m.role, content: m.content }; })
+      sid: meta.sid,
+      mode: meta.mode,
+      messages: history.filter(function (m) { return m.role !== "note"; }).slice(-CHAT.maxTurns).map(function (m) {
+        return m.role === "team"
+          ? { role: "assistant", content: "(" + T.team.en + ") " + m.content }
+          : { role: m.role, content: m.content };
+      })
     };
     fetch(CHAT.endpoint, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) })
       .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, status: r.status, d: d }; }); })
       .then(function (res) {
         typing.remove();
+        if (res.ok && res.d.team) {
+          if (res.d.delivered) { mine.sent = true; status(t("sent")); }
+          save(); schedule(4000);
+          return;
+        }
         if (!res.ok || !res.d.reply) {
           bubble("assistant", res.status === 429 ? t("busy") : t("err"), "err");
           waButton();
           history.pop(); save();
           return;
         }
-        history.push({ role: "assistant", content: res.d.reply, handoff: !!res.d.handoff }); save();
+        history.push({ role: "assistant", content: res.d.reply, handoff: !!res.d.handoff });
         bubble("assistant", res.d.reply);
-        if (res.d.handoff) waButton();
+        if (res.d.handoff) {
+          waButton();
+          if (!meta.mode) {
+            meta.mode = "handoff";
+            history.push({ role: "note", key: "waitHere" });
+            bubble("note", t("waitHere"));
+            schedule(5000);
+          }
+        }
+        save();
       })
       .catch(function () {
         typing.remove();
@@ -199,4 +294,5 @@
   // follow the site's language switch
   new MutationObserver(function () { render(); }).observe(root, { attributes: true, attributeFilter: ["data-lang"] });
   render();
+  if (meta.mode) schedule(1500);   // came back to the page mid-conversation
 })();
