@@ -58,7 +58,7 @@ FAMILY DISCOUNT (automatic in the cart, any mix of editions and sizes)
 - 2 pieces: 10% off · 3 pieces: 15% off · 4 or more: 20% off
 - Ready packs on the site: Family + kid, Family + baby, Family + 2 kids, Family + kid & baby, Siblings kit. Everyone can wear their own colours.
 
-WELCOME OFFER: first-time visitors may see a 15% welcome offer for signing up with their name and email. The team sends the code personally; if someone hasn't received it, hand off to WhatsApp.
+WELCOME OFFER: 15% off the first order with the code SOODI15. It appears straight after signing up with name and email in the welcome window, and you may share it when asked. One use per customer. It does not add on top of the family discount: whichever discount is bigger applies.
 
 HOW TO ORDER: pick an edition and size on soodihoodi.com, add to the cart, tap checkout and follow the steps. Payment is upfront: Apple Pay, Visa, Mastercard.
 
@@ -132,6 +132,7 @@ export default {
     if (!env.ANTHROPIC_API_KEY) return json({ error: "not_configured" }, 500, cors);
 
     if (!rateOk(ip, LIMIT)) return json({ error: "rate_limited" }, 429, cors);
+    if (url.pathname === "/lead") return lead(request, env, cors, later);
 
     let body;
     try { body = await request.json(); } catch (e) { return json({ error: "bad_json" }, 400, cors); }
@@ -205,6 +206,28 @@ export default {
     return json({ reply, handoff }, 200, cors);
   }
 };
+
+/* Welcome pop-up sign-ups: name + email. Sent to the team's Telegram and
+   kept in KV (key "lead:<time>") so the list can be exported later. */
+async function lead(request, env, cors, later) {
+  let b;
+  try { b = await request.json(); } catch (e) { return json({ error: "bad_json" }, 400, cors); }
+  const name = String((b && b.name) || "").replace(/\s+/g, " ").trim().slice(0, 80);
+  const email = String((b && b.email) || "").trim().slice(0, 120);
+  if (name.length < 2 || !/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(email)) return json({ error: "bad_lead" }, 400, cors);
+  const edition = String((b && b.edition) || "").replace(/[^a-z]/g, "").slice(0, 12);
+  const country = (request.cf && request.cf.country) || "";
+  const at = new Date().toISOString();
+  if (env.CHAT_KV) later(env.CHAT_KV.put("lead:" + at + ":" + Math.random().toString(36).slice(2, 6), JSON.stringify({ name, email, edition, country, at })).catch(() => {}));
+  if (telegramReady(env)) {
+    later(tg(env, "sendMessage", {
+      chat_id: env.TELEGRAM_CHAT_ID,
+      text: ["📩 New sign-up for the 15% code (shown: SOODI15)", "", "Name: " + name, "Email: " + email, [edition && "Edition on screen: " + edition, country, riyadhTime()].filter(Boolean).join(" · ")].join("\n"),
+      disable_web_page_preview: true
+    }).catch(() => {}));
+  }
+  return json({ ok: true }, 200, cors);
+}
 
 /* The customer's page asks every few seconds whether the team has replied
    from Telegram. Replies live in KV under the chat code for two days. */
