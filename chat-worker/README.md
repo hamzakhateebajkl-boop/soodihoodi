@@ -15,5 +15,5 @@ Two parts:
 ## Keep it current
 
 - Prices, editions, delivery or policy change → edit `KNOWLEDGE` in `worker.js` and press Deploy in Cloudflare. No site change needed.
-- When the edition rename ships on the site (Raqi Al-Sahra, Faris Al-Layl), update the EDITIONS list in `KNOWLEDGE` the same day.
+- When an edition name changes on the site (js/data.js), update the EDITIONS list in `KNOWLEDGE` the same day.
 - Cost control: set a monthly spend limit in the Anthropic Console. The Worker also caps each visitor at 30 messages per 10 minutes and trims long messages.

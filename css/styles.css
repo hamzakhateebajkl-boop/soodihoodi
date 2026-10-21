@@ -96,7 +96,7 @@ ul,ol,dl{ margin:0; padding:0; list-style:none; }
   overflow:hidden; border-block-end:1px solid rgba(0,0,0,.22);
   transition:background .7s var(--ease);
 }
-.ticker__row{ display:flex; width:max-content; animation:tick 34s linear infinite; }
+.ticker__row{ display:flex; width:max-content; animation:tick 108s linear infinite; }
 html[dir="rtl"] .ticker__row{ animation-name:tick-rtl; }
 .ticker__set{ display:flex; align-items:center; gap:26px; padding-block:9px; padding-inline-end:26px; white-space:nowrap; }
 .ticker b{ font-size:0.7812rem; font-weight:600; letter-spacing:.02em; }
@@ -884,6 +884,7 @@ html[dir="rtl"] .tbl__hi{ box-shadow:inset -3px 0 0 var(--ed); }
 .acc__i[open] summary::after{ transform:rotate(45deg); }
 .acc__b{ padding:0 20px 19px; }
 .acc__b p{ font-size:0.9062rem; color:color-mix(in srgb,var(--sand-ink) 68%,transparent); }
+.acc__b p a{ color:inherit; text-decoration:underline; text-underline-offset:3px; }
 
 /* =========================================================
    CTA STRIP

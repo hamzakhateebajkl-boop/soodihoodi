@@ -34,8 +34,8 @@ PRODUCT — The Classic Blanket Hoodie (الهودي البطانية الكلا
 EDITIONS (names exactly as on the website)
 1. زعيم الدفا — Za'eem Al-Dafa: royal blue and clean white
 2. عميد المدرجات — Ameed Al-Mudarrajat: royal yellow on black
-3. راقي الدفا — Raqi Al-Dafa: regal green with fine white lines
-4. فارس الدفا — Faris Al-Dafa: yellow and royal blue
+3. راقي السهرة — Raqi Al-Sahra: regal green with fine white lines
+4. فارس الليل — Faris Al-Layl: yellow and royal blue
 5. ليث الشتا — Laith Al-Shita: white with black lines
 A sixth edition is coming soon (no details yet).
 

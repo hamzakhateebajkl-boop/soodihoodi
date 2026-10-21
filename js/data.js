@@ -183,8 +183,8 @@ const EDITIONS = [
       baby:  "img/thumb/shot-watan-baby.webp"
     },
     ink: "#046A38",   // text-safe dark variant — NEVER use primary for text on white
-    ar: "راقي الدفا",
-    en: "Raqi Al-Dafa",
+    ar: "راقي السهرة",
+    en: "Raqi Al-Sahra",
     tagAr: "أخضر ملكي بخطوط بيضاء",
     tagEn: "Regal green, fine white lines",
     primary: "#046A38",
@@ -217,8 +217,8 @@ const EDITIONS = [
       baby:  "img/thumb/shot-nassr-baby.webp"
     },
     ink: "#1C3F94",
-    ar: "فارس الدفا",
-    en: "Faris Al-Dafa",
+    ar: "فارس الليل",
+    en: "Faris Al-Layl",
     tagAr: "أصفر وأزرق ملكي",
     tagEn: "Yellow and royal blue",
     primary: "#FFD400",
