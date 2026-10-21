@@ -12,6 +12,13 @@ Two parts:
 3. Settings → Variables and Secrets → Add → type **Secret**, name `ANTHROPIC_API_KEY`, value = your Anthropic key → Deploy.
 4. Copy the Worker URL (`https://soodihoodi-chat.<subdomain>.workers.dev`) into `CHAT.endpoint` in `js/chat.js`, bump `chat.js?v=` in the pages, and push.
 
+## Telegram (alerts and replies)
+
+- Variables on the Worker: `TELEGRAM_BOT_TOKEN` (Secret), `TELEGRAM_CHAT_ID` (Text, the team chat), optional `TELEGRAM_ALERTS` = `all` to be told about every new chat.
+- Binding: Workers KV namespace `soodihoodi-chat` bound as `CHAT_KV` (stores team replies for two days).
+- After changing the bot token, open `https://soodihoodi-chat.<subdomain>.workers.dev/telegram-connect` once.
+- To answer a customer: reply to their alert in Telegram (swipe left). A message that isn't a reply goes to the most recent chat.
+
 ## Keep it current
 
 - Prices, editions, delivery or policy change → edit `KNOWLEDGE` in `worker.js` and press Deploy in Cloudflare. No site change needed.
