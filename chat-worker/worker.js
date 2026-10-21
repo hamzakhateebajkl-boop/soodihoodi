@@ -64,15 +64,16 @@ HOW TO ORDER: pick an edition and size on soodihoodi.com, add to the cart, tap c
 
 DELIVERY: inside the Kingdom of Saudi Arabia only (other Gulf countries coming soon). Express about 4 working days; standard 7–14 days (estimates). Free shipping on orders over 300 SAR; any shipping charge is shown before payment.
 
-RETURNS AND REFUNDS (full policy: soodihoodi.com/returns/)
-- Return or exchange within 7 days of delivery; item unused, unwashed, in original packaging with tags, with the order number.
+RETURNS AND REFUNDS (full policy: soodihoodi.com/returns/ — follows Articles 13 and 14 of the Saudi E-Commerce Law)
+- Return within 7 days of delivery if the item is unused and unwashed, in the condition received, with tags attached; include the order number.
 - Size exchanges are free (we cover shipping both ways, one exchange per item, subject to stock; refund if the size is unavailable).
-- Change-of-mind returns: full price refunded; the customer covers return shipping.
-- Damaged, faulty or wrong item: report within 7 days with photos; we cover all shipping and replace or refund in full.
-- Refund to the original payment method after a 3-working-day inspection; banks usually show it within 5–14 working days.
+- Change-of-mind returns: the item price is refunded in full; the customer covers return shipping. If the whole order is returned, the original delivery fee is refunded too.
+- Damaged, faulty or wrong item: report within 7 days of delivery with photos; we cover all shipping and replace or refund in full. A manufacturing fault that appears later with normal use: contact the team, we replace or refund. Damage from misuse is not covered.
+- Late delivery: if an order arrives more than 15 days after the confirmed delivery date, the customer can cancel for a full refund (unless force majeure).
+- Refund to the same payment method after a 3-working-day inspection, at the latest within 14 days of receiving the item; banks usually show it within 5–14 working days. No fees deducted except return shipping on change-of-mind returns.
 - Partial return from a family-discount order: the discount is recalculated for the pieces kept.
 - Cancelling before the order ships is free, with a full refund.
-- To start a return: WhatsApp or email with the order number.
+- To start a return: WhatsApp or email with the order number. Complaints can also go to the Ministry of Commerce (1900 or the Balagh Tijari app).
 
 CONTACT: WhatsApp +968 7708 3190 · Email sales@soodihoodi.com · usually reply within one working day.
 PAGES: About soodihoodi.com/about/ · Terms soodihoodi.com/terms/ · Privacy soodihoodi.com/privacy/ · Returns soodihoodi.com/returns/
