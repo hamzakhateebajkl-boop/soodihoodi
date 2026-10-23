@@ -14,7 +14,7 @@
 const SALLA = {
   domain: "",            // e.g. "soodihoodi.salla.sa"  ← leave "" to run in demo mode
   currency: "SAR",
-  freeShipping: 300,     // SAR — free shipping threshold
+  freeShipping: 800,     // SAR — free shipping threshold
   instalments: 4,        // Tabby / Tamara split
 
   /* VAT registration in KSA is only mandatory above SAR 375,000 of annual
