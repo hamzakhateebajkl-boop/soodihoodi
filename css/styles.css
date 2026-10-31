@@ -1570,3 +1570,8 @@ html[dir="ltr"] .teamchip__bar{
   .offer__art img{ width:100%; height:100%; object-fit:cover; display:block; }
   .offer__body{ padding:34px 32px; align-content:center; }
 }
+
+/* ---------- pre-launch (until 11.11) ---------- */
+.cart__launch{ margin:0 0 10px; font-size:0.8125rem; line-height:1.6; text-align:center; color:#A8AFBB; }
+.offer__fine--open{ font-weight:700; }
+#checkout:disabled{ opacity:.6; cursor:not-allowed; }

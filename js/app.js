@@ -24,6 +24,9 @@
       (str, [key, val]) => str.replace(new RegExp("\\{" + key + "\\}", "g"), val),
       t(k)
     );
+  // Orders open at LAUNCH.opensAt; before that checkout is locked.
+  const isOpen = () =>
+    typeof LAUNCH === "undefined" || Date.now() >= Date.parse(LAUNCH.opensAt);
   const ed = (id) =>
     EDITIONS.find((e) => e.id === id) ||
     EDITIONS.find((e) => e.id === DEFAULT_EDITION) ||
@@ -772,7 +775,11 @@
     $("#cartSplit").innerHTML = total
       ? `${t("splitPay")} <b>${money(Math.ceil(total / SALLA.instalments))}</b>`
       : "";
-    $("#checkout").disabled = !state.cart.length;
+    const go = $("#checkout");
+    const lbl = isOpen() ? T.checkoutBtn : T.opensSoon;
+    go.dataset.ar = lbl.ar; go.dataset.en = lbl.en;
+    go.textContent = lbl[state.lang];
+    go.disabled = !state.cart.length || !isOpen();
 
     // free-shipping meter
     const left = Math.max(0, SALLA.freeShipping - total);
@@ -806,6 +813,7 @@
      ========================================================= */
   function checkout() {
     if (!state.cart.length) return;
+    if (!isOpen()) { toast(t("opensSoon")); return; }
 
     // Tier 0 — Shopify hosted checkout via cart permalink: the whole
     // basket goes straight into payment. Only the checkout page is
@@ -1092,6 +1100,7 @@
      BOOT
      ========================================================= */
   function init() {
+    if (isOpen()) $$(".pl").forEach((el) => el.remove());
     // Only claim VAT is included once the store is actually VAT-registered.
     const vat = $("#cartVat");
     if (vat) vat.hidden = !SALLA.vatRegistered;

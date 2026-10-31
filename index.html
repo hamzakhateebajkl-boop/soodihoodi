@@ -6,7 +6,6 @@
 <title>SoodiHoodi — منسوجة بوفاك | هودي بطانية بألوان فريقك</title>
 <meta name="description" content="هودي بطانية واسع يلفّك من راسك لركبتك — صُنع لعشّاق الكورة في السعودية. اختر ألوان فريقك، وتوصيل سريع خلال 4 أيام.">
 <meta name="theme-color" content="#08090C">
-<meta name="robots" content="noindex, nofollow">
 
 <!-- Social sharing (WhatsApp / Twitter / iMessage) -->
 <link rel="canonical" href="https://soodihoodi.com/">
@@ -29,42 +28,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&family=Archivo:wdth,wght@62..125,400..900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css?v=31">
+<link rel="stylesheet" href="css/styles.css?v=32">
 </head>
 <body>
 
-<!-- ============ PRIVATE GATE (remove this block + noindex meta to go public) ============ -->
-<div class="gate" id="gate">
-  <div class="gate__glow" aria-hidden="true"></div>
-  <div class="gate__box">
-    <img src="img/logo.png" alt="SoodiHoodi" class="gate__logo" width="1200" height="189">
-    <span class="gate__soon">قريباً</span>
-    <p class="gate__hint">الموقع تحت التجهيز — أدخل كلمة المرور للمعاينة</p>
-    <form class="gate__form" id="gateForm">
-      <input class="gate__input" id="gateInput" type="password" autocomplete="off"
-             placeholder="كلمة المرور" aria-label="كلمة المرور" enterkeyhint="go"
-             data-ph-ar="كلمة المرور" data-ph-en="Password" data-al-ar="كلمة المرور" data-al-en="Password">
-      <button class="gate__btn" type="submit">دخول</button>
-    </form>
-    <p class="gate__err" id="gateErr" hidden>كلمة المرور غير صحيحة</p>
-  </div>
-</div>
-<script>
-(function(){
-  var KEY="sh_gate_v1", PASS="SOODI2026";
-  try{ if(localStorage.getItem(KEY)===PASS){ document.documentElement.classList.add("ungated"); return; } }catch(e){}
-  document.documentElement.classList.add("gated");
-  addEventListener("DOMContentLoaded",function(){
-    document.getElementById("gateForm").addEventListener("submit",function(ev){
-      ev.preventDefault();
-      var v=document.getElementById("gateInput").value.trim();
-      if(v.toUpperCase()===PASS){ try{localStorage.setItem(KEY,PASS)}catch(e){}
-        document.documentElement.classList.remove("gated"); document.documentElement.classList.add("ungated");
-      } else { document.getElementById("gateErr").hidden=false; }
-    });
-  });
-})();
-</script>
 
 <a class="skip" href="#main" data-ar="تخطَّ إلى المحتوى" data-en="Skip to content">تخطَّ إلى المحتوى</a>
 
@@ -74,29 +41,37 @@
     <!-- Each set repeats the messages so one set is wider than any screen;
          the two identical sets make the loop seamless. -->
     <span class="ticker__set">
+      <b class="pl" data-ar="الطلب يفتح 11.11" data-en="Orders open 11.11">الطلب يفتح 11.11</b><i class="pl">✦</i>
       <b data-ar="شحن مجاني فوق 800 ر.س" data-en="Free shipping over 800 SAR">شحن مجاني فوق 800 ر.س</b><i>✦</i>
       <b data-ar="توصيل سريع خلال 4 أيام" data-en="Express delivery in 4 days">توصيل سريع خلال 4 أيام</b><i>✦</i>
       <b data-ar="توصيل عادي 7–14 يوم" data-en="Standard delivery 7–14 days">توصيل عادي 7–14 يوم</b><i>✦</i>
+      <b class="pl" data-ar="الطلب يفتح 11.11" data-en="Orders open 11.11">الطلب يفتح 11.11</b><i class="pl">✦</i>
       <b data-ar="شحن مجاني فوق 800 ر.س" data-en="Free shipping over 800 SAR">شحن مجاني فوق 800 ر.س</b><i>✦</i>
       <b data-ar="توصيل سريع خلال 4 أيام" data-en="Express delivery in 4 days">توصيل سريع خلال 4 أيام</b><i>✦</i>
       <b data-ar="توصيل عادي 7–14 يوم" data-en="Standard delivery 7–14 days">توصيل عادي 7–14 يوم</b><i>✦</i>
+      <b class="pl" data-ar="الطلب يفتح 11.11" data-en="Orders open 11.11">الطلب يفتح 11.11</b><i class="pl">✦</i>
       <b data-ar="شحن مجاني فوق 800 ر.س" data-en="Free shipping over 800 SAR">شحن مجاني فوق 800 ر.س</b><i>✦</i>
       <b data-ar="توصيل سريع خلال 4 أيام" data-en="Express delivery in 4 days">توصيل سريع خلال 4 أيام</b><i>✦</i>
       <b data-ar="توصيل عادي 7–14 يوم" data-en="Standard delivery 7–14 days">توصيل عادي 7–14 يوم</b><i>✦</i>
+      <b class="pl" data-ar="الطلب يفتح 11.11" data-en="Orders open 11.11">الطلب يفتح 11.11</b><i class="pl">✦</i>
       <b data-ar="شحن مجاني فوق 800 ر.س" data-en="Free shipping over 800 SAR">شحن مجاني فوق 800 ر.س</b><i>✦</i>
       <b data-ar="توصيل سريع خلال 4 أيام" data-en="Express delivery in 4 days">توصيل سريع خلال 4 أيام</b><i>✦</i>
       <b data-ar="توصيل عادي 7–14 يوم" data-en="Standard delivery 7–14 days">توصيل عادي 7–14 يوم</b><i>✦</i>
     </span>
     <span class="ticker__set" aria-hidden="true">
+      <b class="pl" data-ar="الطلب يفتح 11.11" data-en="Orders open 11.11">الطلب يفتح 11.11</b><i class="pl">✦</i>
       <b data-ar="شحن مجاني فوق 800 ر.س" data-en="Free shipping over 800 SAR">شحن مجاني فوق 800 ر.س</b><i>✦</i>
       <b data-ar="توصيل سريع خلال 4 أيام" data-en="Express delivery in 4 days">توصيل سريع خلال 4 أيام</b><i>✦</i>
       <b data-ar="توصيل عادي 7–14 يوم" data-en="Standard delivery 7–14 days">توصيل عادي 7–14 يوم</b><i>✦</i>
+      <b class="pl" data-ar="الطلب يفتح 11.11" data-en="Orders open 11.11">الطلب يفتح 11.11</b><i class="pl">✦</i>
       <b data-ar="شحن مجاني فوق 800 ر.س" data-en="Free shipping over 800 SAR">شحن مجاني فوق 800 ر.س</b><i>✦</i>
       <b data-ar="توصيل سريع خلال 4 أيام" data-en="Express delivery in 4 days">توصيل سريع خلال 4 أيام</b><i>✦</i>
       <b data-ar="توصيل عادي 7–14 يوم" data-en="Standard delivery 7–14 days">توصيل عادي 7–14 يوم</b><i>✦</i>
+      <b class="pl" data-ar="الطلب يفتح 11.11" data-en="Orders open 11.11">الطلب يفتح 11.11</b><i class="pl">✦</i>
       <b data-ar="شحن مجاني فوق 800 ر.س" data-en="Free shipping over 800 SAR">شحن مجاني فوق 800 ر.س</b><i>✦</i>
       <b data-ar="توصيل سريع خلال 4 أيام" data-en="Express delivery in 4 days">توصيل سريع خلال 4 أيام</b><i>✦</i>
       <b data-ar="توصيل عادي 7–14 يوم" data-en="Standard delivery 7–14 days">توصيل عادي 7–14 يوم</b><i>✦</i>
+      <b class="pl" data-ar="الطلب يفتح 11.11" data-en="Orders open 11.11">الطلب يفتح 11.11</b><i class="pl">✦</i>
       <b data-ar="شحن مجاني فوق 800 ر.س" data-en="Free shipping over 800 SAR">شحن مجاني فوق 800 ر.س</b><i>✦</i>
       <b data-ar="توصيل سريع خلال 4 أيام" data-en="Express delivery in 4 days">توصيل سريع خلال 4 أيام</b><i>✦</i>
       <b data-ar="توصيل عادي 7–14 يوم" data-en="Standard delivery 7–14 days">توصيل عادي 7–14 يوم</b><i>✦</i>
@@ -580,6 +555,7 @@
         <span id="offerCodeTxt" dir="ltr">SOODI15</span>
         <small data-ar="اضغط للنسخ" data-en="Tap to copy">اضغط للنسخ</small>
       </button>
+      <p class="offer__fine offer__fine--open pl" data-ar="الطلب يفتح 11.11، احتفظ بالكود." data-en="Orders open on 11.11. Keep your code.">الطلب يفتح 11.11، احتفظ بالكود.</p>
       <p class="offer__fine" data-ar="اكتبه عند الدفع. لأول طلب فقط، وما يجتمع مع خصم العائلة: يُطبَّق الخصم الأكبر."
          data-en="Enter it at checkout. First order only, and it doesn't add to the family discount: the bigger one applies.">اكتبه عند الدفع. لأول طلب فقط، وما يجتمع مع خصم العائلة: يُطبَّق الخصم الأكبر.</p>
       <button class="offer__btn" id="offerGo" type="button" data-ar="ابدأ التسوق" data-en="Start shopping">ابدأ التسوق</button>
@@ -626,6 +602,7 @@
       <b id="cartTotal">0 ر.س</b>
     </div>
     <p class="cart__split" id="cartSplit"></p>
+    <p class="cart__launch pl" id="cartLaunch" data-ar="الطلب يفتح 11 نوفمبر، وسلّتك محفوظة لين ذاك اليوم." data-en="Orders open on 11 November. Your cart is saved until then.">الطلب يفتح 11 نوفمبر، وسلّتك محفوظة لين ذاك اليوم.</p>
     <button class="btn btn--go btn--full" id="checkout" type="button" data-ar="إتمام الطلب" data-en="Checkout">إتمام الطلب</button>
     <p class="cart__vat" id="cartVat" hidden data-ar="السعر شامل ضريبة القيمة المضافة 15٪" data-en="Prices include 15% VAT">السعر شامل ضريبة القيمة المضافة 15٪</p>
   </footer>
@@ -633,8 +610,8 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="js/data.js?v=24"></script>
-<script src="js/app.js?v=23"></script>
+<script src="js/data.js?v=25"></script>
+<script src="js/app.js?v=24"></script>
 <script src="js/chat.js?v=4" defer></script>
 </body>
 </html>

@@ -29,6 +29,8 @@ const POLL_LIMIT = { perWindow: 150, windowMs: 10 * 60 * 1000 }; // inbox checks
 const SID_RE = /^[A-HJ-NP-Z2-9]{8}$/;                             // chat code shown in Telegram, e.g. #K3F9QZ7A
 const KEEP_SECONDS = 2 * 24 * 60 * 60;                            // team replies are kept for two days
 
+const LAUNCH_AT = Date.parse("2026-11-11T00:00:00+03:00");    // orders open 11.11, midnight Saudi time
+
 const KNOWLEDGE = `
 STORE: SoodiHoodi (soodihoodi.com) — oversized sherpa blanket hoodies in football-terrace colours, for fans in the Kingdom of Saudi Arabia and their families. Tagline: منسوجة بوفاك / Woven with your loyalty. An independent brand: NOT official merchandise of any club, federation or player. Editions are inspired by colours only.
 
@@ -58,6 +60,8 @@ SIZES AND PRICES (Saudi Riyals)
 FAMILY DISCOUNT (automatic in the cart, any mix of editions and sizes)
 - 2 pieces: 10% off · 3 pieces: 15% off · 4 or more: 20% off
 - Ready packs on the site: Family + junior, Family + kid, Family + 2 juniors, Family + junior & kid, Siblings kit. Everyone can wear their own colours.
+
+ORDERS OPEN ON 11.11: ordering starts on 11 November 2026 at midnight Saudi time (00:00, 11.11). Before that, the website is open for browsing, building a family set and getting the 15% welcome code, and the cart is kept, but checkout stays locked. There are no pre-orders. If someone wants to order early, tell them orders open on 11.11 and suggest they save the code and leave their pieces in the cart. The note below says whether orders are open right now.
 
 WELCOME OFFER: 15% off the first order with the code SOODI15. It appears straight after signing up with name and email in the welcome window, and you may share it when asked. One use per customer. It does not add on top of the family discount: whichever discount is bigger applies.
 
@@ -163,7 +167,8 @@ export default {
       output_config: { effort: EFFORT },
       system: [
         { type: "text", text: RULES + "\nSTORE KNOWLEDGE\n" + KNOWLEDGE, cache_control: { type: "ephemeral" } },
-        { type: "text", text: `The website is currently shown in ${lang === "ar" ? "Arabic" : "English"}; still reply in the language the customer writes in.` }
+        { type: "text", text: `The website is currently shown in ${lang === "ar" ? "Arabic" : "English"}; still reply in the language the customer writes in. ` +
+          (Date.now() >= LAUNCH_AT ? "Orders are open now." : "Orders are NOT open yet: they open on 11 November 2026 (11.11) at midnight Saudi time.") }
       ],
       messages
     };
