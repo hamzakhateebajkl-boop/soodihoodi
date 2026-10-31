@@ -34,7 +34,7 @@ STORE: SoodiHoodi (soodihoodi.com) — oversized sherpa blanket hoodies in footb
 
 PRODUCT — The Classic Blanket Hoodie (الهودي البطانية الكلاسيكي)
 - Two layers: anti-pill polar face + dense sherpa lining. 380 gsm, 100% microfibre polyester.
-- Oversized on purpose: the adult size reaches past the knee and is much wider than a normal hoodie.
+- Oversized on purpose: the adult size is 95 cm long and reaches about the knee on most adults; much wider than a normal hoodie.
 - Big kangaroo pocket (45 × 22 cm) at the front. Locked seams.
 - Care: machine wash at 30°C, NO fabric softener (it clogs the pile and makes it less warm), line dry (dries fast). Does not shrink at 30°C.
 - Made for AC-cold rooms, midnight kickoffs, the istiraha and the majlis.
@@ -48,15 +48,16 @@ EDITIONS (names exactly as on the website)
 A sixth edition is coming soon (no details yet).
 
 SIZES AND PRICES (Saudi Riyals)
-- Baby (بيبي): ages 2–5, fits height 85–110 cm — 229 SAR
-- Kids (أطفال): ages 6–12, fits height 110–150 cm — 259 SAR
-- Adult (كبار): ages 13+, fits height 150–200 cm, one size fits most adults — 299 SAR
+- Kids (أطفال): 64 cm long, ages 2–6, fits height 85–120 cm — 229 SAR
+- Juniors (ناشئين): 84 cm long, ages 7–14, fits height 120–155 cm — 259 SAR
+- Adults (كبار): 95 cm long, ages 15+, fits height 155 cm and up; reaches about the knee on most adults — 299 SAR
+- Exact widths are not published yet. If asked, say the full measurement sheet is coming and offer the lengths above.
 - Between two sizes? Size up — it's a blanket, not a t-shirt. Measurements are taken flat, ±2 cm.
 - Size guide on the home page: soodihoodi.com/#sizes
 
 FAMILY DISCOUNT (automatic in the cart, any mix of editions and sizes)
 - 2 pieces: 10% off · 3 pieces: 15% off · 4 or more: 20% off
-- Ready packs on the site: Family + kid, Family + baby, Family + 2 kids, Family + kid & baby, Siblings kit. Everyone can wear their own colours.
+- Ready packs on the site: Family + junior, Family + kid, Family + 2 juniors, Family + junior & kid, Siblings kit. Everyone can wear their own colours.
 
 WELCOME OFFER: 15% off the first order with the code SOODI15. It appears straight after signing up with name and email in the welcome window, and you may share it when asked. One use per customer. It does not add on top of the family discount: whichever discount is bigger applies.
 

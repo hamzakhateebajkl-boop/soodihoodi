@@ -292,15 +292,24 @@ const EDITIONS = [
 /* Parents shop by age, not by our category names, so the age band is the
    headline on every size control and the category name is the subtitle.
 
-   The bands are set by the garment length, not by guesswork: a hem reaches
-   the knee at roughly 55% of the wearer's height. Baby is 58 cm long, so it
-   stops covering the knee past ~110 cm (age 5). Kids is 80 cm, so it stops
-   past ~150 cm (age 12) — a 14-year-old belongs in the adult size, which
-   already covers 150–200 cm. */
+   Sizes follow the factory's own garments (October 2026), not our earlier
+   spec: lengths 64, 84 and 95 cm. The fit bands come from the factory's
+   size chart, which shows real wearers: 64 cm on a 96 cm three-year-old
+   falls to the ankle; 84 cm on a 150 cm fifteen-year-old lands at the knee;
+   95 cm on a 175 cm adult lands just above it. A hem reaches the knee at
+   roughly 55% of the wearer's height, so each size covers the knee up to
+   about 120 / 155 / 175 cm.
+
+   The ids stay baby / kids / adult because the Shopify variant mapping and
+   the photo file names use them; only the labels changed:
+     baby  -> Kids     (64 cm)
+     kids  -> Juniors  (84 cm)
+     adult -> Adults   (95 cm)
+   Widths are still to come from the factory's spec sheet. */
 const SIZES = {
-  baby:  { ar: "بيبي",  en: "Baby",  ageAr: "2–5 سنوات",   ageEn: "Ages 2–5"  },
-  kids:  { ar: "أطفال", en: "Kids",  ageAr: "6–12 سنة",    ageEn: "Ages 6–12" },
-  adult: { ar: "كبار",  en: "Adult", ageAr: "13 سنة فأكثر", ageEn: "Ages 13+"  }
+  baby:  { ar: "أطفال",  en: "Kids",    ageAr: "2–6 سنوات",    ageEn: "Ages 2–6",  lengthCm: 64 },
+  kids:  { ar: "ناشئين", en: "Juniors", ageAr: "7–14 سنة",     ageEn: "Ages 7–14", lengthCm: 84 },
+  adult: { ar: "كبار",   en: "Adults",  ageAr: "15 سنة فأكثر", ageEn: "Ages 15+",  lengthCm: 95 }
 };
 
 /* ---------------------------------------------------------
@@ -335,16 +344,16 @@ const BUNDLE = {
    between clubs can still order together. The builder then lets any row
    change, and "match all" collapses the set to one team in a tap. */
 const PACKS = [
-  { id: "trio-kid",   ar: "عائلة + طفل",       en: "Family + kid",
+  { id: "trio-kid",   ar: "عائلة + ناشئ",      en: "Family + junior",
     slots: ["adult", "adult", "kids"],
     mix:   ["zaeem", "ameed", "raqi"] },
-  { id: "trio-baby",  ar: "عائلة + بيبي",      en: "Family + baby",
+  { id: "trio-baby",  ar: "عائلة + طفل",       en: "Family + kid",
     slots: ["adult", "adult", "baby"],
     mix:   ["raqi", "faris", "zaeem"] },
-  { id: "quad-kids",  ar: "عائلة + طفلين",     en: "Family + 2 kids",
+  { id: "quad-kids",  ar: "عائلة + 2 ناشئين",  en: "Family + 2 juniors",
     slots: ["adult", "adult", "kids", "kids"],
     mix:   ["zaeem", "laith", "ameed", "faris"] },
-  { id: "quad-mixed", ar: "عائلة + طفل وبيبي", en: "Family + kid & baby",
+  { id: "quad-mixed", ar: "عائلة + ناشئ وطفل", en: "Family + junior & kid",
     slots: ["adult", "adult", "kids", "baby"],
     mix:   ["ameed", "zaeem", "raqi", "laith"] },
   { id: "siblings",   ar: "طقم الإخوان",       en: "Siblings kit",
