@@ -395,7 +395,7 @@ const PRODUCTS = [
     /* Nothing below 200 SAR. Unit cost is ~100–120, but the ladder between
        sizes deliberately does NOT track fabric cost — a matching family set
        is the product, and a 149 price tag makes the whole line read cheap. */
-    prices:    { adult: 349, kids: 289, baby: 249 },
+    prices:    { adult: 399, kids: 339, baby: 299 },
     compareAt: {},   // no crossed-out prices: never sold at a higher price
     badgeAr: "الأكثر مبيعاً",
     badgeEn: "Best seller"

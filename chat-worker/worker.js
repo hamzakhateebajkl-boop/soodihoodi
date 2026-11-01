@@ -50,9 +50,9 @@ EDITIONS (names exactly as on the website)
 A sixth edition is coming soon (no details yet).
 
 SIZES AND PRICES (Saudi Riyals)
-- Kids (أطفال): 64 cm long, ages 2–6, fits height 85–120 cm — 249 SAR
-- Juniors (ناشئين): 84 cm long, ages 7–14, fits height 120–155 cm — 289 SAR
-- Adults (كبار): 95 cm long, ages 15+, fits height 155 cm and up; reaches about the knee on most adults — 349 SAR
+- Kids (أطفال): 64 cm long, ages 2–6, fits height 85–120 cm — 299 SAR
+- Juniors (ناشئين): 84 cm long, ages 7–14, fits height 120–155 cm — 339 SAR
+- Adults (كبار): 95 cm long, ages 15+, fits height 155 cm and up; reaches about the knee on most adults — 399 SAR
 - Exact widths are not published yet. If asked, say the full measurement sheet is coming and offer the lengths above.
 - Between two sizes? Size up — it's a blanket, not a t-shirt. Measurements are taken flat, ±2 cm.
 - Size guide on the home page: soodihoodi.com/#sizes
