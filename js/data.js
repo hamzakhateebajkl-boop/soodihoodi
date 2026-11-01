@@ -14,7 +14,7 @@
 const SALLA = {
   domain: "",            // e.g. "soodihoodi.salla.sa"  ← leave "" to run in demo mode
   currency: "SAR",
-  freeShipping: 800,     // SAR — free shipping threshold
+  freeShipping: 1200,     // SAR — free shipping threshold
   instalments: 4,        // Tabby / Tamara split
 
   /* VAT registration in KSA is only mandatory above SAR 375,000 of annual
@@ -76,7 +76,7 @@ const SHOPIFY = {
 const LAUNCH = { opensAt: "2026-11-11T00:00:00+03:00" };
 
 const OFFER = {
-  enabled: true,
+  enabled: false,     // switched off 1 Nov 2026: no welcome code (SOODI15 retired, margins)
   pct: 15,
   delayMs: 8000,       // let them see the hero first
   code: "SOODI15",
@@ -328,11 +328,11 @@ const SIZES = {
    Tiered, not flat: every extra person visibly raises the discount, which
    is the only reason a "family bundle" persuades anyone. Highest matching
    tier wins. Change the percentages to whatever your margin supports —
-   at 20% off a 4-person set still clears roughly 50% gross.
+   Capped at 15% since 1 Nov 2026: drop-shipped parcels cost 160–210 SAR
+   each, so a 20% tier made the biggest family orders the thinnest.
    --------------------------------------------------------- */
 const BUNDLE = {
   tiers: [
-    { min: 4, pct: 20 },
     { min: 3, pct: 15 },
     { min: 2, pct: 10 }
   ]
@@ -395,8 +395,8 @@ const PRODUCTS = [
     /* Nothing below 200 SAR. Unit cost is ~100–120, but the ladder between
        sizes deliberately does NOT track fabric cost — a matching family set
        is the product, and a 149 price tag makes the whole line read cheap. */
-    prices:    { adult: 299, kids: 259, baby: 229 },
-    compareAt: { adult: 359, kids: 309, baby: 279 },
+    prices:    { adult: 349, kids: 289, baby: 249 },
+    compareAt: {},   // no crossed-out prices: never sold at a higher price
     badgeAr: "الأكثر مبيعاً",
     badgeEn: "Best seller"
   }

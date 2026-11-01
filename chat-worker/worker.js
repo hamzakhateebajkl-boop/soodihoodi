@@ -50,24 +50,24 @@ EDITIONS (names exactly as on the website)
 A sixth edition is coming soon (no details yet).
 
 SIZES AND PRICES (Saudi Riyals)
-- Kids (أطفال): 64 cm long, ages 2–6, fits height 85–120 cm — 229 SAR
-- Juniors (ناشئين): 84 cm long, ages 7–14, fits height 120–155 cm — 259 SAR
-- Adults (كبار): 95 cm long, ages 15+, fits height 155 cm and up; reaches about the knee on most adults — 299 SAR
+- Kids (أطفال): 64 cm long, ages 2–6, fits height 85–120 cm — 249 SAR
+- Juniors (ناشئين): 84 cm long, ages 7–14, fits height 120–155 cm — 289 SAR
+- Adults (كبار): 95 cm long, ages 15+, fits height 155 cm and up; reaches about the knee on most adults — 349 SAR
 - Exact widths are not published yet. If asked, say the full measurement sheet is coming and offer the lengths above.
 - Between two sizes? Size up — it's a blanket, not a t-shirt. Measurements are taken flat, ±2 cm.
 - Size guide on the home page: soodihoodi.com/#sizes
 
 FAMILY DISCOUNT (automatic in the cart, any mix of editions and sizes)
-- 2 pieces: 10% off · 3 pieces: 15% off · 4 or more: 20% off
+- 2 pieces: 10% off · 3 or more pieces: 15% off (the most it goes)
 - Ready packs on the site: Family + junior, Family + kid, Family + 2 juniors, Family + junior & kid, Siblings kit. Everyone can wear their own colours.
 
-ORDERS OPEN ON 11.11: ordering starts on 11 November 2026 at midnight Saudi time (00:00, 11.11). Before that, the website is open for browsing, building a family set and getting the 15% welcome code, and the cart is kept, but checkout stays locked. There are no pre-orders. If someone wants to order early, tell them orders open on 11.11 and suggest they save the code and leave their pieces in the cart. The note below says whether orders are open right now.
+ORDERS OPEN ON 11.11: ordering starts on 11 November 2026 at midnight Saudi time (00:00, 11.11). Before that, the website is open for browsing, building a family set, and the cart is kept, but checkout stays locked. There are no pre-orders. If someone wants to order early, tell them orders open on 11.11 and suggest they leave their pieces in the cart. The note below says whether orders are open right now.
 
-WELCOME OFFER: 15% off the first order with the code SOODI15. It appears straight after signing up with name and email in the welcome window, and you may share it when asked. One use per customer. It does not add on top of the family discount: whichever discount is bigger applies.
+DISCOUNT CODES: there is no welcome code or other discount code now; the only discount is the automatic family discount. Never invent a code. If someone already received SOODI15 from the old welcome window, it still works once on their first order until 30 November 2026, and it does not add on top of the family discount (the bigger one applies).
 
 HOW TO ORDER: pick an edition and size on soodihoodi.com, add to the cart, tap checkout and follow the steps. Payment is upfront: Apple Pay, Visa, Mastercard.
 
-DELIVERY: inside the Kingdom of Saudi Arabia only (other Gulf countries coming soon). Delivery takes 7–14 days (an estimate). There is no express option. Free shipping on orders over 800 SAR; any shipping charge is shown before payment.
+DELIVERY: inside the Kingdom of Saudi Arabia only (other Gulf countries coming soon). Delivery takes 14–21 days (an estimate). There is no express option. Free shipping on orders over 1,200 SAR; any shipping charge is shown before payment.
 
 RETURNS AND REFUNDS (full policy: soodihoodi.com/returns/ — follows Articles 13 and 14 of the Saudi E-Commerce Law)
 - Return within 7 days of delivery if the item is unused and unwashed, in the condition received, with tags attached; include the order number.
