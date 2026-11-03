@@ -81,3 +81,7 @@ html[dir="rtl"] .note{border-radius:12px 0 0 12px}
 .lf small{display:block;color:var(--mut);font-size:12.5px;line-height:1.8}
 .lf__c{font-size:14px;color:var(--txt)}
 .lf__c a{color:var(--txt);text-decoration:none}
+.socials{display:flex;gap:10px;margin-top:14px}
+.socials a{display:grid;place-items:center;width:44px;height:44px;border:1px solid var(--line);border-radius:50%;color:var(--txt);transition:color .25s,border-color .25s}
+.socials a:hover{border-color:var(--txt)}
+.socials svg{width:18px;height:18px}
