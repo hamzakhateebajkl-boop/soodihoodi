@@ -30,7 +30,7 @@ const SALLA = {
      2. AFTER Salla is live → multi-item carts go to WhatsApp, because
         Salla Instant Purchase links carry exactly one product each.
      Leave "" to disable (checkout then stays in demo mode until Salla). */
-  whatsapp: "96877083190"
+  whatsapp: "96876771754"
 };
 
 /* ---------------------------------------------------------

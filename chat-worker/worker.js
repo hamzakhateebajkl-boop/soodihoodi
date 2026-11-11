@@ -80,7 +80,7 @@ RETURNS AND REFUNDS (full policy: soodihoodi.com/returns/ — follows Articles 1
 - Cancelling before the order ships is free, with a full refund.
 - To start a return: WhatsApp or email with the order number. Complaints can also go to the Ministry of Commerce (1900 or the Balagh Tijari app).
 
-CONTACT: WhatsApp +968 7708 3190 · Email sales@soodihoodi.com · usually reply within one working day.
+CONTACT: WhatsApp +968 7677 1754 · Email sales@soodihoodi.com · usually reply within one working day.
 PAGES: About soodihoodi.com/about/ · Terms soodihoodi.com/terms/ · Privacy soodihoodi.com/privacy/ · Returns soodihoodi.com/returns/
 OPERATOR: SoodiHoodi is operated by Hamzeh Al Khatib from Muscat, Sultanate of Oman.
 `;
@@ -281,7 +281,7 @@ function chatAlert(env, kind, messages, reply, where) {
   const canReply = where.sid && env.CHAT_KV;
   const foot = kind === "handoff"
     ? (canReply ? "↩️ Reply to this message to answer them in the website chat (while they still have it open).\n" : "")
-      + "They were also shown the WhatsApp button. If they tap it, their message arrives on +968 7708 3190."
+      + "They were also shown the WhatsApp button. If they tap it, their message arrives on +968 7677 1754."
     : "";
   const text = [head, meta, "", turns.join("\n\n"), foot ? "\n" + foot : ""].join("\n").slice(0, 3900);
   return tg(env, "sendMessage", { chat_id: env.TELEGRAM_CHAT_ID, text, disable_web_page_preview: true }).catch(() => {});

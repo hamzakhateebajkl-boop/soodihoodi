@@ -8,7 +8,7 @@
 (function () {
   var CHAT = {
     endpoint: "https://soodihoodi-chat.hamzakhateebajkl.workers.dev",
-    whatsapp: "96877083190",
+    whatsapp: "96876771754",
     storageKey: "sh_chat_v1",
     maxTurns: 12
   };
