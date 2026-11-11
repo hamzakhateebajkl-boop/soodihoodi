@@ -313,7 +313,14 @@ async function telegramWebhook(request, env) {
   let update;
   try { update = await request.json(); } catch (e) { return ok; }
   const m = update && update.message;
-  if (!m || !m.chat || String(m.chat.id) !== String(env.TELEGRAM_CHAT_ID)) return ok;
+  if (!m || !m.chat) return ok;
+  /* Moving alerts to another Telegram account: from that account, send /id
+     to the bot. It answers with the chat ID to put in TELEGRAM_CHAT_ID. */
+  if (String(m.chat.id) !== String(env.TELEGRAM_CHAT_ID)) {
+    if (m.chat.type === "private" && (m.text || "").trim() === "/id")
+      await tg(env, "sendMessage", { chat_id: m.chat.id, text: `Your chat ID is: ${m.chat.id}\n\nPut it in Cloudflare as TELEGRAM_CHAT_ID to get the SoodiHoodi alerts here.` }).catch(() => null);
+    return ok;
+  }
   const say = (text) => tg(env, "sendMessage", { chat_id: m.chat.id, text, reply_to_message_id: m.message_id }).catch(() => null);
 
   const text = (m.text || "").trim();
@@ -365,7 +372,11 @@ function errorAlert(env, detail) {
    Telegram, and stops working once TELEGRAM_CHAT_ID is set. */
 async function telegramSetup(env, cors) {
   if (!env.TELEGRAM_BOT_TOKEN) return json({ error: "Add the TELEGRAM_BOT_TOKEN secret first." }, 400, cors);
-  if (env.TELEGRAM_CHAT_ID) return json({ ok: true, connected: true, next: "Open /telegram-connect to receive replies." }, 200, cors);
+  if (env.TELEGRAM_CHAT_ID) {
+    const me = await tg(env, "getMe", {});
+    const bot = me.result && me.result.username ? "https://t.me/" + me.result.username : "";
+    return json({ ok: true, connected: true, bot, next: "Open /telegram-connect to receive replies. To move alerts to another Telegram account, send /id to the bot from that account." }, 200, cors);
+  }
   const d = await tg(env, "getUpdates", { allowed_updates: ["message"] });
   const chats = (d.result || []).map(u => u.message && u.message.chat).filter(c => c && c.type === "private");
   if (!chats.length) return json({ error: "No message found. Open your bot in Telegram, press Start or send it any message, then reload this page." }, 404, cors);

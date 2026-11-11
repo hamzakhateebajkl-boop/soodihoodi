@@ -18,6 +18,7 @@ Two parts:
 - Binding: Workers KV namespace `soodihoodi-chat` bound as `CHAT_KV` (stores team replies for two days).
 - After changing the bot token, open `https://soodihoodi-chat.<subdomain>.workers.dev/telegram-connect` once.
 - To answer a customer: reply to their alert in Telegram (swipe left). A message that isn't a reply goes to the most recent chat.
+- To move alerts to another Telegram account: from that account open the bot (its link is in `/telegram-setup`), press Start and send `/id`. Put the number it sends back in `TELEGRAM_CHAT_ID` and Deploy.
 
 ## Keep it current
 
