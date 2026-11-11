@@ -14,7 +14,7 @@
 const SALLA = {
   domain: "",            // e.g. "soodihoodi.salla.sa"  ← leave "" to run in demo mode
   currency: "SAR",
-  freeShipping: 1200,     // SAR — free shipping threshold
+  freeShipping: 0,        // SAR — 0 = delivery is always free (since 11 Nov 2026)
   instalments: 4,        // Tabby / Tamara split
 
   /* VAT registration in KSA is only mandatory above SAR 375,000 of annual
@@ -421,7 +421,7 @@ const T = {
   splitPay:    { ar: "أو 4 دفعات بـ",         en: "or 4 payments of" },
   freeLeft:    { ar: "باقي لك",               en: "You're" },
   freeLeft2:   { ar: "للشحن المجاني",         en: "away from free shipping" },
-  freeGot:     { ar: "مبروك — شحنك مجاني ✓",  en: "Nice — you've got free shipping ✓" },
+  freeGot:     { ar: "التوصيل مجاني لكل الطلبات ✓", en: "Free delivery on every order ✓" },
   pickEdition: { ar: "اختر هذا الإصدار",      en: "Choose this edition" },
   sar:         { ar: "ر.س",                   en: "SAR" },
   from:        { ar: "يبدأ من",                en: "From" },

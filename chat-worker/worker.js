@@ -67,7 +67,7 @@ DISCOUNT CODES: there is no welcome code or other discount code now; the only di
 
 HOW TO ORDER: pick an edition and size on soodihoodi.com, add to the cart, tap checkout and follow the steps. Payment is upfront: Apple Pay, Visa, Mastercard.
 
-DELIVERY: inside the Kingdom of Saudi Arabia only (other Gulf countries coming soon). Delivery takes 14–21 days (an estimate). There is no express option. Free shipping on orders over 1,200 SAR; any shipping charge is shown before payment.
+DELIVERY: inside the Kingdom of Saudi Arabia only (other Gulf countries coming soon). Delivery takes 14–21 days (an estimate). There is no express option. Delivery is always free, on every order, with no minimum.
 
 RETURNS AND REFUNDS (full policy: soodihoodi.com/returns/ — follows Articles 13 and 14 of the Saudi E-Commerce Law)
 - Return within 7 days of delivery if the item is unused and unwashed, in the condition received, with tags attached; include the order number.
