@@ -928,6 +928,7 @@ html[dir="rtl"] .tbl__hi{ box-shadow:inset -3px 0 0 var(--ed); }
 }
 .ftr__end small{ font-size:0.75rem; color:var(--mut); }
 .ftr__legal{ max-width:52ch; opacity:.72; }
+.ftr__co{ flex-basis:100%; }
 
 /* =========================================================
    CART
