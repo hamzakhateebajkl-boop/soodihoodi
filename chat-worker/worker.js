@@ -29,7 +29,7 @@ const POLL_LIMIT = { perWindow: 150, windowMs: 10 * 60 * 1000 }; // inbox checks
 const SID_RE = /^[A-HJ-NP-Z2-9]{8}$/;                             // chat code shown in Telegram, e.g. #K3F9QZ7A
 const KEEP_SECONDS = 2 * 24 * 60 * 60;                            // team replies are kept for two days
 
-const LAUNCH_AT = Date.parse("2026-11-13T00:00:00+03:00");    // orders open 13.11, midnight Saudi time
+const LAUNCH_AT = null;    // null = launching soon, no date yet (14 Nov 2026). Set Date.parse("YYYY-MM-DDT00:00:00+03:00") when a date is set.
 
 const KNOWLEDGE = `
 STORE: SoodiHoodi (soodihoodi.com) — oversized sherpa blanket hoodies in football-terrace colours, for fans in the Kingdom of Saudi Arabia and their families. Tagline: منسوجة بوفاك / Woven with your loyalty. An independent brand: NOT official merchandise of any club, federation or player. Editions are inspired by colours only.
@@ -61,7 +61,7 @@ FAMILY DISCOUNT (automatic in the cart, any mix of editions and sizes)
 - 2 pieces: 10% off · 3 or more pieces: 15% off (the most it goes)
 - Ready packs on the site: Family + junior, Family + kid, Family + 2 juniors, Family + junior & kid, Siblings kit. Everyone can wear their own colours.
 
-ORDERS OPEN ON 13.11: ordering starts on 13 November 2026 at midnight Saudi time (00:00, 13.11). Before that, the website is open for browsing, building a family set, and the cart is kept, but checkout stays locked. There are no pre-orders. If someone wants to order early, tell them orders open on 13.11 and suggest they leave their pieces in the cart. The note below says whether orders are open right now.
+LAUNCHING SOON: ordering is not open yet and no opening date has been announced. The website is open for browsing and building a family set, and the cart is kept, but checkout stays locked. There are no pre-orders. If someone wants to order, tell them we are launching soon, suggest they leave their pieces in the cart and follow @soodihoodi on Instagram or @soodihoodi.official on TikTok for the opening date. Never give a date. The note below says whether orders are open right now.
 
 DISCOUNT CODES: there is no welcome code or other discount code now; the only discount is the automatic family discount. Never invent a code. If someone already received SOODI15 from the old welcome window, it still works once on their first order until 30 November 2026, and it does not add on top of the family discount (the bigger one applies).
 
@@ -168,7 +168,7 @@ export default {
       system: [
         { type: "text", text: RULES + "\nSTORE KNOWLEDGE\n" + KNOWLEDGE, cache_control: { type: "ephemeral" } },
         { type: "text", text: `The website is currently shown in ${lang === "ar" ? "Arabic" : "English"}; still reply in the language the customer writes in. ` +
-          (Date.now() >= LAUNCH_AT ? "Orders are open now." : "Orders are NOT open yet: they open on 13 November 2026 (13.11) at midnight Saudi time.") }
+          (LAUNCH_AT && Date.now() >= LAUNCH_AT ? "Orders are open now." : "Orders are NOT open yet: we are launching soon and no date is announced.") }
       ],
       messages
     };

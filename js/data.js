@@ -68,12 +68,13 @@ const SHOPIFY = {
    --------------------------------------------------------- */
 /* ---------------------------------------------------------
    LAUNCH
-   Orders open on 13.11 at midnight Saudi time. Until then the site is
-   public for browsing, the family builder and the 15% sign-up, but
-   checkout is locked and the cart is kept for the customer. Every element
-   with class "pl" (pre-launch) is removed automatically after this moment.
+   opensAt is the moment orders open (ISO date, Saudi time). null means
+   "Launching soon" with no date: the site stays public for browsing and
+   the family builder, but checkout is locked and the cart is kept for the
+   customer. Every element with class "pl" (pre-launch) is removed
+   automatically once orders open. (14 Nov 2026: back to "Launching soon".)
    --------------------------------------------------------- */
-const LAUNCH = { opensAt: "2026-11-13T00:00:00+03:00" };
+const LAUNCH = { opensAt: null };
 
 const OFFER = {
   enabled: false,     // switched off 1 Nov 2026: no welcome code (SOODI15 retired, margins)
@@ -410,7 +411,7 @@ const PRODUCTS = [
    --------------------------------------------------------- */
 const T = {
   addToCart:   { ar: "أضف إلى السلة",        en: "Add to cart" },
-  opensSoon:   { ar: "الطلب يفتح 13.11",     en: "Orders open 13.11" },
+  opensSoon:   { ar: "الإطلاق قريباً",       en: "Launching soon" },
   checkoutBtn: { ar: "إتمام الطلب",          en: "Checkout" },
   chooseSize:  { ar: "اختر المقاس",           en: "Choose a size" },
   added:       { ar: "تمّت الإضافة إلى السلة", en: "Added to your cart" },

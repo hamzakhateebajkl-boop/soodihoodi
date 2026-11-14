@@ -25,8 +25,10 @@
       t(k)
     );
   // Orders open at LAUNCH.opensAt; before that checkout is locked.
+  // opensAt null = "Launching soon", no date yet: stays locked.
   const isOpen = () =>
-    typeof LAUNCH === "undefined" || Date.now() >= Date.parse(LAUNCH.opensAt);
+    typeof LAUNCH === "undefined" ||
+    (!!LAUNCH.opensAt && Date.now() >= Date.parse(LAUNCH.opensAt));
   const ed = (id) =>
     EDITIONS.find((e) => e.id === id) ||
     EDITIONS.find((e) => e.id === DEFAULT_EDITION) ||
