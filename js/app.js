@@ -1085,7 +1085,8 @@
         parts.push(`${vid}:${l.qty}`);
       }
       if (allMapped && parts.length) {
-        window.location.href = `https://${SHOPIFY.domain}/cart/${parts.join(",")}`;
+        // ?locale keeps Shopify's checkout in the language the customer is browsing in.
+        window.location.href = `https://${SHOPIFY.domain}/cart/${parts.join(",")}?locale=${state.lang === "en" ? "en" : "ar"}`;
         return;
       }
     }

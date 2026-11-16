@@ -2091,3 +2091,16 @@ html[data-lang="en"] .offer__form > .offer__btn{ font-size:0.9375rem; }
     filter:drop-shadow(0 0 1.5px #fff) drop-shadow(0 0 9px var(--neon)) drop-shadow(0 0 20px var(--ed-glow));
     animation:neonOn 1.4s .4s linear; }
 }
+
+/* Desktop hero: the giant wordmark sits behind the family photo and the
+   scoreboard panel, so only two letter fragments showed beside the panel and
+   read as stray light blocks. Hidden here; phones keep it (no panel there).
+   The panel no longer blurs its backdrop: Safari mis-paints backdrop-filter
+   inside a masked parent on first load, and a solid panel looks the same. */
+@media (min-width:1024px){
+  .bigstage__mark{ display:none; }
+  .herobig{
+    -webkit-backdrop-filter:none; backdrop-filter:none;
+    background:color-mix(in srgb,var(--ink) 90%,transparent);
+  }
+}
