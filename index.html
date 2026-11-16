@@ -32,7 +32,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&family=Archivo:wdth,wght@62..125,400..900&family=Lalezar&family=Bungee&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css?v=38">
+<link rel="stylesheet" href="css/styles.css?v=39">
 </head>
 <body>
 
@@ -240,10 +240,16 @@
 <!-- ============ ACTUAL SIZE (edition-reactive) ============ -->
 <section class="scale" id="scale">
   <div class="wrap scale__in">
+    <div class="scale__media">
     <figure class="scale__fig">
-      <img id="scaleImg" src="img/scale-zaeem.jpg" alt="رجل يلبس هودي البطانية بمقاسه الحقيقي" width="1400" height="1400">
-      <figcaption class="scale__cap" data-ar="المقاس الحقيقي — بدون مبالغة" data-en="Actual size — no exaggeration">المقاس الحقيقي — بدون مبالغة</figcaption>
+      <img id="scaleImg" src="img/scale-v2-zaeem.jpg" alt="رجل طوله 175 سم يلبس هودي البطانية مقاس الكبار، وطرف الهودي عند الركبة" data-alt-ar="رجل طوله 175 سم يلبس هودي البطانية مقاس الكبار، وطرف الهودي عند الركبة" data-alt-en="A 175 cm man wearing the Adults blanket hoodie, the hem at his knees" width="1400" height="1400">
+      <figcaption class="scale__cap" data-ar="المقاس الحقيقي، بدون مبالغة" data-en="Actual size, no exaggeration">المقاس الحقيقي، بدون مبالغة</figcaption>
     </figure>
+    <p class="scale__note">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="4.5" r="2"/><path d="M9 8v6M6 10.5 9 8l3 2.5M7.5 21l1.5-7 1.5 7"/><path d="M18 3v18M16 5l2-2 2 2M16 19l2 2 2-2"/></svg>
+      <span data-ar="طول الموديل 175 سم، ويلبس مقاس الكبار (طول الهودي 95 سم)." data-en="The model is 175 cm tall and wears the Adults size (a 95 cm hoodie).">طول الموديل 175 سم، ويلبس مقاس الكبار (طول الهودي 95 سم).</span>
+    </p>
+    </div>
     <div class="scale__copy">
       <h2 data-ar="مو مقاسك. وهذا هو المطلوب." data-en="Not your size. That's the point.">مو مقاسك. وهذا هو المطلوب.</h2>
       <p class="scale__lede" data-ar="هودي عادي يغطي نصك. هذا يغطيك أنت، ورجولك، والريموت، وصحن الفشار — وكل اللي تحتاجه لتسعين دقيقة." data-en="A normal hoodie covers half of you. This covers you, your legs, the remote, and the popcorn — everything you need for ninety minutes.">هودي عادي يغطي نصك. هذا يغطيك أنت، ورجولك، والريموت، وصحن الفشار — وكل اللي تحتاجه لتسعين دقيقة.</p>
@@ -261,11 +267,11 @@
   <div class="wrap">
     <figure class="crew__fig">
       <img class="crew__img" id="crewImg" src="" alt="" loading="lazy">
-      <figcaption class="crew__cap">
+      <figcaption class="crew__cap"><div class="crew__panel">
         <h2 data-ar="لون واحد. كل العيلة." data-en="One colour. The whole family.">لون واحد. كل العيلة.</h2>
-        <p data-ar="مقاس الكبار يوصل للركبة — والصغار يسبحون فيه. وهذا هو المطلوب." data-en="Adults get knee-length. The kids swim in it. That's the point.">مقاس الكبار يوصل للركبة — والصغار يسبحون فيه. وهذا هو المطلوب.</p>
-        <a href="#bundle" class="btn btn--go" data-ar="جهّزهم كلهم" data-en="Kit them all out">جهّزهم كلهم</a>
-      </figcaption>
+        <p data-ar="مقاس الكبار يوصل للركبة، والصغار يسبحون فيه. وهذا هو المطلوب." data-en="Adults get knee-length. The kids swim in it. That's the point.">مقاس الكبار يوصل للركبة، والصغار يسبحون فيه. وهذا هو المطلوب.</p>
+        <a href="#bundle" class="btn btn--kick" data-ar="جهّزهم كلهم" data-en="Kit them all out">جهّزهم كلهم</a>
+      </div></figcaption>
     </figure>
   </div>
 </section>
@@ -648,8 +654,8 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="js/data.js?v=35"></script>
-<script src="js/app.js?v=30"></script>
+<script src="js/data.js?v=36"></script>
+<script src="js/app.js?v=31"></script>
 <script src="js/chat.js?v=5" defer></script>
 </body>
 </html>

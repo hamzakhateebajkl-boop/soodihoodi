@@ -118,7 +118,7 @@ const EDITIONS = [
     },
     fam: "img/fam-zaeem.jpg",
     cut: "img/cut/fam-zaeem.webp",
-    scale: "img/scale-zaeem.jpg",
+    scale: "img/scale-v2-zaeem.jpg",
     life: "img/stadium-zaeem.jpg",
     sky: "#8FC9FF", // light backdrop wash behind the hero family // hero cutout — people only, transparent bg // family gallery shot — section hides for editions without one
     ink: "#0B4EA2",   // text-safe dark variant — NEVER use primary for text on white
@@ -135,7 +135,7 @@ const EDITIONS = [
     id: "ameed",
     fam: "img/fam-ameed.jpg",
     cut: "img/cut/fam-ameed.webp",
-    scale: "img/scale-ameed.jpg",
+    scale: "img/scale-v2-ameed.jpg",
     life: "img/stadium-ameed.jpg",
     sky: "#FFD98A", // light backdrop wash behind the hero family // hero cutout — people only, transparent bg
     fg: "#14161A",
@@ -169,7 +169,7 @@ const EDITIONS = [
     id: "raqi",
     fam: "img/fam-raqi.jpg",
     cut: "img/cut/fam-raqi.webp",
-    scale: "img/scale-raqi.jpg",
+    scale: "img/scale-v2-raqi.jpg",
     life: "img/stadium-raqi.jpg",
     sky: "#9ADFB8", // light backdrop wash behind the hero family // hero cutout — people only, transparent bg
     img: "img/raqi.jpg",
@@ -202,7 +202,7 @@ const EDITIONS = [
     id: "faris",
     fam: "img/fam-faris.jpg",
     cut: "img/cut/fam-faris.webp",
-    scale: "img/scale-faris.jpg",
+    scale: "img/scale-v2-faris.jpg",
     life: "img/stadium-faris.jpg",
     sky: "#FFE08A", // light backdrop wash behind the hero family // hero cutout — people only, transparent bg
     fg: "#14161A",
@@ -236,7 +236,7 @@ const EDITIONS = [
     id: "laith",
     fam: "img/fam-laith.jpg",
     cut: "img/cut/fam-laith.webp",
-    scale: "img/scale-laith.jpg",
+    scale: "img/scale-v2-laith.jpg",
     life: "img/stadium-laith.jpg",
     sky: "#E8DCC8", // light backdrop wash behind the hero family // hero cutout — people only, transparent bg
     fg: "#14161A",

@@ -1202,6 +1202,9 @@
       io.observe(el);
     });
   }
+  // Neon section numbers flicker on like stadium signage when they come into view.
+  // They are visible from the start; the flicker only plays on top.
+  document.querySelectorAll(".sec-h__num").forEach((el) => io.observe(el));
 
   /* =========================================================
      HERO TILT — pointer-driven pseudo-3D on the product shot
