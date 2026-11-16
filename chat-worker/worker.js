@@ -81,7 +81,7 @@ RETURNS AND REFUNDS (full policy: soodihoodi.com/returns/ — follows Articles 1
 
 CONTACT: WhatsApp +968 7677 1754 · Email sales@soodihoodi.com · usually reply within one working day.
 PAGES: About soodihoodi.com/about/ · Terms soodihoodi.com/terms/ · Privacy soodihoodi.com/privacy/ · Returns soodihoodi.com/returns/
-OPERATOR: SoodiHoodi is operated by Hamzeh Al Khatib from Muscat, Sultanate of Oman.
+OPERATOR: SoodiHoodi is operated by Durrat Al-Faiqin Digital SPC (CR No. 1526317), Muscat, Sultanate of Oman. Never name any individual person as the owner or operator; if asked who is behind the brand, give the company name.
 `;
 
 const RULES = `
