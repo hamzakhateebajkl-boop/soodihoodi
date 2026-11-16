@@ -32,7 +32,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&family=Archivo:wdth,wght@62..125,400..900&family=Lalezar&family=Bungee&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css?v=37">
+<link rel="stylesheet" href="css/styles.css?v=38">
 </head>
 <body>
 
@@ -225,7 +225,13 @@
       <p data-ar="واسع بالقصد. لو بين مقاسين، خذ الأكبر — هذي بطانية مو تيشيرت." data-en="Oversized on purpose. Between two sizes? Size up — this is a blanket, not a t-shirt.">واسع بالقصد. لو بين مقاسين، خذ الأكبر — هذي بطانية مو تيشيرت.</p>
     </header>
 
-    <!-- One football shirt per size, the length printed as the shirt number. Filled by renderKits() from SIZES + prices. -->
+    <!-- How to read the cards: the number is the hoodie, not the person. -->
+    <p class="kits__key">
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3.5 5 5.5 3 11l3 1 1-2.5V21h10V9.5l1 2.5 3-1-2-5.5-4-2"/><path d="M9 3.5c.6 1.8 1.6 2.6 3 2.6s2.4-.8 3-2.6"/><path d="M12 8.5v10M10.5 10l1.5-1.5 1.5 1.5M10.5 17l1.5 1.5 1.5-1.5"/></svg>
+      <span data-ar="الرقم على الهودي هو طول الهودي نفسه، من أعلى الكتف لآخر القطعة. مو طول الشخص."
+            data-en="The number on each hoodie is the hoodie's own length, from the top of the shoulder to the hem. Not your height.">الرقم على الهودي هو طول الهودي نفسه، من أعلى الكتف لآخر القطعة. مو طول الشخص.</span>
+    </p>
+    <!-- One hoodie per size, drawn to scale, length marked on the front. Filled by renderKits() from SIZES + prices. -->
     <div class="kits" id="kits"></div>
     <p class="tbl__note" data-ar="القياسات مأخوذة والقطعة مفرودة على الطاولة، بفارق ± 2 سم." data-en="Measured flat on a table, ± 2 cm tolerance.">القياسات مأخوذة والقطعة مفرودة على الطاولة، بفارق ± 2 سم.</p>
   </div>
@@ -422,7 +428,7 @@
     <div class="acc">
       <details class="acc__i" open>
         <summary data-ar="كم ياخذ التوصيل؟" data-en="How long is delivery?">كم ياخذ التوصيل؟</summary>
-        <div class="acc__b"><p data-ar="نوصّلها مع أرامكس خلال 6 إلى 8 أيام عمل، والتوصيل مجاني لكل الطلبات." data-en="We deliver with Aramex in 6–8 working days, and delivery is free on every order.">نوصّلها مع أرامكس خلال 6 إلى 8 أيام عمل، والتوصيل مجاني لكل الطلبات.</p></div>
+        <div class="acc__b"><p data-ar="نوصّلها مع أرامكس خلال 6 إلى 8 أيام عمل، والتوصيل مجاني على كل الطلبات لفترة محدودة." data-en="We deliver with Aramex in 6–8 working days, and delivery is free on every order for a limited time.">نوصّلها مع أرامكس خلال 6 إلى 8 أيام عمل، والتوصيل مجاني على كل الطلبات لفترة محدودة.</p></div>
       </details>
       <details class="acc__i">
         <summary data-ar="كيف أدفع؟" data-en="How do I pay?">كيف أدفع؟</summary>
@@ -642,8 +648,8 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="js/data.js?v=34"></script>
-<script src="js/app.js?v=29"></script>
+<script src="js/data.js?v=35"></script>
+<script src="js/app.js?v=30"></script>
 <script src="js/chat.js?v=5" defer></script>
 </body>
 </html>

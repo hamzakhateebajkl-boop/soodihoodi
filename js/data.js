@@ -289,9 +289,18 @@ const EDITIONS = [
      adult -> Adults   (95 cm)
    Widths are still to come from the factory's spec sheet. */
 const SIZES = {
-  baby:  { ar: "أطفال",  en: "Kids",    ageAr: "2–6 سنوات",    ageEn: "Ages 2–6",  lengthCm: 64, fitAr: "طول 85–120 سم",  fitEn: "Height 85–120 cm" },
-  kids:  { ar: "ناشئين", en: "Juniors", ageAr: "7–14 سنة",     ageEn: "Ages 7–14", lengthCm: 84, fitAr: "طول 120–155 سم", fitEn: "Height 120–155 cm" },
-  adult: { ar: "كبار",   en: "Adults",  ageAr: "15 سنة فأكثر", ageEn: "Ages 15+",  lengthCm: 95, fitAr: "طول 155 سم فأكثر", fitEn: "Height 155 cm and up", noteAr: "يوصل للركبة", noteEn: "Reaches the knee" }
+  /* lengthCm = the hoodie itself, measured flat from the top of the shoulder to the hem.
+     fit = the wearer's height. reach = where the hem lands, from the factory's size chart
+     (photos of real wearers): 64 cm on a 96 cm toddler, 84 cm on a 150 cm teen, 95 cm on a 175 cm adult. */
+  baby:  { ar: "أطفال",  en: "Kids",    ageAr: "2–6 سنوات",    ageEn: "Ages 2–6",  lengthCm: 64,
+           fitAr: "85–120 سم",  fitEn: "85–120 cm",
+           reachAr: "للكاحل تقريباً، على طفل طوله 96 سم", reachEn: "About the ankle on a 96 cm toddler" },
+  kids:  { ar: "ناشئين", en: "Juniors", ageAr: "7–14 سنة",     ageEn: "Ages 7–14", lengthCm: 84,
+           fitAr: "120–155 سم", fitEn: "120–155 cm",
+           reachAr: "للركبة، على طول 150 سم", reachEn: "The knee on a 150 cm teen" },
+  adult: { ar: "كبار",   en: "Adults",  ageAr: "15 سنة فأكثر", ageEn: "Ages 15+",  lengthCm: 95,
+           fitAr: "155 سم فأكثر", fitEn: "155 cm and up",
+           reachAr: "فوق الركبة بشوي، على طول 175 سم", reachEn: "Just above the knee on a 175 cm adult" }
 };
 
 /* ---------------------------------------------------------
@@ -394,7 +403,7 @@ const T = {
   splitPay:    { ar: "أو 4 دفعات بـ",         en: "or 4 payments of" },
   freeLeft:    { ar: "باقي لك",               en: "You're" },
   freeLeft2:   { ar: "للشحن المجاني",         en: "away from free shipping" },
-  freeGot:     { ar: "التوصيل مجاني لكل الطلبات ✓", en: "Free delivery on every order ✓" },
+  freeGot:     { ar: "توصيل مجاني لفترة محدودة ✓", en: "Free delivery for a limited time ✓" },
   pickEdition: { ar: "اختر هذا الإصدار",      en: "Choose this edition" },
   sar:         { ar: "ر.س",                   en: "SAR" },
   from:        { ar: "يبدأ من",                en: "From" },
@@ -445,9 +454,11 @@ const T = {
   removeWho:   { ar: "حذف {who}",                en: "Remove {who}" },
   cm:          { ar: "سم",                       en: "cm" },
   famSizesT:   { ar: "المقاسات والأسعار",         en: "Sizes and prices" },
-  kitLen:      { ar: "الطول",                    en: "Length" },
+  kitLen:      { ar: "طول الهودي",               en: "Hoodie length" },
   age:         { ar: "العمر",                    en: "Age" },
-  fits:        { ar: "يناسب",                    en: "Fits" },
+  fits:        { ar: "يناسب طول الشخص",          en: "Fits wearer height" },
+  reach:       { ar: "وين يوصل",                 en: "Where it lands" },
+  hoodieCm:    { ar: "هودي {cm} سم",             en: "{cm} cm hoodie" },
   offerFam:    { ar: "كم شخص بالعيلة؟",           en: "How many in your family?" },
   bldAdded:    { ar: "تمّت إضافة {n} قطع",       en: "Added {n} items" },
   subtotal:    { ar: "قبل الخصم",                en: "Before discount" },

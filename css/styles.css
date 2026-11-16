@@ -1825,31 +1825,72 @@ html[data-lang="en"] .pack__go{ font-size:0.8125rem; }
 }
 .why__ic svg{ width:24px; height:24px; filter:drop-shadow(0 0 3px color-mix(in srgb,var(--ed-acc) 90%,transparent)); }
 
-/* sizes: one shirt per size, the length as the shirt number */
+/* sizes: one hoodie per size, drawn to scale, length marked on the front */
 .sizes{ background:radial-gradient(ellipse 70% 50% at 50% 0%,color-mix(in srgb,var(--ed-glow) 16%,transparent),transparent 70%),var(--ink-2); color:var(--txt); }
 .sizes .tbl__note{ color:var(--mut); }
-.kits{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:clamp(8px,2vw,22px); max-width:980px; margin-inline:auto; }
+.kits__key{
+  display:flex; align-items:center; gap:12px; max-width:640px; margin:0 auto clamp(18px,3vw,30px);
+  padding:12px 16px; border-radius:var(--r-m);
+  background:color-mix(in srgb,var(--amber) 9%,transparent); border:1px dashed color-mix(in srgb,var(--amber) 55%,transparent);
+  font-size:0.875rem; line-height:1.6; color:var(--txt);
+}
+.kits__key svg{ flex:none; color:var(--amber); }
+.kits{ display:grid; gap:12px; max-width:1040px; margin-inline:auto; }
 .kit{
-  display:grid; justify-items:center; align-content:start; gap:6px; text-align:center;
-  padding:clamp(14px,2.6vw,30px) clamp(6px,1.4vw,18px) clamp(16px,2.4vw,26px);
-  border-radius:var(--r-m); background:var(--ink-1);
-  border:1.5px solid color-mix(in srgb,var(--ed-acc) 38%,transparent);
+  display:grid; grid-template-columns:clamp(118px,36vw,150px) 1fr; gap:14px; align-items:end;
+  padding:16px 16px 18px; border-radius:var(--r-m); background:var(--ink-1);
+  border:1.5px solid color-mix(in srgb,var(--ed-acc) 34%,transparent);
   box-shadow:0 0 12px -6px color-mix(in srgb,var(--ed-glow) 90%,transparent);
 }
-.kit__shirt{ position:relative; width:min(100%,132px); aspect-ratio:1; color:var(--neon);
-  filter:drop-shadow(0 0 6px color-mix(in srgb,var(--ed-glow) 95%,transparent)); }
-.kit__shirt svg{ width:100%; height:100%; display:block; }
-.kit__shirt b{ position:absolute; inset:0; display:grid; place-items:center; padding-block-start:22%;
-  font-family:"Bungee",var(--stad); font-weight:400; font-size:clamp(1.5rem,6vw,2.6rem); color:#fff; }
-.kit__n{ font-family:var(--stad); font-weight:400; font-size:clamp(1.2rem,2.6vw,1.75rem); line-height:1.3; margin:0; }
-.kit__d{ margin:0; display:grid; gap:2px; font-size:clamp(0.6875rem,1.4vw,0.875rem); color:var(--mut); line-height:1.45; }
-.kit__d dt:not(.vh){ display:inline; } .kit__d dt:not(.vh)::after{ content:": "; }
-.kit__d dd{ display:inline; margin:0; }
-.kit__note{ margin:0; font-size:clamp(0.6875rem,1.3vw,0.8125rem); color:var(--neon); font-weight:600; }
-.kit__p{ margin:8px 0 0; padding:3px 14px 1px; border-radius:99px; transform:rotate(-3deg);
+.kit__fig{ margin:0; display:grid; gap:6px; justify-items:center; }
+/* every figure box is the adult's height; smaller sizes stand on the same floor */
+.kit__hd{ position:relative; height:200px; width:100%; display:flex; align-items:flex-end; justify-content:center;
+  border-block-end:2px solid color-mix(in srgb,#fff 22%,transparent); }
+.hd{ height:calc(var(--k) * 100%); width:auto; aspect-ratio:200/250; overflow:visible;
+  fill:none; stroke:var(--neon); stroke-width:2.4; stroke-linejoin:round; stroke-linecap:round;
+  filter:drop-shadow(0 0 5px color-mix(in srgb,var(--ed-glow) 85%,transparent)); }
+.hd__body,.hd__hood{ fill:color-mix(in srgb,var(--ed) 34%,var(--ink-1)); }
+.hd__sleeve{ fill:color-mix(in srgb,var(--ed) 26%,var(--ink-1)); }
+.hd__cuff{ fill:color-mix(in srgb,var(--ed) 48%,var(--ink-1)); }
+.hd__pocket{ fill:color-mix(in srgb,var(--ed) 42%,var(--ink-1)); }
+.hd__face{ fill:var(--ink); }
+.hd__sherpa{ stroke:#F4EFE6; stroke-width:5; stroke-dasharray:.1 4.2; opacity:.9; }
+.hd__hem{ stroke-width:1.6; opacity:.7; }
+.hd__rib{ stroke-width:1.2; opacity:.55; }
+.hd__stitch{ stroke-width:1.4; stroke-dasharray:3 3; opacity:.7; }
+.hd__open{ stroke-width:3.4; }
+.hd__cord{ stroke-width:1.8; }
+.hd__tip{ fill:var(--neon); stroke:none; }
+.hd__dim path{ stroke:var(--amber); stroke-width:2.6; filter:none; }
+.kit__len{
+  position:absolute; inset-inline:0; margin-inline:auto; width:max-content;
+  bottom:calc(var(--k) * 100% * .53); transform:translateY(50%);
+  padding:2px 10px 1px; border-radius:99px; background:var(--amber); color:var(--amber-ink);
+  font-family:"Bungee",var(--stad); font-size:0.75rem; line-height:1.5; white-space:nowrap;
+  box-shadow:0 0 0 3px var(--ink-1);
+}
+.kit__len b{ font-weight:400; font-size:1.0625rem; }
+.kit__cap{ font-size:0.6875rem; color:var(--mut); text-align:center; line-height:1.3; }
+.kit__info{ display:grid; gap:10px; align-content:start; align-self:center; }
+.kit__n{ font-family:var(--stad); font-weight:400; font-size:clamp(1.4rem,3vw,1.875rem); line-height:1.2; margin:0; }
+.kit__facts{ list-style:none; margin:0; padding:0; display:grid; gap:9px; }
+.kit__facts li{ display:grid; grid-template-columns:30px 1fr; gap:9px; align-items:center; }
+.kit__ic{ width:30px; height:30px; border-radius:50%; display:grid; place-items:center; color:var(--neon);
+  border:1.4px solid color-mix(in srgb,var(--ed-acc) 60%,transparent);
+  box-shadow:0 0 8px -3px color-mix(in srgb,var(--ed-glow) 95%,transparent); }
+.kit__ic svg{ width:17px; height:17px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+.kit__facts small{ display:block; font-size:0.6875rem; color:var(--mut); line-height:1.35; }
+.kit__facts b{ display:block; font-size:0.875rem; font-weight:700; line-height:1.45; }
+.kit__p{ justify-self:start; margin:4px 0 0; padding:3px 14px 1px; border-radius:99px; transform:rotate(-3deg);
   background:var(--amber); color:var(--amber-ink);
-  font-family:var(--stad); font-weight:400; font-size:clamp(1rem,2.4vw,1.375rem); line-height:1.35; white-space:nowrap; }
-html[data-lang="en"] .kit__p{ font-size:clamp(0.75rem,1.8vw,1.05rem); }
+  font-family:var(--stad); font-weight:400; font-size:1.25rem; line-height:1.35; white-space:nowrap; }
+html[data-lang="en"] .kit__p{ font-size:0.9375rem; }
+@media (min-width:860px){
+  .kits{ grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; }
+  .kit{ grid-template-columns:1fr; padding:22px 20px 24px; align-items:start; }
+  .kit__hd{ height:250px; }
+  .kit__info{ align-self:start; }
+}
 
 /* family page: sizes and prices on top, labelled remove */
 .fsz{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; margin-block-end:14px; }
@@ -1872,10 +1913,16 @@ html[data-lang="en"] .kit__p{ font-size:clamp(0.75rem,1.8vw,1.05rem); }
 @media (prefers-reduced-motion:reduce){
   .tkt, .btn--kick, .pack__go{ transition:none; }
 }
-.kit__shirt b{ grid-auto-flow:row; align-content:center; gap:0; line-height:1; }
-.kit__shirt b small{ font-family:var(--body); font-size:.36em; font-weight:700; opacity:.8; margin-top:2px; }
 .brow__who{ display:grid; gap:0; }
 .brow__who span{ margin-inline-start:0; }
 .offer__h{ font-family:var(--stad); font-weight:400; text-shadow:0 0 16px color-mix(in srgb,var(--ed-glow) 60%,transparent); }
 .offer__form > .offer__btn{ background:var(--amber); color:var(--amber-ink); font-family:var(--stad); font-weight:400; font-size:1.125rem; line-height:1.3; }
 html[data-lang="en"] .offer__form > .offer__btn{ font-size:0.9375rem; }
+/* phone: give the hoodie half the card so its height (not the column width) sets the scale */
+.kit{ grid-template-columns:minmax(0,1fr) minmax(0,1fr); }
+.kit__hd{ height:176px; }
+.hd__sherpa{ stroke-width:3.4; stroke-dasharray:.1 3.1; opacity:.75; }
+@media (min-width:860px){
+  .kit{ grid-template-columns:1fr; }
+  .kit__hd{ height:250px; }
+}

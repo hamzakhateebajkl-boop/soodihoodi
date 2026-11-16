@@ -309,27 +309,64 @@
     );
   }
 
-  /* Sizes and prices, side by side, biggest first. Used twice: the shirt
+  /* Front view of the blanket hoodie, drawn to scale per size. The amber
+     line on the front is the garment length (shoulder to hem), so nobody
+     reads "95" as the wearer's height. Pocket: closed top, open sides. */
+  const HOODIE = `
+    <svg class="hd" viewBox="0 0 200 250" aria-hidden="true">
+      <path class="hd__body" d="M68 62C80 70 120 70 132 62L160 72C168 75 170 80 170 88V236C170 241 167 244 162 244H38C33 244 30 241 30 236V88C30 80 32 75 40 72Z"/>
+      <path class="hd__hem" d="M30 229H170"/>
+      <path class="hd__sleeve" d="M40 72C26 76 18 90 16 106L8 194L36 198L44 122Z"/>
+      <path class="hd__sleeve" d="M160 72C174 76 182 90 184 106L192 194L164 198L156 122Z"/>
+      <path class="hd__cuff" d="M8 194L36 198L35 210L7 206Z"/>
+      <path class="hd__cuff" d="M192 194L164 198L165 210L193 206Z"/>
+      <path class="hd__rib" d="M13 196L12 207M19 197L18 208M25 197L24 209M31 198L30 209M187 196L188 207M181 197L182 208M175 197L176 209M169 198L170 209"/>
+      <path class="hd__hood" d="M68 62C62 34 80 8 100 8C120 8 138 34 132 62C120 68 80 68 68 62Z"/>
+      <path class="hd__face" d="M80 62C78 40 88 26 100 26C112 26 122 40 120 62"/>
+      <path class="hd__sherpa" d="M80 62C78 40 88 26 100 26C112 26 122 40 120 62"/>
+      <path class="hd__cord" d="M93 64C92 74 94 84 92 93M107 64C108 74 106 84 108 93"/>
+      <circle class="hd__tip" cx="92" cy="95" r="2.2"/><circle class="hd__tip" cx="108" cy="95" r="2.2"/>
+      <path class="hd__pocket" d="M60 168H140L148 212H52Z"/>
+      <path class="hd__stitch" d="M63 172H137"/>
+      <path class="hd__open" d="M60 168L52 212M140 168L148 212"/>
+      <g class="hd__dim">
+        <path d="M100 66V242"/>
+        <path d="M92 66H108M92 242H108"/>
+        <path d="M96 73L100 66L104 73M96 235L100 242L104 235"/>
+      </g>
+    </svg>`;
+
+  const ICONS = {
+    age: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21h16M5 21v-7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v7"/><path d="M5 16c1.4 1 2.6 1 4 0s2.6-1 4 0 2.6 1 4 0 2-1 2-1"/><path d="M12 12V8"/><path d="M12 4.5c.9.9.9 2 0 2.6-.9-.6-.9-1.7 0-2.6Z"/></svg>',
+    tall: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="4.5" r="2"/><path d="M9 8v6M6 10.5 9 8l3 2.5M7.5 21l1.5-7 1.5 7"/><path d="M18 3v18M16 5l2-2 2 2M16 19l2 2 2-2"/></svg>',
+    reach: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="3.8" r="1.9"/><path d="M8.5 7.5h7l1 7.5h-9z"/><path d="M10 15v6.5M14 15v6.5"/><path d="M3 15h18" stroke-dasharray="2 2.2"/></svg>'
+  };
+
+  /* Sizes and prices, side by side, biggest first. Used twice: the hoodie
      cards in #sizes and the compact strip at the top of the family page. */
   const sizeOrder = () => Object.keys(SIZES).reverse();
   const L = (o, k) => o[k + (state.lang === "ar" ? "Ar" : "En")];
   function renderKits() {
     const box = $("#kits");
+    const maxCm = Math.max(...Object.values(SIZES).map((z) => z.lengthCm));
     if (box) box.innerHTML = sizeOrder().map((sz) => {
       const z = SIZES[sz];
+      const fact = (ic, label, val) => `<li><span class="kit__ic">${ICONS[ic]}</span><span><small>${label}</small><b>${val}</b></span></li>`;
       return `
-      <article class="kit">
-        <div class="kit__shirt" role="img" aria-label="${t("kitLen")}: ${z.lengthCm} ${t("cm")}">
-          <svg viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"><path d="M42 12 18 24 8 50l17 7 5-12v63h60V45l5 12 17-7-10-26-24-12c-2 8-9 13-18 13s-16-5-18-13Z"/></svg>
-          <b dir="ltr">${z.lengthCm}<small>${t("cm")}</small></b>
+      <article class="kit" style="--k:${(z.lengthCm / maxCm).toFixed(3)}">
+        <figure class="kit__fig" role="img" aria-label="${t("kitLen")}: ${z.lengthCm} ${t("cm")}">
+          <div class="kit__hd">${HOODIE}<span class="kit__len" dir="ltr"><b>${z.lengthCm}</b> ${t("cm")}</span></div>
+          <figcaption class="kit__cap">${t("kitLen")}</figcaption>
+        </figure>
+        <div class="kit__info">
+          <h3 class="kit__n">${z[state.lang]}</h3>
+          <ul class="kit__facts">
+            ${fact("age", t("age"), L(z, "age"))}
+            ${fact("tall", t("fits"), L(z, "fit"))}
+            ${fact("reach", t("reach"), L(z, "reach"))}
+          </ul>
+          <p class="kit__p" dir="ltr">${money(unitPrice("classic", sz))}</p>
         </div>
-        <h3 class="kit__n">${z[state.lang]}</h3>
-        <dl class="kit__d">
-          <div><dt class="vh">${t("age")}</dt><dd>${L(z, "age")}</dd></div>
-          <div><dt class="vh">${t("fits")}</dt><dd>${L(z, "fit")}</dd></div>
-        </dl>
-        ${z.noteAr ? `<p class="kit__note">${L(z, "note")}</p>` : ""}
-        <p class="kit__p" dir="ltr">${money(unitPrice("classic", sz))}</p>
       </article>`;
     }).join("");
     const fs = $("#famSizes");
@@ -337,7 +374,7 @@
       fs.setAttribute("aria-label", t("famSizesT"));
       fs.innerHTML = sizeOrder().map((sz) => {
         const z = SIZES[sz];
-        return `<div class="fsz__c"><b>${z[state.lang]}</b><span>${z.lengthCm} ${t("cm")} · ${L(z, "age")}</span><em dir="ltr">${money(unitPrice("classic", sz))}</em></div>`;
+        return `<div class="fsz__c"><b>${z[state.lang]}</b><span>${L(z, "age")}<br>${tf("hoodieCm", { cm: z.lengthCm })}</span><em dir="ltr">${money(unitPrice("classic", sz))}</em></div>`;
       }).join("");
     }
   }
@@ -363,8 +400,8 @@
           <div class="brow__main">
             <div class="brow__top">
               <span class="brow__who">
-                <b>${sz[state.lang]} · ${sz.lengthCm} ${t("cm")}</b>
-                <span>${sz[state.lang === "ar" ? "ageAr" : "ageEn"]}</span>
+                <b>${sz[state.lang]}</b>
+                <span>${sz[state.lang === "ar" ? "ageAr" : "ageEn"]} · ${tf("hoodieCm", { cm: sz.lengthCm })}</span>
               </span>
               ${n > 1 ? `<button class="brow__x" type="button" aria-label="${tf("removeWho", { who: sz[state.lang] })}">
                 <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>
