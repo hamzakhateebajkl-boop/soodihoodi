@@ -236,15 +236,17 @@
       return `<button class="pack" type="button" data-pack="${pk.id}">
           <span class="pack__faces" aria-hidden="true">${faces}</span>
           <span class="pack__body">
-            <b class="pack__t">${pk[state.lang]}</b>
+            <span class="pack__hd">
+              <b class="pack__t">${pk[state.lang]}</b>
+              ${pct ? `<span class="pack__save">${tf("packSave", { pct })}</span>` : ""}
+            </span>
             <span class="pack__who">${who}</span>
             <span class="pack__pr">
               <em dir="ltr">${money(Math.round(from - (from * pct) / 100))}</em>
               <s dir="ltr">${money(from)}</s>
             </span>
+            <span class="pack__mix">${t("bldMixed")}</span>
           </span>
-          ${pct ? `<span class="pack__save">${tf("packSave", { pct })}</span>` : ""}
-          <span class="pack__mix">${t("bldMixed")}</span>
         </button>`;
     }).join("");
 
@@ -792,6 +794,65 @@
       : `<b>${t("freeGot")}</b><span class="cart__bar"><i style="width:100%"></i></span>`;
 
     bumpCount();
+    renderObar();
+  }
+
+  /* ---- sticky order bar (mobile) ----
+     Empty cart: "Start your order" → the order box.
+     Items in cart: the running total → opens the cart. */
+  function renderObar() {
+    const go = $("#obarGo");
+    if (!go) return;
+    const n = cartCount();
+    const best = Math.max(...BUNDLE.tiers.map((x) => x.pct));
+    if (n) {
+      $("#obarT").textContent = money(cartTotal());
+      $("#obarT").dir = "ltr";
+      $("#obarS").textContent = tf("obarIn", { n });
+      $("#obarC").textContent = t("obarCart");
+    } else {
+      $("#obarT").textContent = t("obarGo");
+      $("#obarT").dir = "";
+      $("#obarS").textContent = tf("obarSub", { pct: best });
+      $("#obarC").textContent = t("obarBtn");
+    }
+  }
+
+  function obarInit() {
+    const bar = $("#obar");
+    const go = $("#obarGo");
+    if (!bar || !go) return;
+    const cta = $(".hero__cta");
+    const zones = ["#bundle", "#shop"].map((id) => $(id)).filter(Boolean);
+
+    go.addEventListener("click", () => {
+      if (cartCount()) { openCart(true); return; }
+      const box = $("#bundle");
+      if (box) box.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const vh = window.innerHeight;
+      const past = cta ? cta.getBoundingClientRect().bottom < 0 : window.scrollY > vh;
+      const inZone = zones.some((z) => {
+        const r = z.getBoundingClientRect();
+        return r.top < vh * 0.8 && r.bottom > vh * 0.2;
+      });
+      const on = past && !inZone;
+      if (bar.classList.contains("on") === on) return;
+      bar.classList.toggle("on", on);
+      bar.setAttribute("aria-hidden", String(!on));
+      go.tabIndex = on ? 0 : -1;
+      document.body.classList.toggle("obar-on", on);
+    };
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(update); };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    // a reload restores the old scroll position after init, without a scroll event
+    window.addEventListener("load", onScroll);
+    update();
   }
 
   /* ---- drawer ---- */
@@ -1123,6 +1184,7 @@
     observe($$(".sec-h, .why__c, .rev, .acc__i, .tbl-wrap, .fab__art, .fab__copy, .strip__in, .bld__box"));
 
     offerInit();
+    obarInit();
     cineInit();
     tiltInit();
     swipeInit();

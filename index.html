@@ -28,7 +28,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&family=Archivo:wdth,wght@62..125,400..900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css?v=34">
+<link rel="stylesheet" href="css/styles.css?v=35">
 </head>
 <body>
 
@@ -79,7 +79,6 @@
     </a>
 
     <nav class="nav" aria-label="Main">
-      <a href="#editions" data-ar="الإصدارات" data-en="Editions">الإصدارات</a>
       <a href="#bundle" data-ar="طلب العائلة" data-en="Family">طلب العائلة</a>
       <a href="#shop" data-ar="المتجر" data-en="Shop">المتجر</a>
       <a href="#fabric" data-ar="الخامة" data-en="Fabric">الخامة</a>
@@ -168,6 +167,38 @@
   <div class="scrollcue" aria-hidden="true"><span></span></div>
 </section>
 
+<!-- ============ FAMILY BUNDLE BUILDER ============ -->
+<section class="bld" id="bundle">
+  <div class="wrap">
+    <header class="sec-h">
+      <span class="sec-h__num">01</span>
+      <h2 data-ar="اطلبوا كعائلة" data-en="Order as a family">اطلبوا كعائلة</h2>
+      <p data-ar="كل واحد يختار فريقه. قطعتين: خصم 10٪، و3 أو أكثر: خصم 15٪. والتوصيل مجاني."
+         data-en="Everyone picks their own team. 2 pieces save 10%, 3 or more save 15%. Delivery is free.">كل واحد يختار فريقه. قطعتين: خصم 10٪، و3 أو أكثر: خصم 15٪. والتوصيل مجاني.</p>
+    </header>
+
+    <div class="bld__packs" id="bldPacks" role="group" aria-label="Ready packs"><!-- injected --></div>
+
+    <div class="bld__box">
+      <div class="bld__rows" id="bldRows"><!-- injected --></div>
+      <div class="bld__add" id="bldAdd"><!-- injected --></div>
+      <div class="bld__sum" id="bldSum"><!-- injected --></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SHOP ============ -->
+<section class="shop" id="shop">
+  <div class="wrap">
+    <header class="sec-h">
+      <span class="sec-h__num">02</span>
+      <h2 data-ar="تبغى وحدة بس؟" data-en="Just want one?">تبغى وحدة بس؟</h2>
+      <p data-ar="اختر مقاسك — كبار، ناشئين، أو أطفال. اللون يتبع الإصدار اللي فوق." data-en="Pick your size — adults, juniors or kids. The colour follows the edition you selected above.">اختر مقاسك — كبار، ناشئين، أو أطفال. اللون يتبع الإصدار اللي فوق.</p>
+    </header>
+    <div class="shop__grid" id="shopGrid"><!-- injected --></div>
+  </div>
+</section>
+
 <!-- ============ ACTUAL SIZE (edition-reactive) ============ -->
 <section class="scale" id="scale">
   <div class="wrap scale__in">
@@ -205,7 +236,7 @@
 <section class="why" id="why">
   <div class="wrap">
     <header class="sec-h">
-      <span class="sec-h__num">01</span>
+      <span class="sec-h__num">03</span>
       <h2 data-ar="ليش تحتاجه؟" data-en="Why you need it">ليش تحتاجه؟</h2>
       <p data-ar="لأن البرد في السعودية ما يجي من برّا — يجي من المكيّف." data-en="Because in Saudi, the cold doesn't come from outside. It comes from the AC.">لأن البرد في السعودية ما يجي من برّا — يجي من المكيّف.</p>
     </header>
@@ -273,50 +304,6 @@
   </div>
 </section>
 
-<!-- ============ EDITIONS ============ -->
-<section class="eds" id="editions">
-  <div class="wrap">
-    <header class="sec-h sec-h--light">
-      <span class="sec-h__num">02</span>
-      <h2 data-ar="الإصدارات" data-en="The editions">الإصدارات</h2>
-      <p data-ar="ألوان مستوحاة من مدن وملاعب المملكة. تصاميم أصلية من SoodiHoodi — بدون شعارات أندية." data-en="Colourways drawn from the Kingdom's cities and stadiums. Original SoodiHoodi designs — no club marks.">ألوان مستوحاة من مدن وملاعب المملكة. تصاميم أصلية من SoodiHoodi — بدون شعارات أندية.</p>
-    </header>
-    <div class="eds__rail" id="edsRail"><!-- injected --></div>
-  </div>
-</section>
-
-<!-- ============ FAMILY BUNDLE BUILDER ============ -->
-<section class="bld" id="bundle">
-  <div class="wrap">
-    <header class="sec-h">
-      <span class="sec-h__num">03</span>
-      <h2 data-ar="اطلبوا كعائلة" data-en="Order as a family">اطلبوا كعائلة</h2>
-      <p data-ar="كل واحد وفريقه — الأب أزرق، الأم أصفر، والصغير أخضر. ما يلزم تكونون مع نفس النادي. اختر طقم جاهز وعدّله كيف ما تبغى، وكل ما زاد العدد زاد الخصم."
-         data-en="Everyone in their own colours — dad in blue, mum in yellow, the little one in green. You don't all have to support the same club. Start from a pack, change any of it, and the more you add the bigger the discount.">كل واحد وفريقه — الأب أزرق، الأم أصفر، والصغير أخضر. ما يلزم تكونون مع نفس النادي. اختر طقم جاهز وعدّله كيف ما تبغى، وكل ما زاد العدد زاد الخصم.</p>
-    </header>
-
-    <div class="bld__packs" id="bldPacks" role="group" aria-label="Ready packs"><!-- injected --></div>
-
-    <div class="bld__box">
-      <div class="bld__rows" id="bldRows"><!-- injected --></div>
-      <div class="bld__add" id="bldAdd"><!-- injected --></div>
-      <div class="bld__sum" id="bldSum"><!-- injected --></div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ SHOP ============ -->
-<section class="shop" id="shop">
-  <div class="wrap">
-    <header class="sec-h">
-      <span class="sec-h__num">04</span>
-      <h2 data-ar="تبغى وحدة بس؟" data-en="Just want one?">تبغى وحدة بس؟</h2>
-      <p data-ar="اختر مقاسك — كبار، ناشئين، أو أطفال. اللون يتبع الإصدار اللي فوق." data-en="Pick your size — adults, juniors or kids. The colour follows the edition you selected above.">اختر مقاسك — كبار، ناشئين، أو أطفال. اللون يتبع الإصدار اللي فوق.</p>
-    </header>
-    <div class="shop__grid" id="shopGrid"><!-- injected --></div>
-  </div>
-</section>
-
 <!-- ============ FABRIC ============ -->
 <section class="fab" id="fabric">
   <div class="wrap fab__in">
@@ -335,7 +322,7 @@
 
     <div class="fab__copy">
       <header class="sec-h sec-h--start">
-        <span class="sec-h__num">05</span>
+        <span class="sec-h__num">04</span>
         <h2 data-ar="طبقتين. دفا حقيقي." data-en="Two layers. Real warmth.">طبقتين. دفا حقيقي.</h2>
       </header>
       <p class="fab__lede" data-ar="جرّبنا سبع خامات قبل ما نستقر على هذي. الوجه ناعم وما يوبّر بعد الغسيل، والبطانة شيربا كثيفة تحبس الدفا بدون ما تثقل عليك." data-en="We tested seven fabrics before settling on this one. A soft face that won't pill after washing, and a dense sherpa lining that traps heat without weighing you down.">جرّبنا سبع خامات قبل ما نستقر على هذي. الوجه ناعم وما يوبّر بعد الغسيل، والبطانة شيربا كثيفة تحبس الدفا بدون ما تثقل عليك.</p>
@@ -356,7 +343,7 @@
 <section class="sizes" id="sizes">
   <div class="wrap">
     <header class="sec-h sec-h--light">
-      <span class="sec-h__num">06</span>
+      <span class="sec-h__num">05</span>
       <h2 data-ar="المقاسات" data-en="Size guide">المقاسات</h2>
       <p data-ar="واسع بالقصد. لو بين مقاسين، خذ الأكبر — هذي بطانية مو تيشيرت." data-en="Oversized on purpose. Between two sizes? Size up — this is a blanket, not a t-shirt.">واسع بالقصد. لو بين مقاسين، خذ الأكبر — هذي بطانية مو تيشيرت.</p>
     </header>
@@ -397,7 +384,7 @@
 <section class="revs" id="reviews" hidden>
   <div class="wrap">
     <header class="sec-h">
-      <span class="sec-h__num">07</span>
+      <span class="sec-h__num">06</span>
       <h2 data-ar="آراء العملاء" data-en="Customer reviews">آراء العملاء</h2>
       <p class="ph-flag" data-ar="⚠︎ نصوص تجريبية للعرض فقط — استبدلها بتقييمات حقيقية قبل النشر." data-en="⚠︎ Sample text for layout only — replace with real reviews before launch.">⚠︎ نصوص تجريبية للعرض فقط — استبدلها بتقييمات حقيقية قبل النشر.</p>
     </header>
@@ -433,7 +420,7 @@
 <section class="faq" id="faq">
   <div class="wrap faq__in">
     <header class="sec-h sec-h--start sec-h--light">
-      <span class="sec-h__num">07</span>
+      <span class="sec-h__num">06</span>
       <h2 data-ar="أسئلة متكررة" data-en="FAQ">أسئلة متكررة</h2>
     </header>
 
@@ -471,7 +458,7 @@
   <div class="wrap strip__in">
     <h2 data-ar="المباراة الجاية بعد كم يوم." data-en="The next match is days away.">المباراة الجاية بعد كم يوم.</h2>
     <p data-ar="اطلب اليوم، توصلك قبل صفارة البداية." data-en="Order today, it arrives before kickoff.">اطلب اليوم، توصلك قبل صفارة البداية.</p>
-    <a href="#shop" class="btn btn--go btn--lg" data-ar="اختر إصدارك" data-en="Pick your edition">اختر إصدارك</a>
+    <a href="#bundle" class="btn btn--go btn--lg" data-ar="ابدأ طلبك" data-en="Start your order">ابدأ طلبك</a>
   </div>
 </section>
 
@@ -492,7 +479,7 @@
 
     <nav class="ftr__col" aria-label="Shop">
       <h4 data-ar="المتجر" data-en="Shop">المتجر</h4>
-      <a href="#editions" data-ar="الإصدارات" data-en="Editions">الإصدارات</a>
+      <a href="#bundle" data-ar="طلب العائلة" data-en="Family order">طلب العائلة</a>
       <a href="#sizes" data-ar="دليل المقاسات" data-en="Size guide">دليل المقاسات</a>
       <a href="#fabric" data-ar="الخامة" data-en="Fabric">الخامة</a>
     </nav>
@@ -606,10 +593,24 @@
   </footer>
 </aside>
 
+<!-- ============ STICKY ORDER BAR (mobile only) ============
+     Appears once the hero buttons scroll away, hides while the order box or
+     the single-piece shop is on screen. With items in the cart it becomes a
+     shortcut to the cart. -->
+<div class="obar" id="obar" aria-hidden="true">
+  <button class="obar__go" id="obarGo" type="button" tabindex="-1">
+    <span class="obar__txt">
+      <b id="obarT"></b>
+      <small id="obarS"></small>
+    </span>
+    <span class="obar__cta" id="obarC"></span>
+  </button>
+</div>
+
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="js/data.js?v=31"></script>
-<script src="js/app.js?v=26"></script>
+<script src="js/data.js?v=32"></script>
+<script src="js/app.js?v=27"></script>
 <script src="js/chat.js?v=5" defer></script>
 </body>
 </html>
