@@ -69,6 +69,17 @@
   const cardThumb = (e, size) =>
     (e.thumbs && e.thumbs[size]) || (e.shots && e.shots[size]) || e.img;
 
+  // Tighter, sharper crop of the same model shot (upper body), used for the
+  // split pack photos and the family page rows.
+  const sliceShot = (e, size) =>
+    e.shots && e.shots[size] ? `img/slice/${e.id}-${size}.webp` : cardShot(e, size);
+
+  // "قطعة وحدة / قطعتين / 3 قطع" — Arabic counts don't take one plural.
+  const pieces = (n) =>
+    state.lang === "ar"
+      ? n === 1 ? "قطعة وحدة" : n === 2 ? "قطعتين" : `${n} قطع`
+      : n === 1 ? "1 piece" : `${n} pieces`;
+
   // Product-card shot: a model wearing this edition in the picked size.
   // Falls back to the flat garment shot if an edition has no model photos yet.
   const cardShot = (e, size) => (e.shots && e.shots[size]) || e.img;
@@ -208,61 +219,92 @@
   const buildPct = () => (tierFor(state.build.length) || { pct: 0 }).pct;
   const buildSaving = () => Math.round((buildSubtotal() * buildPct()) / 100);
 
+  /* One photo per person, cut into slanted slices like a split shirt.
+     Slices are placed in physical left-to-right space, so Arabic reverses
+     the list to keep the first person on the right. */
+  function splitArt(people) {
+    const n = people.length;
+    const k = 0.14;          // lean of each cut, as a share of the card width
+    const L = 1 / n + k;     // each slice: one share plus the lean
+    const g = "1.5px";       // half the dark gap between slices
+    const list = state.lang === "ar" ? [...people].reverse() : people;
+    return list
+      .map((p, i) => {
+        const left = (i / n - k / 2) * 100;
+        const tl = i === 0 ? "0%" : `calc(${((k / L) * 100).toFixed(3)}% + ${g})`;
+        const bl = i === 0 ? "0%" : g;
+        const tr = i === n - 1 ? "100%" : `calc(100% - ${g})`;
+        const br = i === n - 1 ? "100%" : `calc(${((1 / n / L) * 100).toFixed(3)}% - ${g})`;
+        return `<i style="left:${left.toFixed(3)}%;width:${(L * 100).toFixed(3)}%;clip-path:polygon(${tl} 0,${tr} 0,${br} 100%,${bl} 100%)"><img src="${sliceShot(ed(p.ed), p.size)}" alt="" loading="lazy" width="440" height="589"></i>`;
+      })
+      .join("");
+  }
+
+  const arrow = `<svg class="pack__arr" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>`;
+
   function renderPacks() {
     const el = $("#bldPacks");
     if (!el) return;
-    el.innerHTML = PACKS.map((pk) => {
+    const cards = PACKS.map((pk) => {
       const from = pk.slots.reduce((n, sz) => n + unitPrice("classic", sz), 0);
       const pct = (tierFor(pk.slots.length) || { pct: 0 }).pct;
-      const mix = pk.mix || pk.slots.map(() => state.edition);
+      const mix = pk.mix || [];
+      const people = pk.slots.map((sz, i) => ({
+        size: sz,
+        ed: EDITIONS.some((e) => e.id === mix[i]) ? mix[i] : state.edition
+      }));
 
-      // one model photo per person, each in a different edition — this is the
-      // card doing the explaining, not the copy underneath it
-      const faces = pk.slots
-        .map((sz, i) => {
-          const e = ed(mix[i]);
-          return `<img src="${cardThumb(e, sz)}" alt="" loading="lazy"
-                       width="220" height="220" title="${e[state.lang]}">`;
-        })
-        .join("");
-
-      // "كبار ×2 · أطفال" reads far better than repeating the full age band
-      // three times; the exact ages are on the builder rows below.
+      // "كبار ×2 · ناشئين" reads better than repeating the age bands.
       const counts = pk.slots.reduce((m, sz) => ((m[sz] = (m[sz] || 0) + 1), m), {});
       const who = Object.keys(counts)
         .map((sz) => SIZES[sz][state.lang] + (counts[sz] > 1 ? ` ×${counts[sz]}` : ""))
         .join(" · ");
 
       return `<button class="pack" type="button" data-pack="${pk.id}">
-          <span class="pack__faces" aria-hidden="true">${faces}</span>
+          <span class="pack__art">${splitArt(people)}${pct
+            ? `<span class="pack__save" dir="${state.lang === "ar" ? "rtl" : "ltr"}">${tf("packSave", { pct })}</span>`
+            : ""}</span>
           <span class="pack__body">
-            <span class="pack__hd">
+            <span class="pack__l">
               <b class="pack__t">${pk[state.lang]}</b>
-              ${pct ? `<span class="pack__save">${tf("packSave", { pct })}</span>` : ""}
+              <span class="pack__who">${who}</span>
             </span>
-            <span class="pack__who">${who}</span>
             <span class="pack__pr">
               <em dir="ltr">${money(Math.round(from - (from * pct) / 100))}</em>
-              <s dir="ltr">${money(from)}</s>
+              ${pct ? `<s dir="ltr">${money(from)}</s>` : ""}
             </span>
-            <span class="pack__mix">${t("bldMixed")}</span>
           </span>
+          <span class="pack__go">${t("famPick")}${arrow}</span>
         </button>`;
-    }).join("");
+    });
+
+    cards.push(`<button class="pack pack--own" type="button" data-pack="own">
+        <span class="pack__plus" aria-hidden="true">+</span>
+        <span class="pack__body">
+          <span class="pack__l">
+            <b class="pack__t">${t("famOwn")}</b>
+            <span class="pack__who">${t("famOwnS")}</span>
+          </span>
+        </span>
+        <span class="pack__go">${t("famOwnGo")}${arrow}</span>
+      </button>`);
+    el.innerHTML = cards.join("");
 
     $$(".pack", el).forEach((b) =>
       b.addEventListener("click", () => {
-        const pk = PACKS.find((x) => x.id === b.dataset.pack);
-        if (!pk) return;
-        // Load exactly what the card pictured, mixed teams and all — showing
-        // one thing and loading another would be a bait and switch.
-        const mix = pk.mix || [];
-        state.build = pk.slots.map((sz, i) => ({
-          size: sz,
-          ed: EDITIONS.some((e) => e.id === mix[i]) ? mix[i] : state.edition
-        }));
-        renderBuild();
-        $("#bldRows").scrollIntoView({ behavior: "smooth", block: "center" });
+        if (b.dataset.pack === "own") {
+          state.build = [{ size: "adult", ed: state.edition }];
+        } else {
+          const pk = PACKS.find((x) => x.id === b.dataset.pack);
+          if (!pk) return;
+          // Load exactly what the card pictured, mixed teams and all.
+          const mix = pk.mix || [];
+          state.build = pk.slots.map((sz, i) => ({
+            size: sz,
+            ed: EDITIONS.some((e) => e.id === mix[i]) ? mix[i] : state.edition
+          }));
+        }
+        openFam(true);
       })
     );
   }
@@ -270,30 +312,38 @@
   function renderBuild() {
     const rows = $("#bldRows");
     if (!rows) return;
+    const n = state.build.length;
 
-    if (!state.build.length) {
-      rows.innerHTML = `<div class="bld__empty">${t("bldEmpty")}</div>`;
+    const cnt = $("#famCount");
+    if (cnt) cnt.textContent = n ? pieces(n) : "";
+
+    if (!n) {
+      rows.innerHTML = `<div class="bld__empty">${t("famEmpty")}</div>`;
     } else {
       rows.innerHTML = state.build
         .map((r, i) => {
           const sz = SIZES[r.size];
+          const e = ed(r.ed);
           return `
         <div class="brow" data-i="${i}">
-          <div class="brow__top">
-            <span class="brow__who">
-              <b>${sz[state.lang === "ar" ? "ageAr" : "ageEn"]}</b>
-              <span>${sz[state.lang]}</span>
-            </span>
+          <span class="brow__img"><img src="${sliceShot(e, r.size)}" alt="${e[state.lang]}" width="440" height="589"></span>
+          <div class="brow__main">
+            <div class="brow__top">
+              <span class="brow__who">
+                <b>${sz[state.lang]}</b>
+                <span>${sz[state.lang === "ar" ? "ageAr" : "ageEn"]}</span>
+              </span>
+              <button class="brow__x" type="button" aria-label="${t("remove")}">✕</button>
+            </div>
+            <span class="brow__ed">${e[state.lang]}</span>
             <span class="brow__p" dir="ltr">${money(unitPrice("classic", r.size))}</span>
-            <button class="brow__x" type="button">${t("remove")}</button>
           </div>
           <div class="brow__eds" role="group" aria-label="${t("chooseEd")}">
             ${EDITIONS.map(
-              (e) => `<button class="bed" type="button" data-ed="${e.id}"
-                        aria-pressed="${e.id === r.ed}" title="${e[state.lang]}"
-                        aria-label="${e[state.lang]}">
-                        <img src="${cardThumb(e, r.size)}" alt="" loading="lazy" width="220" height="220">
-                        <span>${e[state.lang]}</span>
+              (x) => `<button class="bed" type="button" data-ed="${x.id}"
+                        aria-pressed="${x.id === r.ed}" aria-label="${x[state.lang]}">
+                        <img src="${cardThumb(x, r.size)}" alt="" loading="lazy" width="220" height="220">
+                        <span>${x[state.lang]}</span>
                       </button>`
             ).join("")}
           </div>
@@ -330,50 +380,111 @@
       b.addEventListener("click", () => {
         state.build.push({ size: b.dataset.size, ed: state.edition });
         renderBuild();
+        // show the person just added
+        const last = $$(".brow", rows).pop();
+        if (last) last.scrollIntoView({ behavior: "smooth", block: "nearest" });
       })
     );
 
-    // summary
-    const sum = $("#bldSum");
-    const n = state.build.length;
-    if (!n) { sum.innerHTML = ""; return; }
-
-    const sub = buildSubtotal();
-    const pct = buildPct();
-    const saving = buildSaving();
-    const nt = nextTier(n);
-
-    const allSame = state.build.every((r) => r.ed === state.build[0].ed);
-    sum.innerHTML = `
-      ${allSame ? "" : `<button class="bmatch" type="button" id="bldMatch">${
-        tf("bldMatch", { ed: ed(state.edition)[state.lang] })
-      }</button>`}
-      <div class="bsum__r"><span>${t("subtotal")}</span><b dir="ltr">${money(sub)}</b></div>
-      ${saving ? `<div class="bsum__r bsum__r--save">
-        <span>${tf("bundleOn", { pct })}</span><b dir="ltr">− ${money(saving)}</b></div>` : ""}
-      <div class="bsum__r bsum__r--total"><span>${t("total")}</span>
-        <b dir="ltr">${money(sub - saving)}</b></div>
-      ${nt ? `<p class="bsum__next">${tf(
-          nt.min - n > 1 ? "bundleAdd2" : "bundleAdd1", { pct: nt.pct }
-        )}</p>` : ""}
-      <button class="btn btn--go" type="button" id="bldAddAll">${tf("bldAddAll", { n })}</button>`;
-
-    const match = $("#bldMatch");
-    if (match) {
-      match.addEventListener("click", () => {
+    // one tap back to a single-team set
+    const mw = $("#bldMatchWrap");
+    const allSame = !n || state.build.every((r) => r.ed === state.build[0].ed);
+    if (mw) {
+      mw.innerHTML = allSame ? "" : `<button class="bmatch" type="button" id="bldMatch">${
+        tf("bldMatch", { ed: ed(state.edition)[state.lang] })}</button>`;
+      const match = $("#bldMatch");
+      if (match) match.addEventListener("click", () => {
         state.build.forEach((r) => { r.ed = state.edition; });
         renderBuild();
       });
     }
 
+    // sticky footer: total + one button
+    const sum = $("#bldSum");
+    const sub = buildSubtotal();
+    const pct = buildPct();
+    const saving = buildSaving();
+    const nt = nextTier(n);
+    const addLbl = state.lang === "ar" ? `أضف ${pieces(n)} للسلة` : `Add ${pieces(n)} to cart`;
+
+    sum.innerHTML = `
+      ${n && nt ? `<p class="bsum__next">${tf(
+          nt.min - n > 1 ? "bundleAdd2" : "bundleAdd1", { pct: nt.pct }
+        )}</p>` : ""}
+      ${saving ? `<p class="fsum__save">${tf("bundleOn", { pct })} · ${t("saved")} <b dir="ltr">${money(saving)}</b></p>` : ""}
+      <div class="fsum">
+        <div class="fsum__l">
+          <span>${t("total")}</span>
+          <b dir="ltr">${money(sub - saving)}</b>
+          ${saving ? `<s dir="ltr">${money(sub)}</s>` : ""}
+        </div>
+        <button class="btn btn--go" type="button" id="bldAddAll"${n ? "" : " disabled"}>${n ? addLbl : t("addToCart")}</button>
+      </div>`;
+
     $("#bldAddAll").addEventListener("click", () => {
       const n = state.build.length;
+      if (!n) return;
       state.build.forEach((r) => addToCart("classic", r.size, r.ed, true));
       state.build = [];
-      renderBuild();
       toast(tf("bldAdded", { n }));
+      leaveFam();
       openCart(true);
     });
+  }
+
+  /* ---- family page ----
+     Behaves like its own page: full screen, a back button, and the phone's
+     back gesture closes it because opening it pushes a #family entry. */
+  let famPushed = false;
+  function famUI(open) {
+    const el = $("#famPage");
+    if (!el) return;
+    el.classList.toggle("open", open);
+    el.setAttribute("aria-hidden", String(!open));
+    if (open) {
+      document.body.style.overflow = "hidden";
+      $("#famBody").scrollTop = 0;
+      setTimeout(() => $("#famBack")?.focus({ preventScroll: true }), 80);
+    } else if (!$("#cart").classList.contains("open")) {
+      document.body.style.overflow = "";
+    }
+  }
+  function openFam(push) {
+    openCart(false); openTeamSheet(false);
+    renderBuild();
+    famUI(true);
+    if (push && location.hash !== "#family") {
+      history.pushState({ fam: 1 }, "", "#family");
+      famPushed = true;
+    }
+  }
+  function leaveFam() {
+    if (!$("#famPage")?.classList.contains("open")) return;
+    if (famPushed && history.state && history.state.fam) {
+      famPushed = false;
+      history.back(); // popstate closes it
+    } else {
+      famUI(false);
+      if (location.hash === "#family")
+        history.replaceState(null, "", location.pathname + location.search);
+    }
+  }
+  function famInit() {
+    if (!$("#famPage")) return;
+    $("#famBack").addEventListener("click", leaveFam);
+    window.addEventListener("popstate", () => {
+      if (location.hash === "#family") {
+        if (!state.build.length) state.build = [{ size: "adult", ed: state.edition }];
+        renderBuild(); famUI(true);
+      } else {
+        famPushed = false; famUI(false);
+      }
+    });
+    // soodihoodi.com/#family opens straight into the family page (for ads)
+    if (location.hash === "#family") {
+      if (!state.build.length) state.build = [{ size: "adult", ed: state.edition }];
+      openFam(false);
+    }
   }
 
   /* =========================================================
@@ -511,6 +622,10 @@
     $$(".tcard").forEach((c) =>
       c.setAttribute("aria-checked", String(c.dataset.ed === state.edition))
     );
+    const sn = $("#shopTeamName");
+    if (sn) sn.textContent = e[state.lang];
+    const si = $("#shopTeamImg");
+    if (si && si.getAttribute("src") !== e.img) si.src = e.img;
   }
 
   /* =========================================================
@@ -827,7 +942,7 @@
 
     go.addEventListener("click", () => {
       if (cartCount()) { openCart(true); return; }
-      const box = $("#bundle");
+      const box = $("#shop");
       if (box) box.scrollIntoView({ behavior: "smooth", block: "start" });
     });
 
@@ -1181,10 +1296,12 @@
     }
 
     // static reveals
-    observe($$(".sec-h, .why__c, .rev, .acc__i, .tbl-wrap, .fab__art, .fab__copy, .strip__in, .bld__box"));
+    observe($$(".sec-h, .why__c, .rev, .acc__i, .tbl-wrap, .fab__art, .fab__copy, .strip__in"));
 
     offerInit();
     obarInit();
+    famInit();
+    $("#shopTeam")?.addEventListener("click", () => openTeamSheet(true));
     cineInit();
     tiltInit();
     swipeInit();
@@ -1229,7 +1346,10 @@
     $("#checkout").addEventListener("click", checkout);
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") {
-        openCart(false); openTeamSheet(false);
+        if ($("#cart").classList.contains("open") || $("#teamSheet").classList.contains("open")) {
+          openCart(false); openTeamSheet(false); return;
+        }
+        leaveFam();
         if ($("#offer").classList.contains("open")) { markOffer("dismissed"); openOffer(false); }
       }
     });

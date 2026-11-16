@@ -266,34 +266,6 @@ const EDITIONS = [
     accent:  "#F5F5F5",
     glow:    "#6B6E76"
   }
-,
-  /* ---------------------------------------------------------
-     COMING SOON — a single unnamed placeholder.
-
-     Deliberately blank: plain white, no colourway, no club reference, no
-     edition name. It says only "New / Soon", which promises more is coming
-     without committing to which team or when.
-
-     `comingSoon` dims it, blocks selection and fires the "we'll tell you
-     when it drops" toast; swipe and the editions rail filter it out. Give
-     it a real name, colours, shots/thumbs/card and drop the flag to ship it.
-     --------------------------------------------------------- */
-  {
-    id: "soon",
-    comingSoon: true,
-    img: "img/soon.jpg",
-    sky: "#F0F1F3",
-    fg: "#14161A",
-    ink: "#4A5058",
-    ar: "جديد",
-    en: "New",
-    tagAr: "إصدار جديد قريباً",
-    tagEn: "A new edition, soon",
-    primary: "#B9BEC7",
-    secondary: "#FFFFFF",
-    accent:  "#DDE1E6",
-    glow:    "#8A9099"
-  }
 ];
 
 /* ---------------------------------------------------------
@@ -452,6 +424,19 @@ const T = {
   bldMatch:    { ar: "خلّهم كلهم {ed}",          en: "Match all to {ed}" },
   bldMixed:    { ar: "كل واحد وفريقه",           en: "Everyone picks their own" },
   packSave:    { ar: "وفّر {pct}٪",              en: "Save {pct}%" },
+  shopTeam:    { ar: "فريقك",                    en: "Your team" },
+  shopTeamGo:  { ar: "اختر فريقك",               en: "Choose your team" },
+  famTitle:    { ar: "طقم العائلة",              en: "Your family set" },
+  famHint:     { ar: "اختر فريق كل واحد. تقدر تضيف أو تحذف أي شخص.",
+                 en: "Pick a team for each person. Add or remove anyone." },
+  famPick:     { ar: "اختر فرقهم",               en: "Pick their teams" },
+  famOwn:      { ar: "صمّم طقمك",                en: "Build your own" },
+  famOwnS:     { ar: "اختر العدد والمقاسات بنفسك", en: "Choose who and which sizes" },
+  famOwnGo:    { ar: "ابدأ",                     en: "Start" },
+  famEmpty:    { ar: "أضف أول شخص من الأزرار تحت.", en: "Add the first person with the buttons below." },
+  famCount:    { ar: "{n} قطع",                  en: "{n} pieces" },
+  back:        { ar: "رجوع",                     en: "Back" },
+  person:      { ar: "الشخص {n}",                en: "Person {n}" },
   obarGo:      { ar: "ابدأ طلبك",                en: "Start your order" },
   obarSub:     { ar: "توصيل مجاني · وفّر حتى {pct}٪", en: "Free delivery · save up to {pct}%" },
   obarBtn:     { ar: "اطلب",                     en: "Order" },

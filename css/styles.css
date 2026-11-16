@@ -1140,73 +1140,73 @@ html.gated .gate::before{
 }
 
 /* ---- ready packs ----
-   A plain grid, never a sideways scroller: testers missed every pack past the
-   first one when they had to swipe for them. On phones each pack is one
-   compact row (stacked faces · name · price) so all five fit on a screen. */
-.bld__packs{
-  display:grid; gap:12px; margin-block-end:clamp(20px,3vw,30px);
-  grid-template-columns:repeat(5,minmax(0,1fr));
-}
+   Cards only, never a sideways scroller. Each card is one big photo of the
+   family, cut into slanted slices (one per person, each in their team).
+   Tapping a card opens the family page; nothing on this page jumps. */
+.bld__packs{ display:grid; gap:14px; grid-template-columns:1fr; }
+@media (min-width:640px){ .bld__packs{ grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media (min-width:1024px){ .bld__packs{ grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; } }
 
 .pack{
-  position:relative; min-width:0;
-  padding:12px 12px 14px; border-radius:var(--r-l);
-  border:1px solid var(--line); background:rgba(255,255,255,.04);
-  display:grid; gap:11px; align-content:start; text-align:start;
-  transition:border-color .25s,background .25s,transform .25s var(--ease-o);
+  position:relative; min-width:0; display:grid; align-content:start;
+  border-radius:var(--r-l); overflow:hidden; text-align:start;
+  border:1px solid var(--line); background:var(--ink-2);
+  transition:border-color .25s,transform .25s var(--ease-o);
 }
-.pack:hover{
-  border-color:var(--ed); background:color-mix(in srgb,var(--ed) 11%,transparent);
-  transform:translateY(-3px);
-}
+.pack:hover{ border-color:var(--ed); transform:translateY(-3px); }
+.pack:active{ transform:scale(.99); }
 
-/* The faces ARE the pitch: different sizes, deliberately different
-   teams, so mix-and-match needs no explaining. */
-.pack__faces{ display:flex; gap:6px; }
-.pack__faces img{
-  flex:1 1 0; min-width:0; aspect-ratio:1; height:auto;
-  object-fit:cover; border-radius:13px;
-  border:1.5px solid rgba(255,255,255,.10); background:var(--ink-2);
+.pack__art{
+  position:relative; display:block; aspect-ratio:16/10; overflow:hidden;
+  background:#05060A; direction:ltr;
 }
-.pack__body{ display:grid; gap:3px; min-width:0; }
-.pack__hd{ display:flex; align-items:center; justify-content:space-between; gap:8px; }
-.pack__t{ font-size:1rem; font-weight:700; color:var(--txt); }
-.pack__who{ font-size:0.75rem; color:var(--mut); letter-spacing:.01em; }
-.pack__pr{ display:flex; align-items:baseline; gap:8px; margin-block-start:4px; }
-.pack__pr em{ font-style:normal; font-family:var(--disp); font-size:1.1875rem; font-weight:700; color:var(--txt); }
-.pack__pr s{ font-size:0.75rem; color:var(--mut); }
-/* the saving rides on the card's top edge so the name gets the full width */
+.pack__art i{ position:absolute; inset-block:0; display:block; }
+.pack__art img{
+  width:100%; height:100%; object-fit:cover; object-position:50% 14%; display:block;
+  transition:transform .6s var(--ease-o);
+}
+.pack:hover .pack__art img{ transform:scale(1.04); }
+
+/* bottom corner of the photo: the top is where the faces are */
 .pack__save{
-  position:absolute; inset-block-start:-9px; inset-inline-end:12px;
-  flex:none; font-size:0.6875rem; font-weight:700; padding:3px 9px; border-radius:99px;
+  position:absolute; z-index:1; inset-block-end:10px; right:12px;
+  font-size:0.75rem; font-weight:700; padding:4px 10px; border-radius:99px;
   background:#6FD9A4; color:#06240F; white-space:nowrap;
 }
-.pack__mix{
-  font-size:0.6875rem; font-weight:600; color:var(--ed-acc);
-  display:flex; align-items:center; gap:5px;
+.pack__body{
+  display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
+  padding:14px 16px 2px;
 }
-.pack__mix::before{ content:"⇄"; font-size:0.8125rem; }
+.pack__l{ display:grid; gap:3px; min-width:0; }
+.pack__t{ font-size:1.0625rem; font-weight:700; color:var(--txt); }
+.pack__who{ font-size:0.8125rem; color:var(--mut); }
+.pack__pr{ display:grid; justify-items:end; gap:1px; flex:none; }
+.pack__pr em{ font-style:normal; font-family:var(--disp); font-size:1.25rem; font-weight:700; color:var(--txt); }
+.pack__pr s{ font-size:0.75rem; color:var(--mut); }
+.pack__go{
+  display:flex; align-items:center; justify-content:space-between; gap:8px;
+  margin:12px 16px 16px; padding:12px 16px; border-radius:99px;
+  background:color-mix(in srgb,var(--ed) 18%,transparent); color:var(--txt);
+  font-size:0.875rem; font-weight:700;
+  transition:background .25s,color .25s;
+}
+.pack:hover .pack__go{ background:var(--ed); color:var(--ed-fg); }
+.pack__arr{ flex:none; }
+[dir="rtl"] .pack__arr{ transform:scaleX(-1); }
+[dir="rtl"] .pack__save{ right:auto; left:12px; }
 
-@media (max-width:1023px){
-  .bld__packs{ grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
-  .pack{
-    grid-template-columns:100px minmax(0,1fr); align-items:center;
-    gap:12px; padding:12px;
-  }
-  .pack:hover{ transform:none; }
-  /* overlapping avatars: four faces in 100px without shrinking to dots */
-  .pack__faces{ gap:0; }
-  .pack__faces img{
-    flex:0 0 37px; width:37px; height:37px; border-radius:50%;
-    border:2px solid var(--ink-1);
-  }
-  .pack__faces img + img{ margin-inline-start:-16px; }
-  .pack__pr{ margin-block-start:1px; }
-  .pack__pr em{ font-size:1.0625rem; }
-  .pack__mix{ display:none; }
+/* "build your own": same footprint, no photo */
+.pack--own{
+  border-style:dashed; background:transparent;
+  align-content:center; justify-items:center; text-align:center;
+  padding-block-start:22px;
 }
-@media (max-width:719px){
-  .bld__packs{ grid-template-columns:1fr; }
+.pack--own .pack__body{ justify-content:center; padding-block-start:10px; }
+.pack--own .pack__go{ width:calc(100% - 32px); }
+.pack__plus{
+  width:54px; height:54px; border-radius:50%; display:grid; place-items:center;
+  border:1.5px solid var(--line); color:var(--ed-acc);
+  font-size:1.75rem; line-height:1;
 }
 
 /* one tap back to a single-club set */
@@ -1231,43 +1231,49 @@ html.gated .gate::before{
 }
 
 .brow{
-  display:grid; gap:11px; padding:13px; border-radius:var(--r-m);
-  border:1px solid var(--line-2); background:rgba(255,255,255,.025);
+  display:grid; grid-template-columns:84px minmax(0,1fr); gap:12px 14px;
+  padding:12px; border-radius:var(--r-m);
+  border:1px solid var(--line-2); background:rgba(255,255,255,.03);
 }
-.brow__top{ display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; }
-.brow__who b{ font-size:0.9375rem; font-weight:700; }
-.brow__who span{ font-size:0.75rem; color:var(--mut); margin-inline-start:7px; }
-.brow__p{ margin-inline-start:auto; font-family:var(--disp); font-weight:700; font-size:1rem; }
+.brow__img{
+  display:block; border-radius:10px; overflow:hidden; aspect-ratio:3/4;
+  background:var(--ink-2);
+}
+.brow__img img{ width:100%; height:100%; object-fit:cover; object-position:50% 10%; display:block; }
+.brow__main{ display:grid; align-content:center; gap:3px; min-width:0; }
+.brow__top{ display:flex; align-items:center; gap:10px; }
+.brow__who b{ font-size:1.0625rem; font-weight:700; }
+.brow__who span{ font-size:0.75rem; color:var(--mut); margin-inline-start:6px; }
 .brow__x{
-  font-size:0.75rem; color:var(--mut); text-decoration:underline;
-  text-underline-offset:3px; transition:color .2s;
+  margin-inline-start:auto; flex:none; width:36px; height:36px; border-radius:10px;
+  border:1px solid var(--line); color:var(--mut); font-size:0.8125rem;
+  display:grid; place-items:center; transition:color .2s,border-color .2s;
 }
-.brow__x:hover{ color:#FF7B7B; }
+.brow__x:hover{ color:#FF7B7B; border-color:#FF7B7B; }
+.brow__ed{ font-size:0.875rem; font-weight:600; color:var(--txt); }
+.brow__p{ font-family:var(--disp); font-weight:700; font-size:1rem; color:var(--mut); justify-self:start; }
 
-/* per-row edition picker: two-tone chips, no club names */
-/* A parent picks a design by seeing it worn, not by decoding a colour chip. */
+/* per-person team picker: five photos across, names under them */
 .brow__eds{
-  /* Big enough to actually read the design — five across a phone gives 46px
-     thumbs, which defeats the point of showing photos at all. */
-  display:grid; grid-template-columns:repeat(auto-fit,minmax(84px,1fr)); gap:8px;
+  grid-column:1 / -1;
+  display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:6px;
 }
 .bed{
-  padding:0; border-radius:11px; border:1.5px solid var(--line);
-  background:rgba(255,255,255,.03); overflow:hidden;
-  transition:border-color .2s,transform .2s,background .2s;
+  padding:0; border-radius:10px; border:1.5px solid var(--line);
+  background:rgba(255,255,255,.03); overflow:hidden; min-width:0;
+  transition:border-color .2s,background .2s;
 }
-/* height:auto is load-bearing — the img's height="220" attribute is a
-   presentational hint that otherwise wins over aspect-ratio. */
+/* height:auto is load-bearing: the img's height="220" attribute otherwise
+   wins over aspect-ratio. */
 .bed img{ width:100%; height:auto; aspect-ratio:1; object-fit:cover; display:block; }
 .bed span{
-  display:block; font-size:0.625rem; font-weight:700; line-height:1.3;
-  padding:5px 3px 6px; color:var(--mut);
-  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  display:block; font-size:0.625rem; font-weight:700; line-height:1.25;
+  padding:4px 2px 5px; color:var(--mut); min-height:calc(2 * 1.25em + 9px);
 }
-.bed:hover{ transform:translateY(-2px); border-color:var(--ed); }
+.bed:hover{ border-color:var(--ed); }
 .bed[aria-pressed="true"]{
-  border-color:var(--ed-acc);
-  background:color-mix(in srgb,var(--ed) 18%,transparent);
+  border-color:var(--ed-acc); border-width:2px;
+  background:color-mix(in srgb,var(--ed) 20%,transparent);
 }
 .bed[aria-pressed="true"] span{ color:var(--txt); }
 
@@ -1295,10 +1301,6 @@ html.gated .gate::before{
 }
 .bld__sum .btn{ width:100%; }
 
-@media (min-width:720px){
-  .brow{ grid-template-columns:1fr auto; align-items:center; }
-  .brow__top{ grid-column:1 / -1; }
-}
 .badd span{ display:block; font-size:0.6875rem; font-weight:500; opacity:.7; }
 
 /* =========================================================
@@ -1643,4 +1645,84 @@ html[dir="ltr"] .teamchip__bar{
 }
 @media (prefers-reduced-motion:reduce){
   .obar,.obar.on,.shc-fab{ transition:none; }
+}
+
+/* =========================================================
+   ORDER ONE: team button above the product card
+   ========================================================= */
+.shteam{
+  display:flex; align-items:center; gap:12px;
+  width:100%; max-width:440px; margin:0 auto clamp(14px,2.2vw,20px);
+  padding:10px 10px 10px 12px; border-radius:var(--r-l);
+  border:1.5px solid var(--ed); color:var(--txt); text-align:start;
+  background:color-mix(in srgb,var(--ed) 12%,transparent);
+  transition:background .3s,border-color .7s var(--ease);
+}
+.shteam:hover{ background:color-mix(in srgb,var(--ed) 22%,transparent); }
+.shteam__img{
+  flex:none; width:50px; height:50px; border-radius:12px; overflow:hidden;
+  background:var(--ink-2);
+}
+.shteam__img img{ width:100%; height:100%; object-fit:cover; display:block; }
+.shteam__txt{ display:grid; gap:1px; min-width:0; flex:1 1 auto; }
+.shteam__txt small{ font-size:0.75rem; color:var(--mut); }
+.shteam__txt b{ font-size:1rem; font-weight:700; }
+.shteam__go{
+  flex:none; display:flex; align-items:center; gap:6px;
+  padding:10px 14px; border-radius:99px;
+  background:var(--ed); color:var(--ed-fg);
+  font-size:0.8125rem; font-weight:700; white-space:nowrap;
+  transition:background .7s var(--ease),color .3s;
+}
+
+/* =========================================================
+   FAMILY PAGE (full-screen, own back button)
+   ========================================================= */
+.fam{
+  position:fixed; inset:0; z-index:86;
+  display:flex; flex-direction:column; background:var(--ink);
+  opacity:0; visibility:hidden; transform:translateY(18px);
+  transition:opacity .28s var(--ease-o),transform .34s var(--ease-o),visibility 0s linear .34s;
+}
+.fam.open{
+  opacity:1; visibility:visible; transform:none;
+  transition:opacity .28s var(--ease-o),transform .34s var(--ease-o),visibility 0s;
+}
+.fam__hd{
+  flex:none; display:flex; align-items:center; gap:12px;
+  padding:calc(10px + env(safe-area-inset-top)) var(--gut) 10px;
+  background:var(--ink-1); border-block-end:1px solid var(--line);
+}
+.fam__back{
+  flex:none; width:44px; height:44px; border-radius:12px;
+  border:1px solid var(--line); color:var(--txt);
+  display:grid; place-items:center; transition:border-color .2s;
+}
+.fam__back:hover{ border-color:var(--ed); }
+[dir="ltr"] .fam__back svg{ transform:scaleX(-1); }
+.fam__t{ font-size:1.125rem; }
+.fam__n{ margin-inline-start:auto; font-size:0.8125rem; color:var(--mut); }
+.fam__body{
+  flex:1 1 auto; overflow-y:auto; overscroll-behavior:contain;
+  padding:14px var(--gut) 22px;
+}
+.fam__body > *{ max-width:720px; margin-inline:auto; }
+.fam__hint{ font-size:0.875rem; color:var(--mut); margin-block-end:12px; line-height:1.6; }
+.fam__body .bmatch{ display:block; max-width:720px; margin:0 auto 10px; }
+.fam__ft{
+  flex:none; display:grid; gap:8px;
+  padding:10px var(--gut) calc(12px + env(safe-area-inset-bottom));
+  background:var(--ink-1); border-block-start:1px solid var(--line);
+}
+.fam__ft > *{ width:100%; max-width:720px; margin-inline:auto; }
+.fsum{ display:flex; align-items:center; gap:12px; }
+.fsum__l{ display:grid; flex:1 1 auto; min-width:0; }
+.fsum__l span{ font-size:0.75rem; color:var(--mut); }
+.fsum__l b{ font-family:var(--disp); font-size:1.375rem; font-weight:700; line-height:1.25; justify-self:start; }
+.fsum__l s{ font-size:0.75rem; color:var(--mut); justify-self:start; }
+.fsum .btn{ flex:none; padding-inline:22px; }
+.fsum__save{ font-size:0.8125rem; color:#6FD9A4; text-align:center; }
+.fsum__save b{ font-weight:700; }
+@media (prefers-reduced-motion:reduce){
+  .fam,.fam.open{ transition:none; transform:none; }
 }
