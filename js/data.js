@@ -77,7 +77,7 @@ const SHOPIFY = {
 const LAUNCH = { opensAt: null };
 
 const OFFER = {
-  enabled: false,     // switched off 1 Nov 2026: no welcome code (SOODI15 retired, margins)
+  enabled: true,      // back on 16 Nov 2026: 15% for joining the list (name, email, phone, family size). One use per customer, Shopify-side.
   pct: 15,
   delayMs: 8000,       // let them see the hero first
   code: "SOODI15",
@@ -289,9 +289,9 @@ const EDITIONS = [
      adult -> Adults   (95 cm)
    Widths are still to come from the factory's spec sheet. */
 const SIZES = {
-  baby:  { ar: "أطفال",  en: "Kids",    ageAr: "2–6 سنوات",    ageEn: "Ages 2–6",  lengthCm: 64 },
-  kids:  { ar: "ناشئين", en: "Juniors", ageAr: "7–14 سنة",     ageEn: "Ages 7–14", lengthCm: 84 },
-  adult: { ar: "كبار",   en: "Adults",  ageAr: "15 سنة فأكثر", ageEn: "Ages 15+",  lengthCm: 95 }
+  baby:  { ar: "أطفال",  en: "Kids",    ageAr: "2–6 سنوات",    ageEn: "Ages 2–6",  lengthCm: 64, fitAr: "طول 85–120 سم",  fitEn: "Height 85–120 cm" },
+  kids:  { ar: "ناشئين", en: "Juniors", ageAr: "7–14 سنة",     ageEn: "Ages 7–14", lengthCm: 84, fitAr: "طول 120–155 سم", fitEn: "Height 120–155 cm" },
+  adult: { ar: "كبار",   en: "Adults",  ageAr: "15 سنة فأكثر", ageEn: "Ages 15+",  lengthCm: 95, fitAr: "طول 155 سم فأكثر", fitEn: "Height 155 cm and up", noteAr: "يوصل للركبة", noteEn: "Reaches the knee" }
 };
 
 /* ---------------------------------------------------------
@@ -427,8 +427,8 @@ const T = {
   shopTeam:    { ar: "فريقك",                    en: "Your team" },
   shopTeamGo:  { ar: "اختر فريقك",               en: "Choose your team" },
   famTitle:    { ar: "طقم العائلة",              en: "Your family set" },
-  famHint:     { ar: "اختر فريق كل واحد. تقدر تضيف أو تحذف أي شخص.",
-                 en: "Pick a team for each person. Add or remove anyone." },
+  famHint:     { ar: "لكل شخص: اختر فريقه. المقاس حسب العمر.",
+                 en: "For each person, pick a team. The size goes by age." },
   famPick:     { ar: "اختر فرقهم",               en: "Pick their teams" },
   famOwn:      { ar: "صمّم طقمك",                en: "Build your own" },
   famOwnS:     { ar: "اختر العدد والمقاسات بنفسك", en: "Choose who and which sizes" },
@@ -438,10 +438,17 @@ const T = {
   back:        { ar: "رجوع",                     en: "Back" },
   person:      { ar: "الشخص {n}",                en: "Person {n}" },
   obarGo:      { ar: "ابدأ طلبك",                en: "Start your order" },
-  obarSub:     { ar: "توصيل مجاني · وفّر حتى {pct}٪", en: "Free delivery · save up to {pct}%" },
+  obarSub:     { ar: "توصيل مجاني لفترة محدودة · وفّر حتى {pct}٪", en: "Free delivery, limited time · save up to {pct}%" },
   obarBtn:     { ar: "اطلب",                     en: "Order" },
   obarIn:      { ar: "في السلة: {n}",            en: "In your cart: {n}" },
   obarCart:    { ar: "السلة",                    en: "View cart" },
+  removeWho:   { ar: "حذف {who}",                en: "Remove {who}" },
+  cm:          { ar: "سم",                       en: "cm" },
+  famSizesT:   { ar: "المقاسات والأسعار",         en: "Sizes and prices" },
+  kitLen:      { ar: "الطول",                    en: "Length" },
+  age:         { ar: "العمر",                    en: "Age" },
+  fits:        { ar: "يناسب",                    en: "Fits" },
+  offerFam:    { ar: "كم شخص بالعيلة؟",           en: "How many in your family?" },
   bldAdded:    { ar: "تمّت إضافة {n} قطع",       en: "Added {n} items" },
   subtotal:    { ar: "قبل الخصم",                en: "Before discount" },
   waIntro:     { ar: "السلام عليكم، أبغى أطلب من SoodiHoodi:",

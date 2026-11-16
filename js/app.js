@@ -309,6 +309,39 @@
     );
   }
 
+  /* Sizes and prices, side by side, biggest first. Used twice: the shirt
+     cards in #sizes and the compact strip at the top of the family page. */
+  const sizeOrder = () => Object.keys(SIZES).reverse();
+  const L = (o, k) => o[k + (state.lang === "ar" ? "Ar" : "En")];
+  function renderKits() {
+    const box = $("#kits");
+    if (box) box.innerHTML = sizeOrder().map((sz) => {
+      const z = SIZES[sz];
+      return `
+      <article class="kit">
+        <div class="kit__shirt" role="img" aria-label="${t("kitLen")}: ${z.lengthCm} ${t("cm")}">
+          <svg viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"><path d="M42 12 18 24 8 50l17 7 5-12v63h60V45l5 12 17-7-10-26-24-12c-2 8-9 13-18 13s-16-5-18-13Z"/></svg>
+          <b dir="ltr">${z.lengthCm}<small>${t("cm")}</small></b>
+        </div>
+        <h3 class="kit__n">${z[state.lang]}</h3>
+        <dl class="kit__d">
+          <div><dt class="vh">${t("age")}</dt><dd>${L(z, "age")}</dd></div>
+          <div><dt class="vh">${t("fits")}</dt><dd>${L(z, "fit")}</dd></div>
+        </dl>
+        ${z.noteAr ? `<p class="kit__note">${L(z, "note")}</p>` : ""}
+        <p class="kit__p" dir="ltr">${money(unitPrice("classic", sz))}</p>
+      </article>`;
+    }).join("");
+    const fs = $("#famSizes");
+    if (fs) {
+      fs.setAttribute("aria-label", t("famSizesT"));
+      fs.innerHTML = sizeOrder().map((sz) => {
+        const z = SIZES[sz];
+        return `<div class="fsz__c"><b>${z[state.lang]}</b><span>${z.lengthCm} ${t("cm")} · ${L(z, "age")}</span><em dir="ltr">${money(unitPrice("classic", sz))}</em></div>`;
+      }).join("");
+    }
+  }
+
   function renderBuild() {
     const rows = $("#bldRows");
     if (!rows) return;
@@ -330,10 +363,13 @@
           <div class="brow__main">
             <div class="brow__top">
               <span class="brow__who">
-                <b>${sz[state.lang]}</b>
+                <b>${sz[state.lang]} · ${sz.lengthCm} ${t("cm")}</b>
                 <span>${sz[state.lang === "ar" ? "ageAr" : "ageEn"]}</span>
               </span>
-              <button class="brow__x" type="button" aria-label="${t("remove")}">✕</button>
+              ${n > 1 ? `<button class="brow__x" type="button" aria-label="${tf("removeWho", { who: sz[state.lang] })}">
+                <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>
+                <span>${t("remove")}</span>
+              </button>` : ""}
             </div>
             <span class="brow__ed">${e[state.lang]}</span>
             <span class="brow__p" dir="ltr">${money(unitPrice("classic", r.size))}</span>
@@ -353,7 +389,7 @@
 
       $$(".brow", rows).forEach((row) => {
         const i = Number(row.dataset.i);
-        $(".brow__x", row).addEventListener("click", () => {
+        $(".brow__x", row)?.addEventListener("click", () => {
           state.build.splice(i, 1);
           renderBuild();
         });
@@ -372,7 +408,7 @@
       .reverse()
       .map(
         (sz) => `<button class="badd" type="button" data-size="${sz}">
-            + ${SIZES[sz][state.lang]} <span>${SIZES[sz][state.lang === "ar" ? "ageAr" : "ageEn"]}</span>
+            + ${SIZES[sz][state.lang]} <span>${SIZES[sz][state.lang === "ar" ? "ageAr" : "ageEn"]} · <b dir="ltr">${money(unitPrice("classic", sz))}</b></span>
           </button>`
       )
       .join("");
@@ -523,7 +559,14 @@
       ev.preventDefault();
       const name = $("#offerName").value.trim();
       const mail = $("#offerMail").value.trim();
-      const ok = name.length > 1 && /^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(mail);
+      const cc = $("#offerCc") ? $("#offerCc").value : "966";
+      // Arabic-Indic digits typed on an Arabic keyboard count as digits too.
+      const tel = ($("#offerTel") ? $("#offerTel").value : "")
+        .replace(/[\u0660-\u0669]/g, (d) => String(d.charCodeAt(0) - 0x0660))
+        .replace(/[\u06F0-\u06F9]/g, (d) => String(d.charCodeAt(0) - 0x06F0))
+        .replace(/\D/g, "").replace(/^0+/, "");
+      const family = Number($("#offerFam") ? $("#offerFam").value : 0) || 0;
+      const ok = name.length > 1 && /^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(mail) && tel.length >= 7 && tel.length <= 12;
       $("#offerErr").hidden = ok;
       if (!ok) return;
 
@@ -535,7 +578,7 @@
         fetch(OFFER.endpoint, {
           method: "POST",
           headers: { "Content-Type": "application/json", Accept: "application/json" },
-          body: JSON.stringify({ name, email: mail, source: "site-offer", edition: state.edition })
+          body: JSON.stringify({ name, email: mail, phone: "+" + cc + tel, family, lang: state.lang, source: "site-offer", edition: state.edition })
         }).catch(() => {});
       } else if (SALLA.whatsapp) {
         // No endpoint configured yet — hand the lead to WhatsApp rather than
@@ -1086,6 +1129,7 @@
     renderShop();
     renderPacks();
     renderBuild();
+    renderKits();
     renderCart();
     applyEdition(state.edition, false);
   }
@@ -1291,6 +1335,7 @@
       renderShop();
       renderPacks();
       renderBuild();
+      renderKits();
       renderCart();
       applyEdition(state.edition, false);
     }

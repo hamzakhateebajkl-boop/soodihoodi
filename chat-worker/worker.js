@@ -213,26 +213,113 @@ export default {
   }
 };
 
-/* Welcome pop-up sign-ups: name + email. Sent to the team's Telegram and
-   kept in KV (key "lead:<time>") so the list can be exported later. */
+/* Welcome pop-up sign-ups: name, email, mobile and family size.
+   1. Saved as a Shopify customer (subscribed to email + SMS marketing,
+      tagged signup-15 and family-N, family size in custom.family_size).
+      Shopify's own "welcome new subscriber" automation sends the code, and
+      the SOODI15 discount is limited to customers tagged signup-15.
+   2. Sent to the team's Telegram and kept in KV ("lead:<time>") as a backup.
+   Shopify access: a SHOPIFY_ADMIN_TOKEN secret, or SHOPIFY_CLIENT_ID +
+   SHOPIFY_CLIENT_SECRET (Dev Dashboard app, client-credentials grant).
+   Without either, sign-ups still reach Telegram and KV. */
 async function lead(request, env, cors, later) {
   let b;
   try { b = await request.json(); } catch (e) { return json({ error: "bad_json" }, 400, cors); }
   const name = String((b && b.name) || "").replace(/\s+/g, " ").trim().slice(0, 80);
-  const email = String((b && b.email) || "").trim().slice(0, 120);
+  const email = String((b && b.email) || "").trim().toLowerCase().slice(0, 120);
   if (name.length < 2 || !/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(email)) return json({ error: "bad_lead" }, 400, cors);
+  const phoneRaw = String((b && b.phone) || "").replace(/[^\d+]/g, "");
+  const phone = /^\+\d{8,15}$/.test(phoneRaw) ? phoneRaw : "";
+  const family = Math.max(0, Math.min(20, parseInt(b && b.family, 10) || 0));
+  const lang = (b && b.lang) === "en" ? "en" : "ar";
   const edition = String((b && b.edition) || "").replace(/[^a-z]/g, "").slice(0, 12);
   const country = (request.cf && request.cf.country) || "";
   const at = new Date().toISOString();
-  if (env.CHAT_KV) later(env.CHAT_KV.put("lead:" + at + ":" + Math.random().toString(36).slice(2, 6), JSON.stringify({ name, email, edition, country, at })).catch(() => {}));
+  const rec = { name, email, phone, family, lang, edition, country, at };
+
+  let shop = "off";
+  if (shopifyReady(env)) {
+    try { shop = await shopifySubscribe(env, rec); }
+    catch (e) { shop = "error: " + String(e && e.message || e).slice(0, 160); }
+  }
+  rec.shopify = shop;
+  if (env.CHAT_KV) later(env.CHAT_KV.put("lead:" + at + ":" + Math.random().toString(36).slice(2, 6), JSON.stringify(rec)).catch(() => {}));
   if (telegramReady(env)) {
     later(tg(env, "sendMessage", {
       chat_id: env.TELEGRAM_CHAT_ID,
-      text: ["📩 New sign-up for the 15% code (shown: SOODI15)", "", "Name: " + name, "Email: " + email, [edition && "Edition on screen: " + edition, country, riyadhTime()].filter(Boolean).join(" · ")].join("\n"),
+      text: ["📩 New sign-up (15% code SOODI15)", "",
+        "Name: " + name, "Email: " + email, "Mobile: " + (phone || "-"), "Family: " + (family ? (family >= 8 ? "8+" : family) : "-"),
+        [edition && "Edition on screen: " + edition, country, lang.toUpperCase(), riyadhTime()].filter(Boolean).join(" · "),
+        "Shopify: " + (shop === "off" ? "not connected yet" : shop)].join("\n"),
       disable_web_page_preview: true
     }).catch(() => {}));
   }
   return json({ ok: true }, 200, cors);
+}
+
+const SHOPIFY_API = "2026-10";
+let shopToken = null; // { token, until } for the client-credentials grant
+function shopifyReady(env) { return !!(env.SHOPIFY_ADMIN_TOKEN || (env.SHOPIFY_CLIENT_ID && env.SHOPIFY_CLIENT_SECRET)); }
+function shopDomain(env) { return env.SHOPIFY_SHOP || "yk3hk2-pu.myshopify.com"; }
+async function shopifyToken(env) {
+  if (env.SHOPIFY_ADMIN_TOKEN) return env.SHOPIFY_ADMIN_TOKEN;
+  if (shopToken && shopToken.until > Date.now()) return shopToken.token;
+  const r = await fetch(`https://${shopDomain(env)}/admin/oauth/access_token`, {
+    method: "POST",
+    headers: { "content-type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({ grant_type: "client_credentials", client_id: env.SHOPIFY_CLIENT_ID, client_secret: env.SHOPIFY_CLIENT_SECRET })
+  });
+  const d = await r.json().catch(() => ({}));
+  if (!r.ok || !d.access_token) throw new Error("token " + r.status);
+  shopToken = { token: d.access_token, until: Date.now() + Math.max(60, (d.expires_in || 3600) - 300) * 1000 };
+  return shopToken.token;
+}
+async function gql(env, query, variables) {
+  const r = await fetch(`https://${shopDomain(env)}/admin/api/${SHOPIFY_API}/graphql.json`, {
+    method: "POST",
+    headers: { "content-type": "application/json", "x-shopify-access-token": await shopifyToken(env) },
+    body: JSON.stringify({ query, variables })
+  });
+  const d = await r.json().catch(() => ({}));
+  if (!r.ok || d.errors) throw new Error("gql " + r.status + " " + JSON.stringify(d.errors || "").slice(0, 120));
+  return d.data;
+}
+const CUSTOMER_ERRS = "userErrors { field message }";
+async function shopifySubscribe(env, rec) {
+  const tags = ["signup-15", "src-site", "lang-" + rec.lang];
+  if (rec.family) tags.push("family-" + (rec.family >= 8 ? "8plus" : rec.family));
+  const now = new Date().toISOString();
+  const emailConsent = { marketingState: "SUBSCRIBED", marketingOptInLevel: "SINGLE_OPT_IN", consentUpdatedAt: now };
+  const smsConsent = { marketingState: "SUBSCRIBED", marketingOptInLevel: "SINGLE_OPT_IN", consentUpdatedAt: now };
+  const metafields = rec.family ? [{ namespace: "custom", key: "family_size", type: "number_integer", value: String(rec.family) }] : [];
+
+  const found = await gql(env, `query($q:String!){ customers(first:1, query:$q){ nodes{ id tags phone } } }`, { q: "email:" + JSON.stringify(rec.email) });
+  const old = found.customers.nodes[0];
+  if (!old) {
+    const input = { firstName: rec.name, email: rec.email, locale: rec.lang, tags, emailMarketingConsent: emailConsent, metafields };
+    if (rec.phone) { input.phone = rec.phone; input.smsMarketingConsent = smsConsent; }
+    let d = await gql(env, `mutation($input:CustomerInput!){ customerCreate(input:$input){ customer{ id } ${CUSTOMER_ERRS} } }`, { input });
+    let errs = d.customerCreate.userErrors;
+    if (errs.length && rec.phone && errs.some((e) => /phone/i.test((e.field || []).join(".") + e.message))) {
+      // Phone rejected (wrong length for the country, or already on another customer): keep it in the note instead.
+      delete input.phone; delete input.smsMarketingConsent; input.note = "Mobile from sign-up: " + rec.phone;
+      d = await gql(env, `mutation($input:CustomerInput!){ customerCreate(input:$input){ customer{ id } ${CUSTOMER_ERRS} } }`, { input });
+      errs = d.customerCreate.userErrors;
+      if (!errs.length) return "created (phone kept in note)";
+    }
+    if (errs.length) throw new Error(errs.map((e) => e.message).join("; "));
+    return "created";
+  }
+  const input = { id: old.id, tags: Array.from(new Set([...(old.tags || []), ...tags])), metafields };
+  if (rec.phone && !old.phone) input.phone = rec.phone;
+  const u = await gql(env, `mutation($input:CustomerInput!){ customerUpdate(input:$input){ customer{ id } ${CUSTOMER_ERRS} } }`, { input });
+  if (u.customerUpdate.userErrors.length && input.phone) {
+    delete input.phone;
+    await gql(env, `mutation($input:CustomerInput!){ customerUpdate(input:$input){ customer{ id } ${CUSTOMER_ERRS} } }`, { input });
+  }
+  await gql(env, `mutation($input:CustomerEmailMarketingConsentUpdateInput!){ customerEmailMarketingConsentUpdate(input:$input){ ${CUSTOMER_ERRS} } }`,
+    { input: { customerId: old.id, emailMarketingConsent: { marketingState: "SUBSCRIBED", marketingOptInLevel: "SINGLE_OPT_IN", consentUpdatedAt: now } } });
+  return "updated (existing customer)";
 }
 
 /* The customer's page asks every few seconds whether the team has replied
