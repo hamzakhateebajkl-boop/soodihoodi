@@ -1732,11 +1732,16 @@ html[dir="ltr"] .teamchip__bar{
    Every touch is a football one: an LED pitch-side board for the
    ticker, a match-ticket sticker, kick-off buttons, floodlit headings,
    halfway-line dividers, neon line icons, and sizes printed as shirt
-   numbers. Amber is the one constant accent; glows follow the edition.
+   numbers. The kick-off accent and the glows both follow the edition.
    ========================================================= */
 :root{
-  --amber:#FFB52E;
-  --amber-ink:#1A1204;
+  /* Kick-off colour = the team the visitor picked (blue, green, yellow, white).
+     --amber      fill of buttons, ticket stickers and pills
+     --amber-ink  text on that fill (white on blue/green, near-black on yellow/white)
+     --amber-txt  the same accent used as TEXT or a line on the dark page */
+  --amber:var(--ed);
+  --amber-ink:var(--ed-fg);
+  --amber-txt:var(--ed-acc);
   --neon:color-mix(in srgb,var(--ed-acc) 72%,#fff);
   --stad:"Lalezar","Bungee","Noto Kufi Arabic",sans-serif;
 }
@@ -1744,13 +1749,13 @@ html[data-lang="en"]{ --stad:"Bungee","Lalezar","Archivo",sans-serif; }
 .vh{ position:absolute!important; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); clip-path:inset(50%); white-space:nowrap; }
 
 /* LED pitch-side board */
-.ticker{ background:#050608; color:var(--amber); border-block:1px solid color-mix(in srgb,var(--amber) 22%,transparent); }
+.ticker{ background:#050608; color:var(--amber-txt); border-block:1px solid color-mix(in srgb,var(--amber-txt) 22%,transparent); }
 .ticker::after{
   content:""; position:absolute; inset:0; pointer-events:none;
   background:radial-gradient(circle,rgba(0,0,0,.5) 0 .55px,transparent .9px) 0 0/3px 3px;
 }
 .ticker b{ font-family:var(--stad); font-weight:400; font-size:0.875rem; letter-spacing:.03em; line-height:1.4;
-  text-shadow:0 0 6px color-mix(in srgb,var(--amber) 75%,transparent); }
+  text-shadow:0 0 6px color-mix(in srgb,var(--amber-txt) 75%,transparent); }
 .ticker i{ color:var(--neon); opacity:.85; }
 
 /* floodlit headings */
@@ -1794,7 +1799,7 @@ html[data-lang="en"] .tkt{ font-size:0.875rem; }
   background:var(--amber); color:var(--amber-ink);
   font-family:var(--stad); font-weight:400; font-size:1.125rem; line-height:1.2; letter-spacing:.01em;
   transform:rotate(-2deg);
-  box-shadow:0 0 0 3px color-mix(in srgb,var(--amber) 22%,transparent),0 10px 20px -10px color-mix(in srgb,var(--amber) 95%,transparent);
+  box-shadow:0 0 0 2px color-mix(in srgb,var(--amber-txt) 60%,transparent),0 10px 20px -10px color-mix(in srgb,var(--amber) 95%,transparent);
 }
 .btn--kick:hover{ transform:rotate(0deg) translateY(-3px); }
 html[data-lang="en"] .btn--kick{ font-size:0.9375rem; }
@@ -1831,10 +1836,10 @@ html[data-lang="en"] .pack__go{ font-size:0.8125rem; }
 .kits__key{
   display:flex; align-items:center; gap:12px; max-width:640px; margin:0 auto clamp(18px,3vw,30px);
   padding:12px 16px; border-radius:var(--r-m);
-  background:color-mix(in srgb,var(--amber) 9%,transparent); border:1px dashed color-mix(in srgb,var(--amber) 55%,transparent);
+  background:color-mix(in srgb,var(--amber-txt) 9%,transparent); border:1px dashed color-mix(in srgb,var(--amber-txt) 55%,transparent);
   font-size:0.875rem; line-height:1.6; color:var(--txt);
 }
-.kits__key svg{ flex:none; color:var(--amber); }
+.kits__key svg{ flex:none; color:var(--amber-txt); }
 .kits{ display:grid; gap:12px; max-width:1040px; margin-inline:auto; }
 .kit{
   display:grid; grid-template-columns:clamp(118px,36vw,150px) 1fr; gap:14px; align-items:end;
@@ -1861,7 +1866,7 @@ html[data-lang="en"] .pack__go{ font-size:0.8125rem; }
 .hd__open{ stroke-width:3.4; }
 .hd__cord{ stroke-width:1.8; }
 .hd__tip{ fill:var(--neon); stroke:none; }
-.hd__dim path{ stroke:var(--amber); stroke-width:2.6; filter:none; }
+.hd__dim path{ stroke:var(--amber-txt); stroke-width:2.6; filter:none; }
 .kit__len{
   position:absolute; inset-inline:0; margin-inline:auto; width:max-content;
   bottom:calc(var(--k) * 100% * .53); transform:translateY(50%);
@@ -1898,10 +1903,10 @@ html[data-lang="en"] .kit__p{ font-size:0.9375rem; }
   background:var(--ink-2); border:1px solid color-mix(in srgb,var(--ed-acc) 30%,transparent); }
 .fsz__c b{ font-family:var(--stad); font-weight:400; font-size:1.0625rem; line-height:1.3; }
 .fsz__c span{ font-size:0.6875rem; color:var(--mut); line-height:1.4; }
-.fsz__c em{ font-style:normal; font-weight:800; font-size:0.875rem; color:var(--amber); }
+.fsz__c em{ font-style:normal; font-weight:800; font-size:0.875rem; color:var(--amber-txt); }
 .brow__x{ width:auto; height:30px; padding:0 10px; gap:5px; display:inline-flex; align-items:center;
   border-radius:99px; font-size:0.75rem; font-weight:700; }
-.badd span b{ font-weight:800; color:var(--amber); }
+.badd span b{ font-weight:800; color:var(--amber-txt); }
 
 /* sign-up form extras */
 .offer__tel{ display:grid; grid-template-columns:auto 1fr; gap:8px; }
@@ -2003,7 +2008,7 @@ html[data-lang="en"] .offer__form > .offer__btn{ font-size:0.9375rem; }
 .scale__fig{ border:1.5px solid color-mix(in srgb,var(--neon) 45%,transparent);
   box-shadow:0 0 16px -6px var(--ed-glow); }
 .scale__note{ display:flex; align-items:center; gap:10px; margin:0; font-size:0.8125rem; line-height:1.5; color:var(--txt); }
-.scale__note svg{ flex:none; color:var(--amber); }
+.scale__note svg{ flex:none; color:var(--amber-txt); }
 .scale__copy h2{ font-family:var(--stad); font-weight:400; line-height:1.3;
   text-shadow:0 0 18px color-mix(in srgb,var(--ed-glow) 70%,transparent); }
 .sec-h__num, .sec-h--light .sec-h__num{ -webkit-text-stroke-width:3px; }
@@ -2053,10 +2058,10 @@ html[data-lang="en"] .offer__form > .offer__btn{ font-size:0.9375rem; }
     background:var(--amber); color:var(--amber-ink);
     font-family:var(--stad); font-weight:400; font-size:1.125rem; line-height:1.2;
     transform:rotate(-2deg);
-    box-shadow:0 0 0 3px color-mix(in srgb,var(--amber) 22%,transparent),0 12px 22px -12px color-mix(in srgb,var(--amber) 95%,transparent);
+    box-shadow:0 0 0 2px color-mix(in srgb,var(--amber-txt) 60%,transparent),0 12px 22px -12px color-mix(in srgb,var(--amber) 95%,transparent);
   }
   html[data-lang="en"] .herobig__cta{ font-size:0.9375rem; }
-  .herobig__cta:hover{ transform:rotate(0deg) translateY(-3px); box-shadow:0 0 0 3px color-mix(in srgb,var(--amber) 30%,transparent),0 16px 26px -12px color-mix(in srgb,var(--amber) 95%,transparent); }
+  .herobig__cta:hover{ transform:rotate(0deg) translateY(-3px); box-shadow:0 0 0 2px color-mix(in srgb,var(--amber-txt) 85%,transparent),0 16px 26px -12px color-mix(in srgb,var(--amber) 95%,transparent); }
   .cta__pitch{ filter:invert(1); }
   .herobig__cta:hover .cta__pitch{ opacity:.22; }
 }

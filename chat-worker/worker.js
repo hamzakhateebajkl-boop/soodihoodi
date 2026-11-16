@@ -216,8 +216,11 @@ export default {
 /* Welcome pop-up sign-ups: name, email, mobile and family size.
    1. Saved as a Shopify customer (subscribed to email + SMS marketing,
       tagged signup-15 and family-N, family size in custom.family_size).
-      Shopify's own "welcome new subscriber" automation sends the code, and
-      the SOODI15 discount is limited to customers tagged signup-15.
+      The welcome email (Shopify Messaging automation) is started by the
+      tag signup-15 being ADDED, so that tag always goes on last and in its
+      own call. Shopify's "customer subscribed" trigger ignores customers
+      created through the API. SOODI15 itself is open to everyone, once per
+      customer.
    2. Sent to the team's Telegram and kept in KV ("lead:<time>") as a backup.
    Shopify access: a SHOPIFY_ADMIN_TOKEN secret, or SHOPIFY_CLIENT_ID +
    SHOPIFY_CLIENT_SECRET (Dev Dashboard app, client-credentials grant).
@@ -286,7 +289,9 @@ async function gql(env, query, variables) {
 }
 const CUSTOMER_ERRS = "userErrors { field message }";
 async function shopifySubscribe(env, rec) {
-  const tags = ["signup-15", "src-site", "lang-" + rec.lang];
+  const WELCOME_TAG = "signup-15"; // adding it starts the welcome email (Flow: Customer tags added)
+  const tags = ["src-site", "lang-" + rec.lang];
+  const addWelcomeTag = (id) => gql(env, `mutation($id:ID!,$tags:[String!]!){ tagsAdd(id:$id, tags:$tags){ ${CUSTOMER_ERRS} } }`, { id, tags: [WELCOME_TAG] });
   if (rec.family) tags.push("family-" + (rec.family >= 8 ? "8plus" : rec.family));
   const now = new Date().toISOString();
   const emailConsent = { marketingState: "SUBSCRIBED", marketingOptInLevel: "SINGLE_OPT_IN", consentUpdatedAt: now };
@@ -305,9 +310,10 @@ async function shopifySubscribe(env, rec) {
       delete input.phone; delete input.smsMarketingConsent; input.note = "Mobile from sign-up: " + rec.phone;
       d = await gql(env, `mutation($input:CustomerInput!){ customerCreate(input:$input){ customer{ id } ${CUSTOMER_ERRS} } }`, { input });
       errs = d.customerCreate.userErrors;
-      if (!errs.length) return "created (phone kept in note)";
+      if (!errs.length) { await addWelcomeTag(d.customerCreate.customer.id); return "created (phone kept in note)"; }
     }
     if (errs.length) throw new Error(errs.map((e) => e.message).join("; "));
+    await addWelcomeTag(d.customerCreate.customer.id);
     return "created";
   }
   const input = { id: old.id, tags: Array.from(new Set([...(old.tags || []), ...tags])), metafields };
@@ -319,6 +325,9 @@ async function shopifySubscribe(env, rec) {
   }
   await gql(env, `mutation($input:CustomerEmailMarketingConsentUpdateInput!){ customerEmailMarketingConsentUpdate(input:$input){ ${CUSTOMER_ERRS} } }`,
     { input: { customerId: old.id, emailMarketingConsent: { marketingState: "SUBSCRIBED", marketingOptInLevel: "SINGLE_OPT_IN", consentUpdatedAt: now } } });
+  // Last, once they are subscribed: the tag that sends the welcome email.
+  // Someone who already has it signed up before and is not emailed twice.
+  if (!(old.tags || []).includes(WELCOME_TAG)) await addWelcomeTag(old.id);
   return "updated (existing customer)";
 }
 
