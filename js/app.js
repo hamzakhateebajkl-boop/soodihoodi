@@ -42,7 +42,7 @@
   state.cart = state.cart.filter(
     (l) => prod(l.pid) && EDITIONS.some((e) => e.id === l.ed)
   );
-  const money = (n) => `${Number(n).toLocaleString("en-US")} ${t("sar")}`;
+  const money = (n) => `${Number(n).toLocaleString("en-US", { useGrouping: false })} ${t("sar")}`;
 
   // Prices vary by size (adult vs kids), so every lookup needs both.
   const unitPrice = (pid, size) => prod(pid).prices[size];
