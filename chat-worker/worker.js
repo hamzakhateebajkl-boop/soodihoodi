@@ -47,7 +47,6 @@ EDITIONS (names exactly as on the website)
 3. راقي السهرة — Raqi Al-Sahra: regal green with fine white lines
 4. فارس الليل — Faris Al-Layl: yellow and royal blue
 5. ليث الشتا — Laith Al-Shita: white with black lines
-A sixth edition is coming soon (no details yet).
 
 SIZES AND PRICES (Saudi Riyals)
 - Kids (أطفال): 64 cm long, ages 2–6, fits height 85–120 cm — 299 SAR
