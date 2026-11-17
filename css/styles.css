@@ -2147,3 +2147,22 @@ html[data-lang="en"] .offer__form > .offer__btn{ font-size:0.9375rem; }
   }
   html[data-lang="en"] .herobig__cta{ font-size:clamp(0.875rem,3.8cqh,0.9375rem); }
 }
+
+/* Desktop hero stage, stadium night (17 Nov): the stage was one flat pale
+   band, so the dark offer panel sat on a grey haze beside the photo. Now the
+   stage is dark like the rest of the page and the family stands in a soft
+   floodlit field of the team's colour; the panel sits on the dark side. */
+@media (min-width:1024px){
+  .bigstage{
+    --famx:66%;
+    background:
+      radial-gradient(ellipse 47% 125% at var(--famx) 34%,
+        color-mix(in srgb,var(--ed-sky,#cfd6e0) 44%,white) 0%,
+        color-mix(in srgb,var(--ed-sky,#cfd6e0) 34%,white) 50%,
+        color-mix(in srgb,var(--ed) 38%,var(--ink)) 80%,
+        var(--ink) 100%);
+  }
+  html[dir="rtl"] .bigstage{ --famx:34%; }
+  .bigstage::after,
+  html[dir="ltr"] .bigstage::after{ background:none; }
+}
