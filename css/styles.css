@@ -2109,3 +2109,41 @@ html[data-lang="en"] .offer__form > .offer__btn{ font-size:0.9375rem; }
     background:color-mix(in srgb,var(--ink) 90%,transparent);
   }
 }
+
+/* Desktop hero on short laptop windows (17 Nov): the offer panel was taller
+   than the stage, so its ticket ribbon slid under the header and its button
+   faded out in the stage's bottom dissolve. The panel now scales with the
+   stage height (cqh), the dissolve moved to an overlay that sits under the
+   panel, and the dark wash sits on the panel's side instead of the photo's,
+   so the panel no longer floats on a pale strip. */
+@media (min-width:1024px){
+  .bigstage{ container-type:size; -webkit-mask-image:none; mask-image:none; }
+  .bigstage__floor{
+    inset:0; height:auto; z-index:2; filter:none;
+    background:linear-gradient(180deg,transparent 58%,color-mix(in srgb,var(--ink) 72%,transparent) 82%,var(--ink) 98%);
+  }
+  .bigstage::after{
+    background:linear-gradient(to left,
+      rgba(6,8,12,.92) 0%, rgba(6,8,12,.76) 24%, rgba(6,8,12,.3) 43%, transparent 60%);
+  }
+  html[dir="ltr"] .bigstage::after{
+    background:linear-gradient(to right,
+      rgba(6,8,12,.92) 0%, rgba(6,8,12,.76) 24%, rgba(6,8,12,.3) 43%, transparent 60%);
+  }
+  .herobig{
+    padding:clamp(14px,4.4cqh,26px) clamp(20px,2.2vw,30px) clamp(16px,4.8cqh,28px);
+  }
+  .herobig__eye{ margin-block-end:clamp(8px,2.8cqh,16px); }
+  .herobig__h{ font-size:clamp(1.35rem,6.8cqh,2.6rem); }
+  .herobig__n{ font-size:clamp(3.4rem,19cqh,6rem); }
+  /* English was missing the negative block margins that cancel the glow padding. */
+  html[data-lang="en"] .herobig__n{ margin-block:calc(6px - .3em) calc(2px - .3em); }
+  .herobig__s{ font-size:clamp(0.875rem,3.7cqh,1.0625rem); line-height:1.5; margin-block-start:clamp(6px,2cqh,14px); }
+  html[data-lang="en"] .herobig__s{ line-height:1.45; }
+  .herobig__cta{
+    margin-block-start:clamp(10px,3.4cqh,20px);
+    padding:clamp(10px,3.2cqh,16px) clamp(20px,2.4vw,32px);
+    font-size:clamp(0.95rem,4.2cqh,1.125rem);
+  }
+  html[data-lang="en"] .herobig__cta{ font-size:clamp(0.875rem,3.8cqh,0.9375rem); }
+}
