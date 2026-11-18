@@ -32,7 +32,7 @@ const KEEP_SECONDS = 2 * 24 * 60 * 60;                            // team replie
 const LAUNCH_AT = null;    // null = launching soon, no date yet (14 Nov 2026). Set Date.parse("YYYY-MM-DDT00:00:00+03:00") when a date is set.
 
 const KNOWLEDGE = `
-STORE: SoodiHoodi (soodihoodi.com) — oversized sherpa blanket hoodies in football-terrace colours, for fans in the Kingdom of Saudi Arabia and their families. Tagline: منسوجة بوفاك / Woven with your loyalty. An independent brand: NOT official merchandise of any club, federation or player. Editions are inspired by colours only.
+STORE: SoodiHoodi (soodihoodi.com) — oversized sherpa blanket hoodies in football-terrace colours, for football fans across the GCC and their families. Tagline: منسوجة بوفاك / Woven with your loyalty. An independent brand: NOT official merchandise of any club, federation or player. Editions are inspired by colours only.
 
 PRODUCT — The Classic Blanket Hoodie (الهودي البطانية الكلاسيكي)
 - Two layers: anti-pill polar face + dense sherpa lining. 380 gsm, 100% microfibre polyester.
@@ -66,7 +66,7 @@ DISCOUNT CODES: there is no welcome code or other discount code now; the only di
 
 HOW TO ORDER: pick an edition and size on soodihoodi.com, add to the cart, tap checkout and follow the steps. Payment is upfront: Apple Pay, Visa, Mastercard.
 
-DELIVERY: to all six GCC countries: the Sultanate of Oman, Saudi Arabia, the UAE, Kuwait, Qatar and Bahrain (list Oman first). Same prices everywhere. No delivery outside the GCC. Delivery is by Aramex and takes 6–8 working days (an estimate). There is no express option. Delivery is always free, on every order, with no minimum.
+DELIVERY: to all six GCC countries: the Sultanate of Oman, Saudi Arabia, the UAE, Kuwait, Qatar and Bahrain (list Oman first). Same prices everywhere. No delivery outside the GCC. Delivery takes 6–10 working days (an estimate). Do not name the courier company. There is no express option. Delivery is always free, on every order, with no minimum.
 
 RETURNS AND REFUNDS (full policy: soodihoodi.com/returns/ — follows Articles 13 and 14 of the Saudi E-Commerce Law)
 - Return within 7 days of delivery if the item is unused and unwashed, in the condition received, with tags attached; include the order number.

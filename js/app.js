@@ -596,14 +596,8 @@
       ev.preventDefault();
       const name = $("#offerName").value.trim();
       const mail = $("#offerMail").value.trim();
-      const cc = $("#offerCc") ? $("#offerCc").value : "966";
-      // Arabic-Indic digits typed on an Arabic keyboard count as digits too.
-      const tel = ($("#offerTel") ? $("#offerTel").value : "")
-        .replace(/[\u0660-\u0669]/g, (d) => String(d.charCodeAt(0) - 0x0660))
-        .replace(/[\u06F0-\u06F9]/g, (d) => String(d.charCodeAt(0) - 0x06F0))
-        .replace(/\D/g, "").replace(/^0+/, "");
       const family = Number($("#offerFam") ? $("#offerFam").value : 0) || 0;
-      const ok = name.length > 1 && /^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(mail) && tel.length >= 7 && tel.length <= 12;
+      const ok = name.length > 1 && /^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(mail);
       $("#offerErr").hidden = ok;
       if (!ok) return;
 
@@ -615,7 +609,7 @@
         fetch(OFFER.endpoint, {
           method: "POST",
           headers: { "Content-Type": "application/json", Accept: "application/json" },
-          body: JSON.stringify({ name, email: mail, phone: "+" + cc + tel, family, lang: state.lang, source: "site-offer", edition: state.edition })
+          body: JSON.stringify({ name, email: mail, family, lang: state.lang, source: "site-offer", edition: state.edition })
         }).catch(() => {});
       } else if (SALLA.whatsapp) {
         // No endpoint configured yet — hand the lead to WhatsApp rather than
