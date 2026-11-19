@@ -2166,3 +2166,17 @@ html[data-lang="en"] .offer__form > .offer__btn{ font-size:0.9375rem; }
   .bigstage::after,
   html[dir="ltr"] .bigstage::after{ background:none; }
 }
+
+/* currency picker (cart footer + site footer) */
+.curpick{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-block:4px 12px; font-size:0.8125rem; color:var(--mut); }
+.curpick select{
+  appearance:none; -webkit-appearance:none; min-height:44px; padding-block:8px; padding-inline:12px 30px;
+  border:1px solid var(--line); border-radius:10px; background-color:rgba(255,255,255,.03); color:var(--txt);
+  font:inherit; font-weight:600; cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-size:12px; background-position:right 10px center;
+}
+[dir="rtl"] .curpick select{ padding-inline:30px 12px; background-position:left 10px center; }
+.curpick select:hover,.curpick select:focus-visible{ border-color:var(--ed); }
+.curpick select option{ color:#111; }
+.curpick--ftr{ justify-content:flex-start; margin-block-start:18px; }

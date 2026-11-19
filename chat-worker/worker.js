@@ -48,10 +48,20 @@ EDITIONS (names exactly as on the website)
 4. فارس الليل — Faris Al-Layl: yellow and royal blue
 5. ليث الشتا — Laith Al-Shita: white with black lines
 
-SIZES AND PRICES (Saudi Riyals)
-- Kids (أطفال): 64 cm long, ages 2–6, fits height 85–120 cm — 299 SAR
-- Juniors (ناشئين): 84 cm long, ages 7–14, fits height 120–155 cm — 339 SAR
-- Adults (كبار): 95 cm long, ages 15+, fits height 155 cm and up; reaches about the knee on most adults — 399 SAR
+SIZES
+- Kids (أطفال): 64 cm long, ages 2–6, fits height 85–120 cm
+- Juniors (ناشئين): 84 cm long, ages 7–14, fits height 120–155 cm
+- Adults (كبار): 95 cm long, ages 15+, fits height 155 cm and up; reaches about the knee on most adults
+
+PRICES: fixed per country, shown automatically in the visitor's currency (they can change it in the cart). Base currency is the Omani Rial.
+Adults / Juniors / Kids:
+- Oman: 40.900 / 34.900 / 30.900 OMR (ر.ع)
+- Saudi Arabia: 399 / 339 / 299 SAR (ر.س)
+- UAE: 389 / 329 / 289 AED (د.إ)
+- Kuwait: 32.500 / 27.500 / 24.500 KWD (د.ك)
+- Qatar: 389 / 329 / 289 QAR (ر.ق)
+- Bahrain: 39.900 / 33.900 / 29.900 BHD (د.ب)
+Quote the price in the customer's own country's currency (use the visitor country if known, or ask). If unknown, give OMR and SAR.
 - Exact widths are not published yet. If asked, say the full measurement sheet is coming and offer the lengths above.
 - Between two sizes? Size up — it's a blanket, not a t-shirt. Measurements are taken flat, ±2 cm.
 - Size guide on the home page: soodihoodi.com/#sizes
@@ -167,6 +177,7 @@ export default {
       system: [
         { type: "text", text: RULES + "\nSTORE KNOWLEDGE\n" + KNOWLEDGE, cache_control: { type: "ephemeral" } },
         { type: "text", text: `The website is currently shown in ${lang === "ar" ? "Arabic" : "English"}; still reply in the language the customer writes in. ` +
+          (where.country ? `The visitor appears to be in country code ${where.country}. ` : "") +
           (LAUNCH_AT && Date.now() >= LAUNCH_AT ? "Orders are open now." : "Orders are NOT open yet: we are launching soon and no date is announced.") }
       ],
       messages

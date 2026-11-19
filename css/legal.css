@@ -85,3 +85,8 @@ html[dir="rtl"] .note{border-radius:12px 0 0 12px}
 .socials a{display:grid;place-items:center;width:44px;height:44px;border:1px solid var(--line);border-radius:50%;color:var(--txt);transition:color .25s,border-color .25s}
 .socials a:hover{border-color:var(--txt)}
 .socials svg{width:18px;height:18px}
+
+/* price-by-country table: 4 columns must fit a 375px phone */
+.tbl--cur{font-size:14px}
+.tbl--cur th,.tbl--cur td{padding:11px 6px}
+.tbl--cur th:first-child,.tbl--cur td:first-child{padding-inline-start:0}

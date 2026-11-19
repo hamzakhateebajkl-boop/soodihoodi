@@ -32,7 +32,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&family=Archivo:wdth,wght@62..125,400..900&family=Lalezar&family=Bungee&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css?v=45">
+<link rel="stylesheet" href="css/styles.css?v=46">
 </head>
 <body>
 
@@ -510,6 +510,7 @@
       <ul class="pays">
         <li>Apple Pay</li><li>VISA</li><li>Mastercard</li>
       </ul>
+      <label class="curpick curpick--ftr"><span data-ar="العملة" data-en="Currency">العملة</span><select data-cur></select></label>
     </div>
   </div>
 
@@ -600,9 +601,10 @@
     </div>
     <div class="cart__row">
       <span data-ar="المجموع" data-en="Subtotal">المجموع</span>
-      <b id="cartTotal">0 ر.س</b>
+      <b id="cartTotal"></b>
     </div>
     <p class="cart__split" id="cartSplit"></p>
+    <label class="curpick"><span data-ar="العملة" data-en="Currency">العملة</span><select data-cur></select></label>
     <p class="cart__launch pl" id="cartLaunch" data-ar="الإطلاق قريباً، وسلّتك محفوظة لين نفتح الطلب." data-en="Launching soon. Your cart is saved until orders open.">الإطلاق قريباً، وسلّتك محفوظة لين نفتح الطلب.</p>
     <button class="btn btn--go btn--full" id="checkout" type="button" data-ar="إتمام الطلب" data-en="Checkout">إتمام الطلب</button>
     <p class="cart__vat" id="cartVat" hidden data-ar="السعر شامل ضريبة القيمة المضافة 15٪" data-en="Prices include 15% VAT">السعر شامل ضريبة القيمة المضافة 15٪</p>
@@ -646,8 +648,8 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="js/data.js?v=36"></script>
-<script src="js/app.js?v=33"></script>
+<script src="js/data.js?v=37"></script>
+<script src="js/app.js?v=34"></script>
 <script src="js/chat.js?v=5" defer></script>
 </body>
 </html>

@@ -6,7 +6,7 @@
   "use strict";
 
   /* ---------------- state ---------------- */
-  const LS = { cart: "sh_cart", ed: "sh_edition", lang: "sh_lang" };
+  const LS = { cart: "sh_cart", ed: "sh_edition", lang: "sh_lang", cur: "sh_cur" };
 
   const state = {
     lang: localStorage.getItem(LS.lang) || "ar",
@@ -42,11 +42,52 @@
   state.cart = state.cart.filter(
     (l) => prod(l.pid) && EDITIONS.some((e) => e.id === l.ed)
   );
-  const money = (n) => `${Number(n).toLocaleString("en-US", { useGrouping: false })} ${t("sar")}`;
+  /* ---- currency ----
+     Saved choice first, then the device time zone, then the browser
+     language region (ar-SA, en-AE...), else the base currency (OMR). */
+  const mkt = (cur) => MARKETS.list.find((m) => m.cur === cur);
+  function detectCur() {
+    try {
+      const saved = localStorage.getItem(LS.cur);
+      if (saved && mkt(saved)) return saved;
+    } catch (e) {}
+    let tz = "";
+    try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ""; } catch (e) {}
+    const byTz = MARKETS.list.find((m) => m.tz.includes(tz));
+    if (byTz) return byTz.cur;
+    const langs = navigator.languages || [navigator.language || ""];
+    for (const l of langs) {
+      const cc = (String(l).split("-")[1] || "").toUpperCase();
+      const byCc = MARKETS.list.find((m) => m.cc === cc);
+      if (byCc) return byCc.cur;
+    }
+    return MARKETS.base;
+  }
+  state.cur = detectCur();
+  const M = () => mkt(state.cur) || mkt(MARKETS.base);
+  // Round to the currency's smallest unit (fils / baisa / halala).
+  const rnd = (n) => { const f = 10 ** M().dp; return Math.round(n * f) / f; };
+  const ceilUnit = (n) => { const f = 10 ** M().dp; return Math.ceil(Math.round(n * f * 1000) / 1000) / f; };
+  /* OMR, KWD and BHD always show 3 decimals (40.900), the local norm.
+     SAR, AED and QAR show whole numbers, and decimals only when there are some. */
+  const money = (n) => {
+    const m = M();
+    const v = rnd(Number(n));
+    const whole = Number.isInteger(v) && m.dp === 2;
+    const str = v.toLocaleString("en-US", {
+      useGrouping: false,
+      minimumFractionDigits: whole ? 0 : m.dp,
+      maximumFractionDigits: whole ? 0 : m.dp
+    });
+    return `${str} ${m[state.lang]}`;
+  };
 
-  // Prices vary by size (adult vs kids), so every lookup needs both.
-  const unitPrice = (pid, size) => prod(pid).prices[size];
-  const wasPrice  = (pid, size) => (prod(pid).compareAt || {})[size];
+  // Prices vary by size (adult vs kids) and by currency.
+  const unitPrice = (pid, size) => {
+    const p = prod(pid).prices;
+    return (p[state.cur] || p[MARKETS.base])[size];
+  };
+  const wasPrice  = (pid, size) => ((prod(pid).compareAt || {})[state.cur] || {})[size];
   const save = () => {
     localStorage.setItem(LS.cart, JSON.stringify(state.cart));
     localStorage.setItem(LS.ed, state.edition);
@@ -217,7 +258,7 @@
   const buildSubtotal = () =>
     state.build.reduce((sum, r) => sum + unitPrice("classic", r.size), 0);
   const buildPct = () => (tierFor(state.build.length) || { pct: 0 }).pct;
-  const buildSaving = () => Math.round((buildSubtotal() * buildPct()) / 100);
+  const buildSaving = () => rnd((buildSubtotal() * buildPct()) / 100);
 
   /* One photo per person, cut into slanted slices like a split shirt.
      Slices are placed in physical left-to-right space, so Arabic reverses
@@ -270,7 +311,7 @@
               <span class="pack__who">${who}</span>
             </span>
             <span class="pack__pr">
-              <em dir="ltr">${money(Math.round(from - (from * pct) / 100))}</em>
+              <em dir="ltr">${money(from - rnd((from * pct) / 100))}</em>
               ${pct ? `<s dir="ltr">${money(from)}</s>` : ""}
             </span>
           </span>
@@ -885,8 +926,8 @@
   const bundlePct = () => (tierFor(cartCount()) || { pct: 0 }).pct;
   const bundleOn = () => bundlePct() > 0;
   const bundleSaving = () =>
-    Math.round((cartSubtotal() * bundlePct()) / 100);
-  const cartTotal = () => cartSubtotal() - bundleSaving();
+    rnd((cartSubtotal() * bundlePct()) / 100);
+  const cartTotal = () => rnd(cartSubtotal() - bundleSaving());
 
   function bumpCount() {
     const el = $("#cartCount");
@@ -966,7 +1007,7 @@
 
     $("#cartTotal").textContent = money(total);
     $("#cartSplit").innerHTML = total
-      ? `${t("splitPay")} <b>${money(Math.ceil(total / SALLA.instalments))}</b>`
+      ? `${t("splitPay")} <b>${money(ceilUnit(total / SALLA.instalments))}</b>`
       : "";
     const go = $("#checkout");
     const lbl = isOpen() ? T.checkoutBtn : T.opensSoon;
@@ -1098,7 +1139,7 @@
       const lines = state.cart.map((l) => {
         const p = prod(l.pid);
         const e = ed(l.ed);
-        return `• ${p.ar} — ${e.ar} — ${SIZES[l.size].ar} × ${l.qty} (${unitPrice(l.pid, l.size) * l.qty} ر.س)`;
+        return `• ${p.ar} — ${e.ar} — ${SIZES[l.size].ar} × ${l.qty} (${money(unitPrice(l.pid, l.size) * l.qty)})`;
       });
       const saving = bundleSaving();
       const msg = [
@@ -1116,7 +1157,7 @@
 
     // Tier 3 — demo mode: nothing configured yet.
     const order = {
-      currency: SALLA.currency,
+      currency: state.cur,
       total: cartTotal(),
       items: state.cart.map((l) => ({
         sallaId: prod(l.pid).sallaId,
@@ -1132,6 +1173,31 @@
     console.log(order);
     console.groupEnd();
     toast(t("demoNote"));
+  }
+
+  /* =========================================================
+     CURRENCY PICKER
+     Every <select data-cur> on the page (cart, footer) stays in sync.
+     ========================================================= */
+  function renderCurPickers() {
+    $$("select[data-cur]").forEach((sel) => {
+      sel.setAttribute("aria-label", t("curLabel"));
+      sel.innerHTML = MARKETS.list
+        .map((m) => `<option value="${m.cur}"${m.cur === state.cur ? " selected" : ""}>${
+          state.lang === "ar" ? `${m.nameAr} · ${m.ar}` : `${m.nameEn} · ${m.en}`}</option>`)
+        .join("");
+    });
+  }
+  function setCur(cur) {
+    if (!mkt(cur) || cur === state.cur) return;
+    state.cur = cur;
+    try { localStorage.setItem(LS.cur, cur); } catch (e) {}
+    renderCurPickers();
+    renderShop();
+    renderPacks();
+    renderBuild();
+    renderKits();
+    renderCart();
   }
 
   /* =========================================================
@@ -1155,6 +1221,7 @@
     $$("[data-alt-ar]").forEach((el) => { const v = el.dataset["alt" + sfx]; if (v) el.alt = v; });
 
     save();
+    renderCurPickers();
     renderSwatches();
     renderTeamSheet();
     renderRail();
@@ -1364,6 +1431,7 @@
 
     if (state.lang !== "ar") applyLang(state.lang);
     else {
+      renderCurPickers();
       renderSwatches();
       renderTeamSheet();
       renderRail();
@@ -1433,6 +1501,11 @@
         if ($("#offer").classList.contains("open")) { markOffer("dismissed"); openOffer(false); }
       }
     });
+
+    // currency picker
+    $$("select[data-cur]").forEach((sel) =>
+      sel.addEventListener("change", () => setCur(sel.value))
+    );
 
     // language toggle
     $("#langBtn").addEventListener("click", () =>

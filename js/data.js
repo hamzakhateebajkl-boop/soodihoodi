@@ -13,8 +13,8 @@
    --------------------------------------------------------- */
 const SALLA = {
   domain: "",            // e.g. "soodihoodi.salla.sa"  ← leave "" to run in demo mode
-  currency: "SAR",
-  freeShipping: 0,        // SAR — 0 = delivery is always free (since 11 Nov 2026)
+  currency: "OMR",        // base currency (the company is in Oman). Visitors see their own: see MARKETS
+  freeShipping: 0,        // 0 = delivery is always free (since 11 Nov 2026)
   instalments: 4,        // Tabby / Tamara split
 
   /* VAT registration in KSA is only mandatory above SAR 375,000 of annual
@@ -53,6 +53,27 @@ const SHOPIFY = {
     "classic-faris-adult": "53971290816877", "classic-faris-kids": "53971290849645", "classic-faris-baby": "67757252575597",
     "classic-laith-adult": "53971290882413", "classic-laith-kids": "53971290915181", "classic-laith-baby": "67757252608365"
   }
+};
+
+/* ---------------------------------------------------------
+   CURRENCY BY COUNTRY
+   Base currency is OMR. A visitor sees prices in their own GCC
+   currency, picked from the device time zone, then the browser
+   language region (no tracking, no network call). They can change
+   it with the currency picker; the choice is remembered.
+   Anyone outside the GCC sees OMR.
+   `dp` = decimal places of the currency's smallest unit.
+   --------------------------------------------------------- */
+const MARKETS = {
+  base: "OMR",
+  list: [
+    { cc: "OM", cur: "OMR", dp: 3, ar: "ر.ع", en: "OMR", nameAr: "عُمان",    nameEn: "Oman",         tz: ["Asia/Muscat"] },
+    { cc: "SA", cur: "SAR", dp: 2, ar: "ر.س", en: "SAR", nameAr: "السعودية", nameEn: "Saudi Arabia", tz: ["Asia/Riyadh"] },
+    { cc: "AE", cur: "AED", dp: 2, ar: "د.إ", en: "AED", nameAr: "الإمارات", nameEn: "UAE",          tz: ["Asia/Dubai"] },
+    { cc: "KW", cur: "KWD", dp: 3, ar: "د.ك", en: "KWD", nameAr: "الكويت",   nameEn: "Kuwait",       tz: ["Asia/Kuwait"] },
+    { cc: "QA", cur: "QAR", dp: 2, ar: "ر.ق", en: "QAR", nameAr: "قطر",      nameEn: "Qatar",        tz: ["Asia/Qatar"] },
+    { cc: "BH", cur: "BHD", dp: 3, ar: "د.ب", en: "BHD", nameAr: "البحرين",  nameEn: "Bahrain",      tz: ["Asia/Bahrain"] }
+  ]
 };
 
 /* ---------------------------------------------------------
@@ -377,8 +398,19 @@ const PRODUCTS = [
     /* Nothing below 200 SAR. Unit cost is ~100–120, but the ladder between
        sizes deliberately does NOT track fabric cost — a matching family set
        is the product, and a 149 price tag makes the whole line read cheap. */
-    prices:    { adult: 399, kids: 339, baby: 299 },
-    compareAt: {},   // no crossed-out prices: never sold at a higher price
+    /* Fixed prices per currency, not live conversion: all six GCC currencies
+       are pegged (KWD to a basket), so these stay level with each other.
+       Matched to the SAR ladder (399/339/299) within about 1%.
+       When Shopify goes live, set the SAME fixed prices per market there. */
+    prices: {
+      OMR: { adult: 40.9,  kids: 34.9,  baby: 30.9 },
+      SAR: { adult: 399,   kids: 339,   baby: 299 },
+      AED: { adult: 389,   kids: 329,   baby: 289 },
+      KWD: { adult: 32.5,  kids: 27.5,  baby: 24.5 },
+      QAR: { adult: 389,   kids: 329,   baby: 289 },
+      BHD: { adult: 39.9,  kids: 33.9,  baby: 29.9 }
+    },
+    compareAt: {},   // per currency, e.g. { SAR: { adult: 449 } }. Empty: never sold at a higher price
     badgeAr: "الأكثر مبيعاً",
     badgeEn: "Best seller"
   }
@@ -405,7 +437,7 @@ const T = {
   freeLeft2:   { ar: "للشحن المجاني",         en: "away from free shipping" },
   freeGot:     { ar: "توصيل مجاني لفترة محدودة ✓", en: "Free delivery for a limited time ✓" },
   pickEdition: { ar: "اختر هذا الإصدار",      en: "Choose this edition" },
-  sar:         { ar: "ر.س",                   en: "SAR" },
+  curLabel:    { ar: "العملة",                en: "Currency" },
   from:        { ar: "يبدأ من",                en: "From" },
   edSwitched:  { ar: "تم اختيار",             en: "Switched to" },
   soonBadge:   { ar: "قريباً",                 en: "Soon" },
