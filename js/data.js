@@ -58,14 +58,15 @@ const SHOPIFY = {
 /* ---------------------------------------------------------
    CURRENCY BY COUNTRY
    Base currency is OMR. A visitor sees prices in their own GCC
-   currency, picked from the device time zone, then the browser
-   language region (no tracking, no network call). They can change
-   it with the currency picker; the choice is remembered.
-   Anyone outside the GCC sees OMR.
+   currency, picked from their IP country (Cloudflare lookup via the
+   chat worker's /geo; nothing stored). Until that answers, the device
+   time zone / browser region is used. They can change it with the
+   currency picker; the choice is remembered. Outside the GCC: OMR.
    `dp` = decimal places of the currency's smallest unit.
    --------------------------------------------------------- */
 const MARKETS = {
   base: "OMR",
+  geo: "https://soodihoodi-chat.hamzakhateebajkl.workers.dev/geo",   // "" = no IP lookup
   list: [
     { cc: "OM", cur: "OMR", dp: 3, ar: "ر.ع", en: "OMR", nameAr: "عُمان",    nameEn: "Oman",         tz: ["Asia/Muscat"] },
     { cc: "SA", cur: "SAR", dp: 2, ar: "ر.س", en: "SAR", nameAr: "السعودية", nameEn: "Saudi Arabia", tz: ["Asia/Riyadh"] },

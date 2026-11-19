@@ -137,6 +137,10 @@ export default {
 
     if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: cors });
     if (request.method === "GET") {
+      // Visitor country from Cloudflare's IP lookup, so the site can show local prices.
+      // Returns only the 2-letter code; nothing is stored.
+      if (url.pathname === "/geo") return json({ country: (request.cf && request.cf.country) || "" }, 200,
+        Object.assign({ "Cache-Control": "private, no-store" }, cors));
       if (url.pathname === "/inbox") return inbox(url, env, cors, allowed, ip);
       if (url.pathname === "/telegram-setup") return telegramSetup(env, cors);
       if (url.pathname === "/telegram-connect") return telegramConnect(url, env, cors);

@@ -1188,10 +1188,11 @@
         .join("");
     });
   }
-  function setCur(cur) {
+  // keep = the visitor picked it themselves, so remember it.
+  function setCur(cur, keep = true) {
+    if (keep) { try { localStorage.setItem(LS.cur, cur); } catch (e) {} }
     if (!mkt(cur) || cur === state.cur) return;
     state.cur = cur;
-    try { localStorage.setItem(LS.cur, cur); } catch (e) {}
     renderCurPickers();
     renderShop();
     renderPacks();
@@ -1506,6 +1507,26 @@
     $$("select[data-cur]").forEach((sel) =>
       sel.addEventListener("change", () => setCur(sel.value))
     );
+
+    /* Country from the visitor's IP (Cloudflare, via our chat worker).
+       The time-zone guess above shows instantly; this corrects it a moment
+       later. A GCC country gets its own currency, anywhere else gets OMR.
+       Skipped when the visitor has picked a currency themselves. */
+    let picked = null;
+    try { picked = localStorage.getItem(LS.cur); } catch (e) {}
+    if (!picked && MARKETS.geo && window.fetch) {
+      const ctl = window.AbortController ? new AbortController() : null;
+      if (ctl) setTimeout(() => ctl.abort(), 2500);
+      fetch(MARKETS.geo, ctl ? { signal: ctl.signal } : {})
+        .then((r) => r.json())
+        .then((d) => {
+          const cc = String((d && d.country) || "").toUpperCase();
+          if (!/^[A-Z]{2}$/.test(cc)) return;
+          const m = MARKETS.list.find((x) => x.cc === cc);
+          setCur(m ? m.cur : MARKETS.base, false);
+        })
+        .catch(() => {});
+    }
 
     // language toggle
     $("#langBtn").addEventListener("click", () =>
