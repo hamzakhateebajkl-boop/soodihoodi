@@ -144,6 +144,16 @@ export default {
       if (url.pathname === "/inbox") return inbox(url, env, cors, allowed, ip);
       if (url.pathname === "/telegram-setup") return telegramSetup(env, cors);
       if (url.pathname === "/telegram-connect") return telegramConnect(url, env, cors);
+      if (url.pathname === "/stock-check") {
+        // Runs the hourly stock check now (alerts only fire once per crossing). At most once a minute.
+        if (!env.CHAT_KV) return json({ ok: false }, 200, cors);
+        const lastRun = Number(await env.CHAT_KV.get("stock:manual")) || 0;
+        if (Date.now() - lastRun < 60e3) return json({ ok: true, ran: false }, 200, cors);
+        await env.CHAT_KV.put("stock:manual", String(Date.now()));
+        let r = "error";
+        try { r = await stockCheck(env); } catch (e) { r = "error: " + String(e && e.message || e).slice(0, 60); }
+        return json({ ok: true, ran: true, result: r }, 200, cors);
+      }
       return json({ ok: true, service: "soodihoodi-chat", telegram: telegramReady(env), replies: !!env.CHAT_KV }, 200, cors);
     }
     if (request.method !== "POST") return json({ error: "method_not_allowed" }, 405, cors);
@@ -225,8 +235,94 @@ export default {
       }
     }
     return json({ reply, handoff }, 200, cors);
+  },
+
+  // Cron trigger (Cloudflare → Settings → Triggers, hourly): stock and made-to-order alerts.
+  async scheduled(event, env, ctx) {
+    ctx.waitUntil(stockCheck(env).catch((e) => console.log("stock_check_error", String(e && e.message || e).slice(0, 200))));
   }
 };
+
+/* Stock alerts to the team's Telegram (hourly cron).
+   Two Shopify locations: EasyGoShip = ready stock (ships in 6–10 working
+   days), Muscat = next production batch (made to order, 15–20 days).
+   - Ready stock of a variant drops to READY_LOW or below → "start the next batch".
+   - Next-batch allowance drops to BATCH_LOW or below → raise it or plan another run.
+   - A new order with the "Made to order" delivery option → tell the team.
+   Each alert fires once per crossing (KV "alert:…" flag), and re-arms when stock
+   goes back above the line. Nothing is sent before EasyGoShip has shown stock once.
+   Needs the Shopify app scopes read_inventory, read_locations, read_orders. */
+const READY_LOCATION = "gid://shopify/Location/120898453869"; // Easygoship
+const BATCH_LOCATION = "gid://shopify/Location/118671114605"; // Muscat = next batch
+const READY_LOW = 3, BATCH_LOW = 10;
+const SIZE_AR = { AD: "كبار", KD: "ناشئين", BB: "أطفال" };
+
+async function stockAt(env, id) {
+  const d = await gql(env, `query($id:ID!){ location(id:$id){ inventoryLevels(first:100){ nodes{ item{ sku variants(first:1){ nodes{ displayName } } } quantities(names:["available"]){ quantity } } } } }`, { id });
+  const out = {};
+  for (const n of (d.location && d.location.inventoryLevels.nodes) || []) {
+    const sku = (n.item && n.item.sku) || "";
+    if (!sku.startsWith("SH-CL-")) continue;
+    const v = n.item.variants && n.item.variants.nodes[0];
+    out[sku] = { qty: n.quantities[0] ? n.quantities[0].quantity : 0, name: v ? v.displayName.replace(/^.*? - /, "") : sku };
+  }
+  return out;
+}
+
+// true once per crossing: when `low` becomes true. Clears the flag when it is false again.
+async function crossed(env, key, low) {
+  const k = "alert:" + key, had = await env.CHAT_KV.get(k);
+  if (low && !had) { await env.CHAT_KV.put(k, "1"); return true; }
+  if (!low && had) await env.CHAT_KV.delete(k);
+  return false;
+}
+
+async function stockCheck(env) {
+  if (!shopifyReady(env) || !telegramReady(env) || !env.CHAT_KV) return "not_configured";
+  const ready = await stockAt(env, READY_LOCATION);
+  const batch = await stockAt(env, BATCH_LOCATION);
+  const send = (lines) => tg(env, "sendMessage", { chat_id: env.TELEGRAM_CHAT_ID, text: lines.join("\n").slice(0, 3900), disable_web_page_preview: true });
+
+  // 1. Ready stock low (only after EasyGoShip has loaded our stock once).
+  const readyTotal = Object.values(ready).reduce((a, r) => a + Math.max(0, r.qty), 0);
+  let live = await env.CHAT_KV.get("stock:live");
+  if (!live && readyTotal > 0) { await env.CHAT_KV.put("stock:live", "1"); live = "1"; }
+  const lowReady = [], lowBatch = [];
+  if (live) {
+    for (const [sku, r] of Object.entries(ready)) {
+      if (await crossed(env, "ready:" + sku, r.qty <= READY_LOW)) {
+        const b = batch[sku] ? batch[sku].qty : "?";
+        lowReady.push(`• ${r.name}: ${Math.max(0, r.qty)} ready left (next batch allows ${b})`);
+      }
+    }
+  }
+  // 2. Next-batch allowance low.
+  for (const [sku, r] of Object.entries(batch)) {
+    if (await crossed(env, "batch:" + sku, r.qty <= BATCH_LOW)) lowBatch.push(`• ${r.name}: ${Math.max(0, r.qty)} left in the next batch`);
+  }
+  if (lowReady.length) await send(["⚠️ Ready stock is low | المخزون الجاهز قليل", "", ...lowReady, "",
+    "Start the next batch now (7 days to make + 1 day to EasyGoShip).",
+    "After these sell out, customers see «Made to order: 15–20 working days».", riyadhTime()]);
+  if (lowBatch.length) await send(["🧵 Next batch is nearly full | الدفعة الجاية قربت تمتلي", "", ...lowBatch, "",
+    "When this reaches 0 the size shows as sold out. Ask Claude to raise the batch number if the factory can make more.", riyadhTime()]);
+
+  // 3. New made-to-order orders since the last check.
+  const since = (await env.CHAT_KV.get("mto:since")) || new Date(Date.now() - 2 * 3600e3).toISOString();
+  const now = new Date().toISOString();
+  const o = await gql(env, `query($q:String!){ orders(first:25, sortKey:CREATED_AT, query:$q){ nodes{ name test tags createdAt shippingLines(first:3){ nodes{ title } } lineItems(first:20){ nodes{ quantity variantTitle sku } } } } }`,
+    { q: `created_at:>='${since}'` });
+  for (const n of o.orders.nodes) {
+    if (n.test || (n.tags || []).includes("TEST")) continue;
+    const mto = n.shippingLines.nodes.some((s) => /made to order/i.test(s.title || ""));
+    if (!mto || await env.CHAT_KV.get("mto:" + n.name)) continue;
+    await env.CHAT_KV.put("mto:" + n.name, "1", { expirationTtl: 60 * 24 * 3600 });
+    await send(["🧵 New made-to-order order " + n.name + " | طلب يُصنع", "",
+      ...n.lineItems.nodes.map((l) => `• ${l.quantity} × ${l.variantTitle || l.sku}`), "",
+      "Promised: 15–20 working days. It ships from the next batch.", riyadhTime()]);
+  }
+  await env.CHAT_KV.put("mto:since", now);
+  return "ok";
+}
 
 /* Welcome pop-up sign-ups: name, email, mobile and family size.
    1. Saved as a Shopify customer (subscribed to email + SMS marketing,
