@@ -643,6 +643,7 @@
       if (!ok) return;
 
       markOffer("joined");
+      if (window.SHT) window.SHT.track("Lead", {});
 
       if (OFFER.endpoint) {
         // Fire-and-forget: a form handler's response is irrelevant to the
@@ -893,6 +894,7 @@
     save();
     renderCart();
     bumpCount();
+    track("AddToCart", [{ pid, size, ed: e, qty: 1 }]);
     if (!quiet) toast(t("added"));
   }
 
@@ -912,6 +914,23 @@
     renderCart();
     bumpCount();
     toast(t("removed"));
+  }
+
+  // Ad pixels (js/track.js, only after cookie consent). Content IDs are the
+  // Shopify variant IDs, so they match the Meta catalog.
+  function track(name, lines) {
+    if (!window.SHT) return;
+    try {
+      const ids = [], vids = typeof SHOPIFY !== "undefined" ? SHOPIFY.variants : {};
+      let value = 0, qty = 0;
+      lines.forEach((l) => {
+        const id = vids[`${l.pid}-${l.ed}-${l.size}`] || `${l.pid}-${l.ed}-${l.size}`;
+        if (!ids.includes(id)) ids.push(id);
+        value += unitPrice(l.pid, l.size) * l.qty;
+        qty += l.qty;
+      });
+      window.SHT.track(name, { ids, value: Math.round(value * 1000) / 1000, currency: state.cur, qty });
+    } catch (e) {}
   }
 
   const cartSubtotal = () =>
@@ -1107,6 +1126,7 @@
   function checkout() {
     if (!state.cart.length) return;
     if (!isOpen()) { toast(t("opensSoon")); return; }
+    track("InitiateCheckout", state.cart);
 
     // Tier 0 — Shopify hosted checkout via cart permalink: the whole
     // basket goes straight into payment. Only the checkout page is
