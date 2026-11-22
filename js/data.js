@@ -99,10 +99,10 @@ const MARKETS = {
 const LAUNCH = { opensAt: null };
 
 const OFFER = {
-  enabled: true,      // back on 16 Nov 2026: 15% for joining the list (name, email, phone, family size). One use per customer, Shopify-side.
+  enabled: false,     // OFF 22 Nov 2026 (Roast Room council): no 15% welcome code; the family pack is the offer. Codes already handed out work until 30 Nov in Shopify.
   pct: 15,
   delayMs: 8000,       // let them see the hero first
-  code: "SOODI15",
+  code: null,        // was "SOODI15"
   img: "img/offer-family.webp",  // the whole family, every edition, from the ad campaign     // Shopify discount: 15% off, one use per customer; shown right after sign-up
   /* Sign-ups go to the chat Worker, which forwards them to the team's
      Telegram and keeps them in Workers KV for later export. */

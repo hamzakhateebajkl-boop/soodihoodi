@@ -283,6 +283,29 @@
 
   const arrow = `<svg class="pack__arr" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>`;
 
+  /* Opens the family page loaded with a pack ("own" = start from one adult).
+     Also used by any link with data-open-pack, e.g. the hero button. */
+  function openPack(id) {
+    if (id === "own") {
+      state.build = [{ size: "adult", ed: state.edition }];
+    } else {
+      const pk = PACKS.find((x) => x.id === id);
+      if (!pk) return false;
+      // Load exactly what the card pictured, mixed teams and all.
+      const mix = pk.mix || [];
+      state.build = pk.slots.map((sz, i) => ({
+        size: sz,
+        ed: EDITIONS.some((e) => e.id === mix[i]) ? mix[i] : state.edition
+      }));
+    }
+    openFam(true);
+    return true;
+  }
+  document.addEventListener("click", (ev) => {
+    const a = ev.target.closest && ev.target.closest("[data-open-pack]");
+    if (a && openPack(a.dataset.openPack)) ev.preventDefault();
+  });
+
   function renderPacks() {
     const el = $("#bldPacks");
     if (!el) return;
@@ -332,21 +355,7 @@
     el.innerHTML = cards.join("");
 
     $$(".pack", el).forEach((b) =>
-      b.addEventListener("click", () => {
-        if (b.dataset.pack === "own") {
-          state.build = [{ size: "adult", ed: state.edition }];
-        } else {
-          const pk = PACKS.find((x) => x.id === b.dataset.pack);
-          if (!pk) return;
-          // Load exactly what the card pictured, mixed teams and all.
-          const mix = pk.mix || [];
-          state.build = pk.slots.map((sz, i) => ({
-            size: sz,
-            ed: EDITIONS.some((e) => e.id === mix[i]) ? mix[i] : state.edition
-          }));
-        }
-        openFam(true);
-      })
+      b.addEventListener("click", () => openPack(b.dataset.pack))
     );
   }
 
