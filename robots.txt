@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /chat-worker/
+
+Sitemap: https://soodihoodi.com/sitemap.xml
