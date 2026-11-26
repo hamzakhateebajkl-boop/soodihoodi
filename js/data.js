@@ -45,7 +45,7 @@ const SHOPIFY = {
   /* DORMANT until the store has a live payment method (gateway or COD
      via a KSA fulfilment partner). Until then checkout goes to WhatsApp.
      To activate: set domain to "yk3hk2-pu.myshopify.com". */
-  domain: "",
+  domain: "shop.soodihoodi.com",   // opened for ordering 26 Nov 2026 (Hamzeh)
   variants: {
     "classic-zaeem-adult": "53971290620269", "classic-zaeem-kids": "53971290653037", "classic-zaeem-baby": "67757252477293",
     "classic-ameed-adult": "53971290685805", "classic-ameed-kids": "53971290718573", "classic-ameed-baby": "67757252510061",
@@ -96,7 +96,7 @@ const MARKETS = {
    customer. Every element with class "pl" (pre-launch) is removed
    automatically once orders open. (14 Nov 2026: back to "Launching soon".)
    --------------------------------------------------------- */
-const LAUNCH = { opensAt: null };
+const LAUNCH = { opensAt: "2026-11-26T00:00:00+03:00" };   // orders opened 26 Nov 2026 (Hamzeh); null = back to "Launching soon"
 
 const OFFER = {
   enabled: true,      // ON again 23 Nov 2026 (Hamzeh): sign-up code = 15% on FAMILY orders only (Shopify SOODI15: min 2 pieces, once per customer, no stacking with the family discount).
